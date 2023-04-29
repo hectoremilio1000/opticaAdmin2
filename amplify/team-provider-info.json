@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-opticaadmin-dev-191131-authRole",
+      "UnauthRoleArn": "arn:aws:iam::012201143908:role/amplify-opticaadmin-dev-191131-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::012201143908:role/amplify-opticaadmin-dev-191131-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-opticaadmin-dev-191131-deployment",
+      "UnauthRoleName": "amplify-opticaadmin-dev-191131-unauthRole",
+      "StackName": "amplify-opticaadmin-dev-191131",
+      "StackId": "arn:aws:cloudformation:us-east-1:012201143908:stack/amplify-opticaadmin-dev-191131/7c597140-e5f8-11ed-936d-0e048620bb05",
+      "AmplifyAppId": "d3a9wgqztafcak"
+    },
+    "categories": {
+      "auth": {
+        "opticaadmind48f139d": {}
+      },
+      "api": {
+        "apiopticaadmin": {}
+      }
+    }
+  }
+}
