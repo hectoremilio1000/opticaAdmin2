@@ -1,0 +1,339 @@
+
+type GERENTE @aws_iam @aws_api_key {
+  id: ID!
+  nombres: String!
+  userName: String!
+  laboratorioID: ID!
+  LABORATORIO: LABORATORIO
+  email: String
+  phoneNumber: String
+  confirmed: Boolean
+  blocked: Boolean
+  createdBy: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type LABORATORIO @aws_iam @aws_api_key {
+  id: ID!
+  nombre: String!
+  createdBy: String!
+  GERENTES(filter: ModelGERENTEFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGERENTEConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelGERENTEConnection @aws_api_key @aws_iam {
+  items: [GERENTE]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelGERENTEFilterInput {
+  id: ModelIDInput
+  nombres: ModelStringInput
+  userName: ModelStringInput
+  laboratorioID: ModelIDInput
+  email: ModelStringInput
+  phoneNumber: ModelStringInput
+  confirmed: ModelBooleanInput
+  blocked: ModelBooleanInput
+  createdBy: ModelStringInput
+  and: [ModelGERENTEFilterInput]
+  or: [ModelGERENTEFilterInput]
+  not: ModelGERENTEFilterInput
+}
+
+type Query {
+  getGERENTE(id: ID!): GERENTE @aws_api_key @aws_iam
+  listGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
+  syncGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGERENTEConnection @aws_api_key @aws_iam
+  gERENTESByLaboratorioID(laboratorioID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
+  getLABORATORIO(id: ID!): LABORATORIO @aws_api_key @aws_iam
+  listLABORATORIOS(filter: ModelLABORATORIOFilterInput, limit: Int, nextToken: String): ModelLABORATORIOConnection @aws_api_key @aws_iam
+  syncLABORATORIOS(filter: ModelLABORATORIOFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelLABORATORIOConnection @aws_api_key @aws_iam
+}
+
+input ModelGERENTEConditionInput {
+  nombres: ModelStringInput
+  userName: ModelStringInput
+  laboratorioID: ModelIDInput
+  email: ModelStringInput
+  phoneNumber: ModelStringInput
+  confirmed: ModelBooleanInput
+  blocked: ModelBooleanInput
+  createdBy: ModelStringInput
+  and: [ModelGERENTEConditionInput]
+  or: [ModelGERENTEConditionInput]
+  not: ModelGERENTEConditionInput
+}
+
+input CreateGERENTEInput {
+  id: ID
+  nombres: String!
+  userName: String!
+  laboratorioID: ID!
+  email: String
+  phoneNumber: String
+  confirmed: Boolean
+  blocked: Boolean
+  createdBy: String!
+  _version: Int
+}
+
+input UpdateGERENTEInput {
+  id: ID!
+  nombres: String
+  userName: String
+  laboratorioID: ID
+  email: String
+  phoneNumber: String
+  confirmed: Boolean
+  blocked: Boolean
+  createdBy: String
+  _version: Int
+}
+
+input DeleteGERENTEInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createGERENTE(input: CreateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
+  updateGERENTE(input: UpdateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
+  deleteGERENTE(input: DeleteGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
+  createLABORATORIO(input: CreateLABORATORIOInput!, condition: ModelLABORATORIOConditionInput): LABORATORIO @aws_api_key @aws_iam
+  updateLABORATORIO(input: UpdateLABORATORIOInput!, condition: ModelLABORATORIOConditionInput): LABORATORIO @aws_api_key @aws_iam
+  deleteLABORATORIO(input: DeleteLABORATORIOInput!, condition: ModelLABORATORIOConditionInput): LABORATORIO @aws_api_key @aws_iam
+}
+
+input ModelSubscriptionGERENTEFilterInput {
+  id: ModelSubscriptionIDInput
+  nombres: ModelSubscriptionStringInput
+  userName: ModelSubscriptionStringInput
+  laboratorioID: ModelSubscriptionIDInput
+  email: ModelSubscriptionStringInput
+  phoneNumber: ModelSubscriptionStringInput
+  confirmed: ModelSubscriptionBooleanInput
+  blocked: ModelSubscriptionBooleanInput
+  createdBy: ModelSubscriptionStringInput
+  and: [ModelSubscriptionGERENTEFilterInput]
+  or: [ModelSubscriptionGERENTEFilterInput]
+}
+
+type Subscription {
+  onCreateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["createGERENTE"]) @aws_api_key @aws_iam
+  onUpdateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["updateGERENTE"]) @aws_api_key @aws_iam
+  onDeleteGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["deleteGERENTE"]) @aws_api_key @aws_iam
+  onCreateLABORATORIO(filter: ModelSubscriptionLABORATORIOFilterInput): LABORATORIO @aws_subscribe(mutations: ["createLABORATORIO"]) @aws_api_key @aws_iam
+  onUpdateLABORATORIO(filter: ModelSubscriptionLABORATORIOFilterInput): LABORATORIO @aws_subscribe(mutations: ["updateLABORATORIO"]) @aws_api_key @aws_iam
+  onDeleteLABORATORIO(filter: ModelSubscriptionLABORATORIOFilterInput): LABORATORIO @aws_subscribe(mutations: ["deleteLABORATORIO"]) @aws_api_key @aws_iam
+}
+
+type ModelLABORATORIOConnection @aws_api_key @aws_iam {
+  items: [LABORATORIO]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelLABORATORIOFilterInput {
+  id: ModelIDInput
+  nombre: ModelStringInput
+  createdBy: ModelStringInput
+  and: [ModelLABORATORIOFilterInput]
+  or: [ModelLABORATORIOFilterInput]
+  not: ModelLABORATORIOFilterInput
+}
+
+input ModelLABORATORIOConditionInput {
+  nombre: ModelStringInput
+  createdBy: ModelStringInput
+  and: [ModelLABORATORIOConditionInput]
+  or: [ModelLABORATORIOConditionInput]
+  not: ModelLABORATORIOConditionInput
+}
+
+input CreateLABORATORIOInput {
+  id: ID
+  nombre: String!
+  createdBy: String!
+  _version: Int
+}
+
+input UpdateLABORATORIOInput {
+  id: ID!
+  nombre: String
+  createdBy: String
+  _version: Int
+}
+
+input DeleteLABORATORIOInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionLABORATORIOFilterInput {
+  id: ModelSubscriptionIDInput
+  nombre: ModelSubscriptionStringInput
+  createdBy: ModelSubscriptionStringInput
+  and: [ModelSubscriptionLABORATORIOFilterInput]
+  or: [ModelSubscriptionLABORATORIOFilterInput]
+}
+
