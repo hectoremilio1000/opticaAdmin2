@@ -15,12 +15,12 @@ type EagerGERENTE = {
   readonly nombres: string;
   readonly userName: string;
   readonly laboratorioID: string;
-  readonly LABORATORIO?: LABORATORIO | null;
   readonly email?: string | null;
   readonly phoneNumber?: string | null;
   readonly confirmed?: boolean | null;
   readonly blocked?: boolean | null;
   readonly createdBy: string;
+  readonly OPTICA?: OPTICA | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -34,12 +34,12 @@ type LazyGERENTE = {
   readonly nombres: string;
   readonly userName: string;
   readonly laboratorioID: string;
-  readonly LABORATORIO: AsyncItem<LABORATORIO | undefined>;
   readonly email?: string | null;
   readonly phoneNumber?: string | null;
   readonly confirmed?: boolean | null;
   readonly blocked?: boolean | null;
   readonly createdBy: string;
+  readonly OPTICA: AsyncItem<OPTICA | undefined>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -50,9 +50,9 @@ export declare const GERENTE: (new (init: ModelInit<GERENTE>) => GERENTE) & {
   copyOf(source: GERENTE, mutator: (draft: MutableModel<GERENTE>) => MutableModel<GERENTE> | void): GERENTE;
 }
 
-type EagerLABORATORIO = {
+type EagerOPTICA = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<LABORATORIO, 'id'>;
+    identifier: ManagedIdentifier<OPTICA, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
@@ -63,9 +63,9 @@ type EagerLABORATORIO = {
   readonly updatedAt?: string | null;
 }
 
-type LazyLABORATORIO = {
+type LazyOPTICA = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<LABORATORIO, 'id'>;
+    identifier: ManagedIdentifier<OPTICA, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
@@ -76,8 +76,8 @@ type LazyLABORATORIO = {
   readonly updatedAt?: string | null;
 }
 
-export declare type LABORATORIO = LazyLoading extends LazyLoadingDisabled ? EagerLABORATORIO : LazyLABORATORIO
+export declare type OPTICA = LazyLoading extends LazyLoadingDisabled ? EagerOPTICA : LazyOPTICA
 
-export declare const LABORATORIO: (new (init: ModelInit<LABORATORIO>) => LABORATORIO) & {
-  copyOf(source: LABORATORIO, mutator: (draft: MutableModel<LABORATORIO>) => MutableModel<LABORATORIO> | void): LABORATORIO;
+export declare const OPTICA: (new (init: ModelInit<OPTICA>) => OPTICA) & {
+  copyOf(source: OPTICA, mutator: (draft: MutableModel<OPTICA>) => MutableModel<OPTICA> | void): OPTICA;
 }

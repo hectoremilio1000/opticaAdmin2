@@ -128,7 +128,7 @@
         },
         "GlobalSecondaryIndexes": [
           {
-            "IndexName": "byLABORATORIO",
+            "IndexName": "byOPTICA",
             "KeySchema": [
               {
                 "AttributeName": "laboratorioID",

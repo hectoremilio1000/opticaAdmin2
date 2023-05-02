@@ -11,7 +11,12 @@ export const createGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -25,11 +30,6 @@ export const createGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -48,7 +48,12 @@ export const updateGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -62,11 +67,6 @@ export const updateGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -85,7 +85,12 @@ export const deleteGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -99,11 +104,6 @@ export const deleteGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -112,12 +112,12 @@ export const deleteGERENTE = /* GraphQL */ `
     }
   }
 `;
-export const createLABORATORIO = /* GraphQL */ `
-  mutation CreateLABORATORIO(
-    $input: CreateLABORATORIOInput!
-    $condition: ModelLABORATORIOConditionInput
+export const createOPTICA = /* GraphQL */ `
+  mutation CreateOPTICA(
+    $input: CreateOPTICAInput!
+    $condition: ModelOPTICAConditionInput
   ) {
-    createLABORATORIO(input: $input, condition: $condition) {
+    createOPTICA(input: $input, condition: $condition) {
       id
       nombre
       createdBy
@@ -149,12 +149,12 @@ export const createLABORATORIO = /* GraphQL */ `
     }
   }
 `;
-export const updateLABORATORIO = /* GraphQL */ `
-  mutation UpdateLABORATORIO(
-    $input: UpdateLABORATORIOInput!
-    $condition: ModelLABORATORIOConditionInput
+export const updateOPTICA = /* GraphQL */ `
+  mutation UpdateOPTICA(
+    $input: UpdateOPTICAInput!
+    $condition: ModelOPTICAConditionInput
   ) {
-    updateLABORATORIO(input: $input, condition: $condition) {
+    updateOPTICA(input: $input, condition: $condition) {
       id
       nombre
       createdBy
@@ -186,12 +186,12 @@ export const updateLABORATORIO = /* GraphQL */ `
     }
   }
 `;
-export const deleteLABORATORIO = /* GraphQL */ `
-  mutation DeleteLABORATORIO(
-    $input: DeleteLABORATORIOInput!
-    $condition: ModelLABORATORIOConditionInput
+export const deleteOPTICA = /* GraphQL */ `
+  mutation DeleteOPTICA(
+    $input: DeleteOPTICAInput!
+    $condition: ModelOPTICAConditionInput
   ) {
-    deleteLABORATORIO(input: $input, condition: $condition) {
+    deleteOPTICA(input: $input, condition: $condition) {
       id
       nombre
       createdBy

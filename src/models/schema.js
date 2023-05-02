@@ -31,21 +31,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "LABORATORIO": {
-                    "name": "LABORATORIO",
-                    "isArray": false,
-                    "type": {
-                        "model": "LABORATORIO"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetNames": [
-                            "laboratorioID"
-                        ]
-                    }
-                },
                 "email": {
                     "name": "email",
                     "isArray": false,
@@ -81,6 +66,21 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "OPTICA": {
+                    "name": "OPTICA",
+                    "isArray": false,
+                    "type": {
+                        "model": "OPTICA"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "laboratorioID"
+                        ]
+                    }
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -108,7 +108,7 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byLABORATORIO",
+                        "name": "byOPTICA",
                         "fields": [
                             "laboratorioID"
                         ]
@@ -132,8 +132,8 @@ export const schema = {
                 }
             ]
         },
-        "LABORATORIO": {
-            "name": "LABORATORIO",
+        "OPTICA": {
+            "name": "OPTICA",
             "fields": {
                 "id": {
                     "name": "id",
@@ -168,7 +168,7 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
-                            "LABORATORIO"
+                            "OPTICA"
                         ]
                     }
                 },
@@ -190,7 +190,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "LABORATORIOS",
+            "pluralName": "OPTICAS",
             "attributes": [
                 {
                     "type": "model",
@@ -218,5 +218,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "4aef2a9cdd78ce210b556975968ab5e8"
+    "version": "9bb0c74175bfe6807febdf073d67df73"
 };

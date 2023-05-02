@@ -4,12 +4,12 @@ type GERENTE @aws_iam @aws_api_key {
   nombres: String!
   userName: String!
   laboratorioID: ID!
-  LABORATORIO: LABORATORIO
   email: String
   phoneNumber: String
   confirmed: Boolean
   blocked: Boolean
   createdBy: String!
+  OPTICA: OPTICA
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -17,7 +17,7 @@ type GERENTE @aws_iam @aws_api_key {
   _lastChangedAt: AWSTimestamp!
 }
 
-type LABORATORIO @aws_iam @aws_api_key {
+type OPTICA @aws_iam @aws_api_key {
   id: ID!
   nombre: String!
   createdBy: String!
@@ -205,9 +205,9 @@ type Query {
   listGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
   syncGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGERENTEConnection @aws_api_key @aws_iam
   gERENTESByLaboratorioID(laboratorioID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
-  getLABORATORIO(id: ID!): LABORATORIO @aws_api_key @aws_iam
-  listLABORATORIOS(filter: ModelLABORATORIOFilterInput, limit: Int, nextToken: String): ModelLABORATORIOConnection @aws_api_key @aws_iam
-  syncLABORATORIOS(filter: ModelLABORATORIOFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelLABORATORIOConnection @aws_api_key @aws_iam
+  getOPTICA(id: ID!): OPTICA @aws_api_key @aws_iam
+  listOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String): ModelOPTICAConnection @aws_api_key @aws_iam
+  syncOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOPTICAConnection @aws_api_key @aws_iam
 }
 
 input ModelGERENTEConditionInput {
@@ -259,9 +259,9 @@ type Mutation {
   createGERENTE(input: CreateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
   updateGERENTE(input: UpdateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
   deleteGERENTE(input: DeleteGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
-  createLABORATORIO(input: CreateLABORATORIOInput!, condition: ModelLABORATORIOConditionInput): LABORATORIO @aws_api_key @aws_iam
-  updateLABORATORIO(input: UpdateLABORATORIOInput!, condition: ModelLABORATORIOConditionInput): LABORATORIO @aws_api_key @aws_iam
-  deleteLABORATORIO(input: DeleteLABORATORIOInput!, condition: ModelLABORATORIOConditionInput): LABORATORIO @aws_api_key @aws_iam
+  createOPTICA(input: CreateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
+  updateOPTICA(input: UpdateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
+  deleteOPTICA(input: DeleteOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
 }
 
 input ModelSubscriptionGERENTEFilterInput {
@@ -282,58 +282,58 @@ type Subscription {
   onCreateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["createGERENTE"]) @aws_api_key @aws_iam
   onUpdateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["updateGERENTE"]) @aws_api_key @aws_iam
   onDeleteGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["deleteGERENTE"]) @aws_api_key @aws_iam
-  onCreateLABORATORIO(filter: ModelSubscriptionLABORATORIOFilterInput): LABORATORIO @aws_subscribe(mutations: ["createLABORATORIO"]) @aws_api_key @aws_iam
-  onUpdateLABORATORIO(filter: ModelSubscriptionLABORATORIOFilterInput): LABORATORIO @aws_subscribe(mutations: ["updateLABORATORIO"]) @aws_api_key @aws_iam
-  onDeleteLABORATORIO(filter: ModelSubscriptionLABORATORIOFilterInput): LABORATORIO @aws_subscribe(mutations: ["deleteLABORATORIO"]) @aws_api_key @aws_iam
+  onCreateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["createOPTICA"]) @aws_api_key @aws_iam
+  onUpdateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["updateOPTICA"]) @aws_api_key @aws_iam
+  onDeleteOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["deleteOPTICA"]) @aws_api_key @aws_iam
 }
 
-type ModelLABORATORIOConnection @aws_api_key @aws_iam {
-  items: [LABORATORIO]!
+type ModelOPTICAConnection @aws_api_key @aws_iam {
+  items: [OPTICA]!
   nextToken: String
   startedAt: AWSTimestamp
 }
 
-input ModelLABORATORIOFilterInput {
+input ModelOPTICAFilterInput {
   id: ModelIDInput
   nombre: ModelStringInput
   createdBy: ModelStringInput
-  and: [ModelLABORATORIOFilterInput]
-  or: [ModelLABORATORIOFilterInput]
-  not: ModelLABORATORIOFilterInput
+  and: [ModelOPTICAFilterInput]
+  or: [ModelOPTICAFilterInput]
+  not: ModelOPTICAFilterInput
 }
 
-input ModelLABORATORIOConditionInput {
+input ModelOPTICAConditionInput {
   nombre: ModelStringInput
   createdBy: ModelStringInput
-  and: [ModelLABORATORIOConditionInput]
-  or: [ModelLABORATORIOConditionInput]
-  not: ModelLABORATORIOConditionInput
+  and: [ModelOPTICAConditionInput]
+  or: [ModelOPTICAConditionInput]
+  not: ModelOPTICAConditionInput
 }
 
-input CreateLABORATORIOInput {
+input CreateOPTICAInput {
   id: ID
   nombre: String!
   createdBy: String!
   _version: Int
 }
 
-input UpdateLABORATORIOInput {
+input UpdateOPTICAInput {
   id: ID!
   nombre: String
   createdBy: String
   _version: Int
 }
 
-input DeleteLABORATORIOInput {
+input DeleteOPTICAInput {
   id: ID!
   _version: Int
 }
 
-input ModelSubscriptionLABORATORIOFilterInput {
+input ModelSubscriptionOPTICAFilterInput {
   id: ModelSubscriptionIDInput
   nombre: ModelSubscriptionStringInput
   createdBy: ModelSubscriptionStringInput
-  and: [ModelSubscriptionLABORATORIOFilterInput]
-  or: [ModelSubscriptionLABORATORIOFilterInput]
+  and: [ModelSubscriptionOPTICAFilterInput]
+  or: [ModelSubscriptionOPTICAFilterInput]
 }
 

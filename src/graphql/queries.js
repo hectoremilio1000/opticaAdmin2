@@ -8,7 +8,12 @@ export const getGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -22,11 +27,6 @@ export const getGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -47,7 +47,12 @@ export const listGERENTES = /* GraphQL */ `
         nombres
         userName
         laboratorioID
-        LABORATORIO {
+        email
+        phoneNumber
+        confirmed
+        blocked
+        createdBy
+        OPTICA {
           id
           nombre
           createdBy
@@ -57,11 +62,6 @@ export const listGERENTES = /* GraphQL */ `
           _deleted
           _lastChangedAt
         }
-        email
-        phoneNumber
-        confirmed
-        blocked
-        createdBy
         createdAt
         updatedAt
         _version
@@ -91,7 +91,12 @@ export const syncGERENTES = /* GraphQL */ `
         nombres
         userName
         laboratorioID
-        LABORATORIO {
+        email
+        phoneNumber
+        confirmed
+        blocked
+        createdBy
+        OPTICA {
           id
           nombre
           createdBy
@@ -101,11 +106,6 @@ export const syncGERENTES = /* GraphQL */ `
           _deleted
           _lastChangedAt
         }
-        email
-        phoneNumber
-        confirmed
-        blocked
-        createdBy
         createdAt
         updatedAt
         _version
@@ -137,7 +137,12 @@ export const gERENTESByLaboratorioID = /* GraphQL */ `
         nombres
         userName
         laboratorioID
-        LABORATORIO {
+        email
+        phoneNumber
+        confirmed
+        blocked
+        createdBy
+        OPTICA {
           id
           nombre
           createdBy
@@ -147,11 +152,6 @@ export const gERENTESByLaboratorioID = /* GraphQL */ `
           _deleted
           _lastChangedAt
         }
-        email
-        phoneNumber
-        confirmed
-        blocked
-        createdBy
         createdAt
         updatedAt
         _version
@@ -163,9 +163,9 @@ export const gERENTESByLaboratorioID = /* GraphQL */ `
     }
   }
 `;
-export const getLABORATORIO = /* GraphQL */ `
-  query GetLABORATORIO($id: ID!) {
-    getLABORATORIO(id: $id) {
+export const getOPTICA = /* GraphQL */ `
+  query GetOPTICA($id: ID!) {
+    getOPTICA(id: $id) {
       id
       nombre
       createdBy
@@ -197,13 +197,13 @@ export const getLABORATORIO = /* GraphQL */ `
     }
   }
 `;
-export const listLABORATORIOS = /* GraphQL */ `
-  query ListLABORATORIOS(
-    $filter: ModelLABORATORIOFilterInput
+export const listOPTICAS = /* GraphQL */ `
+  query ListOPTICAS(
+    $filter: ModelOPTICAFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listLABORATORIOS(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listOPTICAS(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         nombre
@@ -223,14 +223,14 @@ export const listLABORATORIOS = /* GraphQL */ `
     }
   }
 `;
-export const syncLABORATORIOS = /* GraphQL */ `
-  query SyncLABORATORIOS(
-    $filter: ModelLABORATORIOFilterInput
+export const syncOPTICAS = /* GraphQL */ `
+  query SyncOPTICAS(
+    $filter: ModelOPTICAFilterInput
     $limit: Int
     $nextToken: String
     $lastSync: AWSTimestamp
   ) {
-    syncLABORATORIOS(
+    syncOPTICAS(
       filter: $filter
       limit: $limit
       nextToken: $nextToken

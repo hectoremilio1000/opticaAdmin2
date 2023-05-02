@@ -8,7 +8,12 @@ export const onCreateGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -22,11 +27,6 @@ export const onCreateGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -42,7 +42,12 @@ export const onUpdateGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -56,11 +61,6 @@ export const onUpdateGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -76,7 +76,12 @@ export const onDeleteGERENTE = /* GraphQL */ `
       nombres
       userName
       laboratorioID
-      LABORATORIO {
+      email
+      phoneNumber
+      confirmed
+      blocked
+      createdBy
+      OPTICA {
         id
         nombre
         createdBy
@@ -90,11 +95,6 @@ export const onDeleteGERENTE = /* GraphQL */ `
         _deleted
         _lastChangedAt
       }
-      email
-      phoneNumber
-      confirmed
-      blocked
-      createdBy
       createdAt
       updatedAt
       _version
@@ -103,11 +103,9 @@ export const onDeleteGERENTE = /* GraphQL */ `
     }
   }
 `;
-export const onCreateLABORATORIO = /* GraphQL */ `
-  subscription OnCreateLABORATORIO(
-    $filter: ModelSubscriptionLABORATORIOFilterInput
-  ) {
-    onCreateLABORATORIO(filter: $filter) {
+export const onCreateOPTICA = /* GraphQL */ `
+  subscription OnCreateOPTICA($filter: ModelSubscriptionOPTICAFilterInput) {
+    onCreateOPTICA(filter: $filter) {
       id
       nombre
       createdBy
@@ -139,11 +137,9 @@ export const onCreateLABORATORIO = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateLABORATORIO = /* GraphQL */ `
-  subscription OnUpdateLABORATORIO(
-    $filter: ModelSubscriptionLABORATORIOFilterInput
-  ) {
-    onUpdateLABORATORIO(filter: $filter) {
+export const onUpdateOPTICA = /* GraphQL */ `
+  subscription OnUpdateOPTICA($filter: ModelSubscriptionOPTICAFilterInput) {
+    onUpdateOPTICA(filter: $filter) {
       id
       nombre
       createdBy
@@ -175,11 +171,9 @@ export const onUpdateLABORATORIO = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteLABORATORIO = /* GraphQL */ `
-  subscription OnDeleteLABORATORIO(
-    $filter: ModelSubscriptionLABORATORIOFilterInput
-  ) {
-    onDeleteLABORATORIO(filter: $filter) {
+export const onDeleteOPTICA = /* GraphQL */ `
+  subscription OnDeleteOPTICA($filter: ModelSubscriptionOPTICAFilterInput) {
+    onDeleteOPTICA(filter: $filter) {
       id
       nombre
       createdBy

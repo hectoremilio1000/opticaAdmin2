@@ -5,5 +5,5 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
-export { default as LABORATORIOCreateForm } from "./LABORATORIOCreateForm";
-export { default as LABORATORIOUpdateForm } from "./LABORATORIOUpdateForm";
+export { default as OPTICACreateForm } from "./OPTICACreateForm";
+export { default as OPTICAUpdateForm } from "./OPTICAUpdateForm";

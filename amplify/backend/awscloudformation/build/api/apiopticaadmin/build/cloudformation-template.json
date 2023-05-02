@@ -123,7 +123,7 @@
           ]
         },
         "Description": "api key description",
-        "Expires": 1685368874
+        "Expires": 1685550239
       }
     },
     "GraphQLAPINONEDS95A13CF0": {
@@ -385,7 +385,7 @@
         "GraphQLAPITransformerSchema3CB2AE18"
       ]
     },
-    "LABORATORIO": {
+    "OPTICA": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
         "TemplateURL": {
@@ -408,7 +408,7 @@
               {
                 "Ref": "S3DeploymentRootKey"
               },
-              "/stacks/LABORATORIO.json"
+              "/stacks/OPTICA.json"
             ]
           ]
         },
@@ -561,16 +561,16 @@
           "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
             "Ref": "unauthRoleName"
           },
-          "referencetotransformerrootstackLABORATORIONestedStackLABORATORIONestedStackResource15C7AB30OutputstransformerrootstackLABORATORIOLABORATORIODataSource2DD8AA71Name": {
+          "referencetotransformerrootstackOPTICANestedStackOPTICANestedStackResource803BF2BDOutputstransformerrootstackOPTICAOPTICADataSourceDC2E6AFFName": {
             "Fn::GetAtt": [
-              "LABORATORIO",
-              "Outputs.transformerrootstackLABORATORIOLABORATORIODataSource2DD8AA71Name"
+              "OPTICA",
+              "Outputs.transformerrootstackOPTICAOPTICADataSourceDC2E6AFFName"
             ]
           },
-          "referencetotransformerrootstackLABORATORIONestedStackLABORATORIONestedStackResource15C7AB30OutputstransformerrootstackLABORATORIOLABORATORIOTable755270B7Ref": {
+          "referencetotransformerrootstackOPTICANestedStackOPTICANestedStackResource803BF2BDOutputstransformerrootstackOPTICAOPTICATableA2BBDF52Ref": {
             "Fn::GetAtt": [
-              "LABORATORIO",
-              "Outputs.transformerrootstackLABORATORIOLABORATORIOTable755270B7Ref"
+              "OPTICA",
+              "Outputs.transformerrootstackOPTICAOPTICATableA2BBDF52Ref"
             ]
           }
         }
@@ -578,7 +578,7 @@
       "DependsOn": [
         "GERENTE",
         "GraphQLAPITransformerSchema3CB2AE18",
-        "LABORATORIO"
+        "OPTICA"
       ]
     },
     "CustomResourcesjson": {
@@ -625,7 +625,7 @@
         "GraphQLAPI",
         "GraphQLAPITransformerSchema3CB2AE18",
         "GERENTE",
-        "LABORATORIO",
+        "OPTICA",
         "ConnectionStack"
       ]
     }
