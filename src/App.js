@@ -48,13 +48,10 @@ const App = () => {
       </div>
     );
   }
-  console.log(authUser);
   const SignOut = () => {
     Auth.signOut();
-    navigate("/", { replace: true });
+    navigate("/");
   };
-  const groups =
-    authUser?.signInUserSession?.idToken?.payload["cognito:groups"] ?? [];
   return (
     <AuthContextProvider>
       <AppRoutes signOut={SignOut} user={authUser} sub={sub} />

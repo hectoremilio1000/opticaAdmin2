@@ -1,57 +1,31 @@
 import { React, useState } from "react";
+import logo from "../../assets/logohilmora.png";
 
-import { Layout, Menu, Table } from "antd";
+import { Layout, Menu } from "antd";
 import ItemsRoutes from "../../components/ItemRoutes/ItemRoutes";
 import HeaderLayoutSuperAdmin from "./HeaderLayoutSuperAdmin";
+import { MenuContext } from "../../contexts/MenuContext";
+import ContentLayoutSuperAdmin from "./ContentLayoutSuperAdmin";
 
-const { Content, Footer, Sider } = Layout;
+const { Footer, Sider } = Layout;
 
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-];
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-];
 function LayoutSuperAdmin({ user, signOut }) {
   const [collapsed, setCollapsed] = useState(false);
-  //   const [current, setCurrent] = useState("");
+  const [current, setCurrent] = useState("");
 
   const toggle = () => {
     setCollapsed(!collapsed);
   };
-  //   const cambiarComponent = (e) => {
-  //     setCurrent(e.key);
-  //   };
+  const cambiarComponent = (e) => {
+    setCurrent(e.key);
+    console.log(e.key);
+  };
   return (
     <Layout>
       <Sider
-        style={{ height: "100vh" }}
+        breakpoint="lg"
+        collapsedWidth="50"
+        style={{ minHeight: "100vh" }}
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -62,19 +36,16 @@ function LayoutSuperAdmin({ user, signOut }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: "30px",
+            marginBottom: "10px",
           }}
         >
-          <img
-            style={{ width: "80%" }}
-            src="https://imagenesrutalab.s3.amazonaws.com/sanmateo/logo+nuevo/SAN-MATEO.png"
-            alt=""
-          />
+          <img style={{ width: "80%" }} src={logo} alt="" />
         </div>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["2"]}
+          selectedKeys={current}
+          onClick={cambiarComponent}
           items={ItemsRoutes}
         />
       </Sider>
@@ -84,18 +55,11 @@ function LayoutSuperAdmin({ user, signOut }) {
           toggle={toggle}
           signOut={signOut}
         />
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-            }}
-          >
-            <Table dataSource={dataSource} columns={columns} />
-          </div>
-        </Content>
+        <MenuContext.Provider value={{ current, cambiarComponent }}>
+          <ContentLayoutSuperAdmin current={current} />
+        </MenuContext.Provider>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2023 Created by Ant UED
+          Todos los Derechos reservados ©2023 por Hilmora Optica
         </Footer>
       </Layout>
     </Layout>

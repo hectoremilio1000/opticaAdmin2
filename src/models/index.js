@@ -2,11 +2,26 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const Enumgrupo = {
+  "DAMA": "DAMA",
+  "CABALLERO": "CABALLERO",
+  "BOY": "BOY"
+};
 
+const Tipo = {
+  "COTIZACION": "COTIZACION",
+  "NUEVO": "NUEVO"
+};
 
-const { GERENTE, OPTICA } = initSchema(schema);
+const { LENTE, Orden, GERENTE, Cliente, Vendedores, OPTICA } = initSchema(schema);
 
 export {
+  LENTE,
+  Orden,
   GERENTE,
-  OPTICA
+  Cliente,
+  Vendedores,
+  OPTICA,
+  Enumgrupo,
+  Tipo
 };

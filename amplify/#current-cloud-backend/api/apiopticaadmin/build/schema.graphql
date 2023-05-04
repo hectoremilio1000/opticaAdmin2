@@ -1,4 +1,45 @@
 
+enum ENUMGRUPO {
+  DAMA
+  CABALLERO
+  BOY
+}
+
+type LENTE @aws_iam @aws_api_key {
+  id: ID!
+  grupo: ENUMGRUPO!
+  proveedor: String!
+  costo: Float!
+  precioVenta: Float!
+  tiempoEntrega: String
+  color: String
+  tipoArmazon: String
+  imagen: String
+  tipoMaterial: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+enum TIPO {
+  COTIZACION
+  NUEVO
+}
+
+type Orden @aws_iam @aws_api_key {
+  id: ID!
+  opticaID: ID!
+  tipo: TIPO
+  clienteID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
 type GERENTE @aws_iam @aws_api_key {
   id: ID!
   nombres: String!
@@ -17,11 +58,43 @@ type GERENTE @aws_iam @aws_api_key {
   _lastChangedAt: AWSTimestamp!
 }
 
+type Cliente @aws_iam @aws_api_key {
+  id: ID!
+  nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  whats: String
+  email: String
+  fechaNacimiento: String
+  edad: Int
+  opticaID: ID!
+  Ordens(filter: ModelOrdenFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrdenConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Vendedores @aws_iam @aws_api_key {
+  id: ID!
+  nombres: String
+  opticaID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
 type OPTICA @aws_iam @aws_api_key {
   id: ID!
   nombre: String!
   createdBy: String!
   GERENTES(filter: ModelGERENTEFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGERENTEConnection
+  Clientes(filter: ModelClienteFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelClienteConnection
+  Ordens(filter: ModelOrdenFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrdenConnection
+  Vendedores(filter: ModelVendedoresFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelVendedoresConnection
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -179,6 +252,224 @@ enum ModelSortDirection {
   DESC
 }
 
+type ModelLENTEConnection @aws_api_key @aws_iam {
+  items: [LENTE]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelENUMGRUPOInput {
+  eq: ENUMGRUPO
+  ne: ENUMGRUPO
+}
+
+input ModelLENTEFilterInput {
+  id: ModelIDInput
+  grupo: ModelENUMGRUPOInput
+  proveedor: ModelStringInput
+  costo: ModelFloatInput
+  precioVenta: ModelFloatInput
+  tiempoEntrega: ModelStringInput
+  color: ModelStringInput
+  tipoArmazon: ModelStringInput
+  imagen: ModelStringInput
+  tipoMaterial: ModelStringInput
+  and: [ModelLENTEFilterInput]
+  or: [ModelLENTEFilterInput]
+  not: ModelLENTEFilterInput
+}
+
+type Query {
+  getLENTE(id: ID!): LENTE @aws_api_key @aws_iam
+  listLENTES(filter: ModelLENTEFilterInput, limit: Int, nextToken: String): ModelLENTEConnection @aws_api_key @aws_iam
+  syncLENTES(filter: ModelLENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelLENTEConnection @aws_api_key @aws_iam
+  getOrden(id: ID!): Orden @aws_api_key @aws_iam
+  listOrdens(filter: ModelOrdenFilterInput, limit: Int, nextToken: String): ModelOrdenConnection @aws_api_key @aws_iam
+  syncOrdens(filter: ModelOrdenFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOrdenConnection @aws_api_key @aws_iam
+  ordensByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelOrdenFilterInput, limit: Int, nextToken: String): ModelOrdenConnection @aws_api_key @aws_iam
+  ordensByClienteID(clienteID: ID!, sortDirection: ModelSortDirection, filter: ModelOrdenFilterInput, limit: Int, nextToken: String): ModelOrdenConnection @aws_api_key @aws_iam
+  getGERENTE(id: ID!): GERENTE @aws_api_key @aws_iam
+  listGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
+  syncGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGERENTEConnection @aws_api_key @aws_iam
+  gERENTESByLaboratorioID(laboratorioID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
+  getCliente(id: ID!): Cliente @aws_api_key @aws_iam
+  listClientes(filter: ModelClienteFilterInput, limit: Int, nextToken: String): ModelClienteConnection @aws_api_key @aws_iam
+  syncClientes(filter: ModelClienteFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelClienteConnection @aws_api_key @aws_iam
+  clientesByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelClienteFilterInput, limit: Int, nextToken: String): ModelClienteConnection @aws_api_key @aws_iam
+  getVendedores(id: ID!): Vendedores @aws_api_key @aws_iam
+  listVendedores(filter: ModelVendedoresFilterInput, limit: Int, nextToken: String): ModelVendedoresConnection @aws_api_key @aws_iam
+  syncVendedores(filter: ModelVendedoresFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelVendedoresConnection @aws_api_key @aws_iam
+  vendedoresByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelVendedoresFilterInput, limit: Int, nextToken: String): ModelVendedoresConnection @aws_api_key @aws_iam
+  getOPTICA(id: ID!): OPTICA @aws_api_key @aws_iam
+  listOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String): ModelOPTICAConnection @aws_api_key @aws_iam
+  syncOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOPTICAConnection @aws_api_key @aws_iam
+}
+
+input ModelLENTEConditionInput {
+  grupo: ModelENUMGRUPOInput
+  proveedor: ModelStringInput
+  costo: ModelFloatInput
+  precioVenta: ModelFloatInput
+  tiempoEntrega: ModelStringInput
+  color: ModelStringInput
+  tipoArmazon: ModelStringInput
+  imagen: ModelStringInput
+  tipoMaterial: ModelStringInput
+  and: [ModelLENTEConditionInput]
+  or: [ModelLENTEConditionInput]
+  not: ModelLENTEConditionInput
+}
+
+input CreateLENTEInput {
+  id: ID
+  grupo: ENUMGRUPO!
+  proveedor: String!
+  costo: Float!
+  precioVenta: Float!
+  tiempoEntrega: String
+  color: String
+  tipoArmazon: String
+  imagen: String
+  tipoMaterial: String
+  _version: Int
+}
+
+input UpdateLENTEInput {
+  id: ID!
+  grupo: ENUMGRUPO
+  proveedor: String
+  costo: Float
+  precioVenta: Float
+  tiempoEntrega: String
+  color: String
+  tipoArmazon: String
+  imagen: String
+  tipoMaterial: String
+  _version: Int
+}
+
+input DeleteLENTEInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createLENTE(input: CreateLENTEInput!, condition: ModelLENTEConditionInput): LENTE @aws_api_key @aws_iam
+  updateLENTE(input: UpdateLENTEInput!, condition: ModelLENTEConditionInput): LENTE @aws_api_key @aws_iam
+  deleteLENTE(input: DeleteLENTEInput!, condition: ModelLENTEConditionInput): LENTE @aws_api_key @aws_iam
+  createOrden(input: CreateOrdenInput!, condition: ModelOrdenConditionInput): Orden @aws_api_key @aws_iam
+  updateOrden(input: UpdateOrdenInput!, condition: ModelOrdenConditionInput): Orden @aws_api_key @aws_iam
+  deleteOrden(input: DeleteOrdenInput!, condition: ModelOrdenConditionInput): Orden @aws_api_key @aws_iam
+  createGERENTE(input: CreateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
+  updateGERENTE(input: UpdateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
+  deleteGERENTE(input: DeleteGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
+  createCliente(input: CreateClienteInput!, condition: ModelClienteConditionInput): Cliente @aws_api_key @aws_iam
+  updateCliente(input: UpdateClienteInput!, condition: ModelClienteConditionInput): Cliente @aws_api_key @aws_iam
+  deleteCliente(input: DeleteClienteInput!, condition: ModelClienteConditionInput): Cliente @aws_api_key @aws_iam
+  createVendedores(input: CreateVendedoresInput!, condition: ModelVendedoresConditionInput): Vendedores @aws_api_key @aws_iam
+  updateVendedores(input: UpdateVendedoresInput!, condition: ModelVendedoresConditionInput): Vendedores @aws_api_key @aws_iam
+  deleteVendedores(input: DeleteVendedoresInput!, condition: ModelVendedoresConditionInput): Vendedores @aws_api_key @aws_iam
+  createOPTICA(input: CreateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
+  updateOPTICA(input: UpdateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
+  deleteOPTICA(input: DeleteOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
+}
+
+input ModelSubscriptionLENTEFilterInput {
+  id: ModelSubscriptionIDInput
+  grupo: ModelSubscriptionStringInput
+  proveedor: ModelSubscriptionStringInput
+  costo: ModelSubscriptionFloatInput
+  precioVenta: ModelSubscriptionFloatInput
+  tiempoEntrega: ModelSubscriptionStringInput
+  color: ModelSubscriptionStringInput
+  tipoArmazon: ModelSubscriptionStringInput
+  imagen: ModelSubscriptionStringInput
+  tipoMaterial: ModelSubscriptionStringInput
+  and: [ModelSubscriptionLENTEFilterInput]
+  or: [ModelSubscriptionLENTEFilterInput]
+}
+
+type Subscription {
+  onCreateLENTE(filter: ModelSubscriptionLENTEFilterInput): LENTE @aws_subscribe(mutations: ["createLENTE"]) @aws_api_key @aws_iam
+  onUpdateLENTE(filter: ModelSubscriptionLENTEFilterInput): LENTE @aws_subscribe(mutations: ["updateLENTE"]) @aws_api_key @aws_iam
+  onDeleteLENTE(filter: ModelSubscriptionLENTEFilterInput): LENTE @aws_subscribe(mutations: ["deleteLENTE"]) @aws_api_key @aws_iam
+  onCreateOrden(filter: ModelSubscriptionOrdenFilterInput): Orden @aws_subscribe(mutations: ["createOrden"]) @aws_api_key @aws_iam
+  onUpdateOrden(filter: ModelSubscriptionOrdenFilterInput): Orden @aws_subscribe(mutations: ["updateOrden"]) @aws_api_key @aws_iam
+  onDeleteOrden(filter: ModelSubscriptionOrdenFilterInput): Orden @aws_subscribe(mutations: ["deleteOrden"]) @aws_api_key @aws_iam
+  onCreateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["createGERENTE"]) @aws_api_key @aws_iam
+  onUpdateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["updateGERENTE"]) @aws_api_key @aws_iam
+  onDeleteGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["deleteGERENTE"]) @aws_api_key @aws_iam
+  onCreateCliente(filter: ModelSubscriptionClienteFilterInput): Cliente @aws_subscribe(mutations: ["createCliente"]) @aws_api_key @aws_iam
+  onUpdateCliente(filter: ModelSubscriptionClienteFilterInput): Cliente @aws_subscribe(mutations: ["updateCliente"]) @aws_api_key @aws_iam
+  onDeleteCliente(filter: ModelSubscriptionClienteFilterInput): Cliente @aws_subscribe(mutations: ["deleteCliente"]) @aws_api_key @aws_iam
+  onCreateVendedores(filter: ModelSubscriptionVendedoresFilterInput): Vendedores @aws_subscribe(mutations: ["createVendedores"]) @aws_api_key @aws_iam
+  onUpdateVendedores(filter: ModelSubscriptionVendedoresFilterInput): Vendedores @aws_subscribe(mutations: ["updateVendedores"]) @aws_api_key @aws_iam
+  onDeleteVendedores(filter: ModelSubscriptionVendedoresFilterInput): Vendedores @aws_subscribe(mutations: ["deleteVendedores"]) @aws_api_key @aws_iam
+  onCreateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["createOPTICA"]) @aws_api_key @aws_iam
+  onUpdateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["updateOPTICA"]) @aws_api_key @aws_iam
+  onDeleteOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["deleteOPTICA"]) @aws_api_key @aws_iam
+}
+
+type ModelOrdenConnection @aws_api_key @aws_iam {
+  items: [Orden]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelTIPOInput {
+  eq: TIPO
+  ne: TIPO
+}
+
+input ModelOrdenFilterInput {
+  id: ModelIDInput
+  opticaID: ModelIDInput
+  tipo: ModelTIPOInput
+  clienteID: ModelIDInput
+  and: [ModelOrdenFilterInput]
+  or: [ModelOrdenFilterInput]
+  not: ModelOrdenFilterInput
+}
+
+input ModelOrdenConditionInput {
+  opticaID: ModelIDInput
+  tipo: ModelTIPOInput
+  clienteID: ModelIDInput
+  and: [ModelOrdenConditionInput]
+  or: [ModelOrdenConditionInput]
+  not: ModelOrdenConditionInput
+}
+
+input CreateOrdenInput {
+  id: ID
+  opticaID: ID!
+  tipo: TIPO
+  clienteID: ID!
+  _version: Int
+}
+
+input UpdateOrdenInput {
+  id: ID!
+  opticaID: ID
+  tipo: TIPO
+  clienteID: ID
+  _version: Int
+}
+
+input DeleteOrdenInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionOrdenFilterInput {
+  id: ModelSubscriptionIDInput
+  opticaID: ModelSubscriptionIDInput
+  tipo: ModelSubscriptionStringInput
+  clienteID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionOrdenFilterInput]
+  or: [ModelSubscriptionOrdenFilterInput]
+}
+
 type ModelGERENTEConnection @aws_api_key @aws_iam {
   items: [GERENTE]!
   nextToken: String
@@ -198,16 +489,6 @@ input ModelGERENTEFilterInput {
   and: [ModelGERENTEFilterInput]
   or: [ModelGERENTEFilterInput]
   not: ModelGERENTEFilterInput
-}
-
-type Query {
-  getGERENTE(id: ID!): GERENTE @aws_api_key @aws_iam
-  listGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
-  syncGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGERENTEConnection @aws_api_key @aws_iam
-  gERENTESByLaboratorioID(laboratorioID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
-  getOPTICA(id: ID!): OPTICA @aws_api_key @aws_iam
-  listOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String): ModelOPTICAConnection @aws_api_key @aws_iam
-  syncOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOPTICAConnection @aws_api_key @aws_iam
 }
 
 input ModelGERENTEConditionInput {
@@ -255,15 +536,6 @@ input DeleteGERENTEInput {
   _version: Int
 }
 
-type Mutation {
-  createGERENTE(input: CreateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
-  updateGERENTE(input: UpdateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
-  deleteGERENTE(input: DeleteGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
-  createOPTICA(input: CreateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
-  updateOPTICA(input: UpdateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
-  deleteOPTICA(input: DeleteOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
-}
-
 input ModelSubscriptionGERENTEFilterInput {
   id: ModelSubscriptionIDInput
   nombres: ModelSubscriptionStringInput
@@ -278,13 +550,134 @@ input ModelSubscriptionGERENTEFilterInput {
   or: [ModelSubscriptionGERENTEFilterInput]
 }
 
-type Subscription {
-  onCreateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["createGERENTE"]) @aws_api_key @aws_iam
-  onUpdateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["updateGERENTE"]) @aws_api_key @aws_iam
-  onDeleteGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["deleteGERENTE"]) @aws_api_key @aws_iam
-  onCreateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["createOPTICA"]) @aws_api_key @aws_iam
-  onUpdateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["updateOPTICA"]) @aws_api_key @aws_iam
-  onDeleteOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["deleteOPTICA"]) @aws_api_key @aws_iam
+type ModelClienteConnection @aws_api_key @aws_iam {
+  items: [Cliente]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelClienteFilterInput {
+  id: ModelIDInput
+  nombres: ModelStringInput
+  apellidoPaterno: ModelStringInput
+  apellidoMaterno: ModelStringInput
+  whats: ModelStringInput
+  email: ModelStringInput
+  fechaNacimiento: ModelStringInput
+  edad: ModelIntInput
+  opticaID: ModelIDInput
+  and: [ModelClienteFilterInput]
+  or: [ModelClienteFilterInput]
+  not: ModelClienteFilterInput
+}
+
+input ModelClienteConditionInput {
+  nombres: ModelStringInput
+  apellidoPaterno: ModelStringInput
+  apellidoMaterno: ModelStringInput
+  whats: ModelStringInput
+  email: ModelStringInput
+  fechaNacimiento: ModelStringInput
+  edad: ModelIntInput
+  opticaID: ModelIDInput
+  and: [ModelClienteConditionInput]
+  or: [ModelClienteConditionInput]
+  not: ModelClienteConditionInput
+}
+
+input CreateClienteInput {
+  id: ID
+  nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  whats: String
+  email: String
+  fechaNacimiento: String
+  edad: Int
+  opticaID: ID!
+  _version: Int
+}
+
+input UpdateClienteInput {
+  id: ID!
+  nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  whats: String
+  email: String
+  fechaNacimiento: String
+  edad: Int
+  opticaID: ID
+  _version: Int
+}
+
+input DeleteClienteInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionClienteFilterInput {
+  id: ModelSubscriptionIDInput
+  nombres: ModelSubscriptionStringInput
+  apellidoPaterno: ModelSubscriptionStringInput
+  apellidoMaterno: ModelSubscriptionStringInput
+  whats: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
+  fechaNacimiento: ModelSubscriptionStringInput
+  edad: ModelSubscriptionIntInput
+  opticaID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionClienteFilterInput]
+  or: [ModelSubscriptionClienteFilterInput]
+}
+
+type ModelVendedoresConnection @aws_api_key @aws_iam {
+  items: [Vendedores]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelVendedoresFilterInput {
+  id: ModelIDInput
+  nombres: ModelStringInput
+  opticaID: ModelIDInput
+  and: [ModelVendedoresFilterInput]
+  or: [ModelVendedoresFilterInput]
+  not: ModelVendedoresFilterInput
+}
+
+input ModelVendedoresConditionInput {
+  nombres: ModelStringInput
+  opticaID: ModelIDInput
+  and: [ModelVendedoresConditionInput]
+  or: [ModelVendedoresConditionInput]
+  not: ModelVendedoresConditionInput
+}
+
+input CreateVendedoresInput {
+  id: ID
+  nombres: String
+  opticaID: ID!
+  _version: Int
+}
+
+input UpdateVendedoresInput {
+  id: ID!
+  nombres: String
+  opticaID: ID
+  _version: Int
+}
+
+input DeleteVendedoresInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionVendedoresFilterInput {
+  id: ModelSubscriptionIDInput
+  nombres: ModelSubscriptionStringInput
+  opticaID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionVendedoresFilterInput]
+  or: [ModelSubscriptionVendedoresFilterInput]
 }
 
 type ModelOPTICAConnection @aws_api_key @aws_iam {

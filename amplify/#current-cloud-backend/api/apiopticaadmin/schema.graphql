@@ -1,3 +1,34 @@
+enum ENUMGRUPO {
+  DAMA
+  CABALLERO
+  BOY
+}
+
+type LENTE @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  grupo: ENUMGRUPO!
+  proveedor: String!
+  costo: Float!
+  precioVenta: Float!
+  tiempoEntrega: String
+  color: String
+  tipoArmazon: String
+  imagen: String
+  tipoMaterial: String
+}
+
+enum TIPO {
+  COTIZACION
+  NUEVO
+}
+
+type Orden @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  opticaID: ID! @index(name: "byOPTICA")
+  tipo: TIPO
+  clienteID: ID! @index(name: "byCliente")
+}
+
 type GERENTE @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombres: String!
@@ -11,10 +42,32 @@ type GERENTE @model @auth(rules: [{allow: public}]) {
   OPTICA: OPTICA @belongsTo(fields: ["laboratorioID"])
 }
 
+type Cliente @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  whats: String
+  email: String
+  fechaNacimiento: String
+  edad: Int
+  opticaID: ID! @index(name: "byOPTICA")
+  Ordens: [Orden] @hasMany(indexName: "byCliente", fields: ["id"])
+}
+
+type Vendedores @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nombres: String
+  opticaID: ID! @index(name: "byOPTICA")
+}
+
 type OPTICA @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombre: String!
   createdBy: String!
   GERENTES: [GERENTE] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  Clientes: [Cliente] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  Ordens: [Orden] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  Vendedores: [Vendedores] @hasMany(indexName: "byOPTICA", fields: ["id"])
 }
  

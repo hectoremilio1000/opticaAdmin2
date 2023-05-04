@@ -1,6 +1,6 @@
 {
   "identityPoolName": "opticaadmind48f139d_identitypool_d48f139d",
-  "allowUnauthenticatedIdentities": false,
+  "allowUnauthenticatedIdentities": true,
   "resourceNameTruncated": "opticad48f139d",
   "userPoolName": "opticaadmind48f139d_userpool_d48f139d",
   "autoVerifiedAttributes": [
