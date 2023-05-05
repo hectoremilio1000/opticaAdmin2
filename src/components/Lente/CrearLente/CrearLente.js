@@ -19,8 +19,6 @@ const { Option } = Select;
 
 function CrearLente() {
   // usesate url y key
-  const [url, setUrl] = useState("");
-  const [key, setKey] = useState("");
 
   const { cambiarComponent } = useContext(MenuContext);
   const [proveedor, setProveedor] = useState("");
@@ -86,10 +84,8 @@ function CrearLente() {
         level: "public",
         contentType: file.type,
       });
-      const image1 = await Storage.get(keys, { level: "public" });
-      setImagen(image1);
-      setUrl(url);
-      setKey(key);
+      // const image1 = await Storage.get(keys, { level: "public" });
+      setImagen(urls);
       console.log("archivo guardado");
       message.success("imagen 1 cargada exitósamente");
     } catch (error) {

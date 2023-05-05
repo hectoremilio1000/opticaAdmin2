@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Table, Tag } from "antd";
+import { Button, Form, Input, Layout, Select, Table, Tag } from "antd";
 
 // amplify API
 import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "../../../graphql/queries";
+// import { useNavigate } from "react-router-dom";
 
 const { Content } = Layout;
-
+const { Option } = Select;
 function ListaLentes() {
+  const [editingRow, setEditingRow] = useState(null);
+  const [form] = Form.useForm();
+  // const navigate = useNavigate();
   const [lentes, setLentes] = useState([]);
   const searchGrupos = () => {
     const grupos = [...new Set(lentes.map((lente) => lente.grupo))];
@@ -16,56 +20,58 @@ function ListaLentes() {
       const grup = { text: grupos[index], value: grupos[index] };
       items.push(grup);
     }
-    console.log(items);
     return items;
   };
-
   const columns = [
     {
       title: "Grupo",
       key: "grupo",
       dataIndex: "grupo",
-      render: (grupo) => {
-        let color = "";
-        if (grupo === "DAMA") {
-          color = "geekblue";
+      render: (text, record) => {
+        if (editingRow === record.id) {
+          return (
+            <Form.Item name="grupo" valuePropName={record.grupo}>
+              <Select placeholder="Select un grupo DAMA/CABALERO/BOY">
+                <Option value="DAMA">DAMA</Option>
+                <Option value="CABALLERO">CABALLERO</Option>
+                <Option value="BOY">BOY</Option>
+              </Select>
+            </Form.Item>
+          );
+        } else {
+          let color = "";
+          if (text === "DAMA") {
+            color = "geekblue";
+          }
+          if (text === "CABALLERO") {
+            color = "green";
+          }
+          if (text === "BOY") {
+            color = "volcano";
+          }
+          return <Tag color={color}>{text}</Tag>;
         }
-        if (grupo === "CABALLERO") {
-          color = "green";
-        }
-        if (grupo === "BOY") {
-          color = "volcano";
-        }
-        return <Tag color={color}>{grupo}</Tag>;
       },
       filters: searchGrupos(),
-      // filters: [
-      //   {
-      //     text: "CABALLERO",
-      //     value: "CABALLERO",
-      //   },
-      //   {
-      //     text: "DAMA",
-      //     value: "DAMA",
-      //   },
-      //   {
-      //     text: "BOY",
-      //     value: "BOY",
-      //   },
-      // ],
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.grupo.startsWith(value),
-
-      // filters: () => {
-      //   const category_lente = [...new Set(lentes.map((lente) => lente.grupo))];
-      //   return category_lente;
-      // },
     },
     {
       title: "Proveedor",
       dataIndex: "proveedor",
       key: "proveedor",
+      render: (text, record) => {
+        if (editingRow === record.id) {
+          return (
+            <Form.Item name="proveedor">
+              <Input />
+            </Form.Item>
+          );
+        } else {
+          return <p>{text}</p>;
+        }
+      },
     },
     {
       title: "Costo",
@@ -121,12 +127,37 @@ function ListaLentes() {
       dataIndex: "tipoMaterial",
       key: "tipoMaterial",
     },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, record) => {
+        return (
+          <>
+            <Button
+              type="link"
+              onClick={() => {
+                setEditingRow(record.id);
+                console.log(record);
+                form.setFieldValue({
+                  grupo: record.grupo,
+                  proveedor: record.proveedor,
+                });
+                console.log(form);
+              }}
+            >
+              Edit
+            </Button>
+            <Button type="link">Save</Button>
+          </>
+        );
+      },
+    },
   ];
 
   const fetchLentes = async () => {
     const lentes = await API.graphql(graphqlOperation(queries.listLENTES));
     const items = lentes?.data?.listLENTES?.items;
-    console.log(items);
     setLentes(
       items.sort(function (a, b) {
         if (a.proveedor > b.proveedor) {
@@ -149,12 +180,18 @@ function ListaLentes() {
     <Content>
       <div>
         <p>NUESTOS LENTES</p>
-        <Table
-          scroll={{ x: 400 }}
-          rowKey={(record) => record.id}
-          dataSource={lentes}
-          columns={columns}
-        />
+        <Form form={form}>
+          <Table
+            scroll={{ x: 400 }}
+            rowKey={(record) => record.id}
+            dataSource={lentes}
+            columns={columns}
+            rowClassName="editable-row"
+            // onRow={(lentes) => ({
+            //   onClick: () => navigate(`lentes/${lentes.id}`),
+            // })}
+          />
+        </Form>
       </div>
     </Content>
   );
