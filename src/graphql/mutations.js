@@ -52,9 +52,9 @@ export const updateLENTE = /* GraphQL */ `
 export const deleteLENTE = /* GraphQL */ `
   mutation DeleteLENTE(
     $input: DeleteLENTEInput!
-    $condition: ModelLENTEConditionInput
+    
   ) {
-    deleteLENTE(input: $input, condition: $condition) {
+    deleteLENTE(input: $input) {
       id
       grupo
       proveedor

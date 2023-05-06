@@ -13,10 +13,11 @@ import {
 } from "antd";
 // amplify API
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, DataStore, graphqlOperation } from "aws-amplify";
 import * as mutations from "../../../graphql/mutations";
 import * as queries from "../../../graphql/queries";
 // import { useNavigate } from "react-router-dom";
+import {LENTE} from '../../../models'
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -32,7 +33,7 @@ function ListaLentes() {
   const [tipoArmazon, setTipoArmazon] = useState("");
   const [imagen, setImagen] = useState("");
   const [tipoMaterial, setTipoMaterial] = useState("");
-
+  const [lenteResult, setLenteResult] = useState();
   const [isEditing, setIsEditing] = useState(false);
 
   // const navigate = useNavigate();
@@ -145,7 +146,7 @@ function ListaLentes() {
             <Popconfirm
               title="Eliminar Lente"
               description="¿Esta seguro de eliminar el lente?"
-              onConfirm={() => deletehandle(record)}
+              onConfirm={() => deletehandle()}
               okText="Si"
               cancelText="No"
             >
@@ -190,52 +191,79 @@ function ListaLentes() {
     setIsEditing(true);
     setImagen(record?.imagen);
   };
+
   const changeDelete = (record) => {
     setId(record?.id);
   };
-  const deletehandle = async (record) => {
-    const lente = lentes[record?.id];
-    console.log(lente);
+
+  const fetchLente = async () => {
+    const result = await DataStore.query(LENTE);
+    setLenteResult(result);
+  }
+
+  useEffect(() => {
+    fetchLente();
+    
+  }, [id]);
+
+  console.log(lenteResult);
+ 
+
+  const deletehandle = async () => {
+    console.log(id);
+    
+
     try {
-      const lente = {
-        id,
-      };
-      const result = await API.graphql(
-        graphqlOperation(mutations.deleteLENTE, { input: lente })
-      );
-      console.log(result);
+      // console.log(lenteResult);
+      // const lenteDetail = {
+      //   id:id,
+      // };
+     
+
+   
+
+      // await DataStore.delete(result)
+      // console.log(result);
+      // await DataStore.delete(result);
+      // API.graphql({
+      //   query: mutations.deleteLENTE,
+      //   variables:{input:lenteDetail}
+      // }
+      
+      // console.log(result);
       message.success("El lente se ha eliminado correctamente");
     } catch (error) {
       console.log(error);
       message.error("Hubo un error contacta al administrador");
     }
   };
+
   const onFinish = async () => {
-    try {
-      const updateLentes = {
-        id,
-        grupo,
-        proveedor,
-        costo,
-        precioVenta,
-        tiempoEntrega,
-        color,
-        tipoArmazon,
-        imagen,
-        tipoMaterial,
-      };
-      console.log(updateLentes);
-      const result = await API.graphql(
-        graphqlOperation(mutations.updateLENTE, { input: updateLentes })
-      );
-      console.log(result);
-      message.success("El lente se ha actualizado");
-      fetchLentes();
-      setIsEditing(false);
-    } catch (error) {
-      console.log(error);
-      message.error("Hubo un error contacta al administrador");
-    }
+    // try {
+    //   const updateLentes = {
+    //     id,
+    //     grupo,
+    //     proveedor,
+    //     costo,
+    //     precioVenta,
+    //     tiempoEntrega,
+    //     color,
+    //     tipoArmazon,
+    //     imagen,
+    //     tipoMaterial,
+    //   };
+    //   console.log(updateLentes);
+    //   const result = await API.graphql(
+    //     graphqlOperation(mutations.updateLENTE, { input: updateLentes })
+    //   );
+    //   console.log(result);
+    //   message.success("El lente se ha actualizado");
+    //   fetchLentes();
+    //   setIsEditing(false);
+    // } catch (error) {
+    //   console.log(error);
+    //   message.error("Hubo un error contacta al administrador");
+    // }
   };
 
   useEffect(() => {
