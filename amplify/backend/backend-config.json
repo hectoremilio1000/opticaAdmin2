@@ -1,18 +1,33 @@
 {
   "api": {
     "apiopticaadmin": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "opticaadmind48f139d"
+        }
+      ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authopticaadmind48f139d"
+              }
+            },
             {
               "authenticationType": "AWS_IAM"
             }
           ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+              "apiKeyExpirationDate": "2024-05-04T23:12:01.246Z",
+              "apiKeyExpirationDays": 365,
+              "description": "api nuevo"
             },
             "authenticationType": "API_KEY"
           }

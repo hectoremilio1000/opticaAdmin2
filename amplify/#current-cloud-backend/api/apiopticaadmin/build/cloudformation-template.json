@@ -41,6 +41,9 @@
             ],
             "Description": "Enable server side encryption powered by KMS."
         },
+        "AuthCognitoUserPoolId": {
+            "Type": "String"
+        },
         "AppSyncApiName": {
             "Type": "String",
             "Default": "AppSyncSimpleTransform"
@@ -80,6 +83,17 @@
                     ]
                 },
                 "AdditionalAuthenticationProviders": [
+                    {
+                        "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
+                        "UserPoolConfig": {
+                            "AwsRegion": {
+                                "Ref": "AWS::Region"
+                            },
+                            "UserPoolId": {
+                                "Ref": "AuthCognitoUserPoolId"
+                            }
+                        }
+                    },
                     {
                         "AuthenticationType": "AWS_IAM"
                     }
@@ -122,8 +136,8 @@
                         "ApiId"
                     ]
                 },
-                "Description": "api key description",
-                "Expires": 1685719287
+                "Description": "api nuevo",
+                "Expires": 1714865797
             }
         },
         "GraphQLAPINONEDS95A13CF0": {

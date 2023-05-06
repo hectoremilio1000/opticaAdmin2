@@ -2,6 +2,12 @@
     "AppSyncApiName": "apiopticaadmin",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authopticaadmind48f139d",
+            "Outputs.UserPoolId"
+        ]
+    },
     "authRoleName": {
         "Ref": "AuthRoleName"
     },
@@ -9,5 +15,5 @@
         "Ref": "UnauthRoleName"
     },
     "S3DeploymentBucket": "amplify-opticaadmin-dev-191131-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/689000310612932c7b7f9ca0f57c44247ec30eb4"
+    "S3DeploymentRootKey": "amplify-appsync-files/1650c4550b1c76dc797e9227de40ff4f7119d0fd"
 }
