@@ -131,7 +131,7 @@
             "AttributeType": "S"
           },
           {
-            "AttributeName": "laboratorioID",
+            "AttributeName": "opticaID",
             "AttributeType": "S"
           }
         ],
@@ -149,7 +149,7 @@
             "IndexName": "byOPTICA",
             "KeySchema": [
               {
-                "AttributeName": "laboratorioID",
+                "AttributeName": "opticaID",
                 "KeyType": "HASH"
               }
             ],
@@ -1494,7 +1494,7 @@
         "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
       }
     },
-    "QueryGERENTESByLaboratorioIDDataResolverFnQueryGERENTESByLaboratorioIDDataResolverFnAppSyncFunction4E35DEBD": {
+    "QueryGERENTESByOpticaIDDataResolverFnQueryGERENTESByOpticaIDDataResolverFnAppSyncFunction0225BFAB": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
@@ -1506,7 +1506,7 @@
             "Name"
           ]
         },
-        "Name": "QueryGERENTESByLaboratorioIDDataResolverFn",
+        "Name": "QueryGERENTESByOpticaIDDataResolverFn",
         "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
@@ -1520,7 +1520,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Query.gERENTESByLaboratorioID.req.vtl"
+              "/resolvers/Query.gERENTESByOpticaID.req.vtl"
             ]
           ]
         },
@@ -1536,7 +1536,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Query.gERENTESByLaboratorioID.res.vtl"
+              "/resolvers/Query.gERENTESByOpticaID.res.vtl"
             ]
           ]
         },
@@ -1549,13 +1549,13 @@
         "GERENTEDataSource"
       ]
     },
-    "QuerygERENTESByLaboratorioIDResolver": {
+    "QuerygERENTESByOpticaIDResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "gERENTESByLaboratorioID",
+        "FieldName": "gERENTESByOpticaID",
         "TypeName": "Query",
         "Kind": "PIPELINE",
         "PipelineConfig": {
@@ -1568,7 +1568,7 @@
             },
             {
               "Fn::GetAtt": [
-                "QueryGERENTESByLaboratorioIDDataResolverFnQueryGERENTESByLaboratorioIDDataResolverFnAppSyncFunction4E35DEBD",
+                "QueryGERENTESByOpticaIDDataResolverFnQueryGERENTESByOpticaIDDataResolverFnAppSyncFunction0225BFAB",
                 "FunctionId"
               ]
             }
@@ -1578,7 +1578,7 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"gERENTESByLaboratorioID\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"gERENTESByOpticaID\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },

@@ -41,9 +41,6 @@
             ],
             "Description": "Enable server side encryption powered by KMS."
         },
-        "AuthCognitoUserPoolId": {
-            "Type": "String"
-        },
         "AppSyncApiName": {
             "Type": "String",
             "Default": "AppSyncSimpleTransform"
@@ -83,17 +80,6 @@
                     ]
                 },
                 "AdditionalAuthenticationProviders": [
-                    {
-                        "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
-                        "UserPoolConfig": {
-                            "AwsRegion": {
-                                "Ref": "AWS::Region"
-                            },
-                            "UserPoolId": {
-                                "Ref": "AuthCognitoUserPoolId"
-                            }
-                        }
-                    },
                     {
                         "AuthenticationType": "AWS_IAM"
                     }
@@ -136,8 +122,8 @@
                         "ApiId"
                     ]
                 },
-                "Description": "newAPI",
-                "Expires": 1714921921
+                "Description": "api key description",
+                "Expires": 1685988309
             }
         },
         "GraphQLAPINONEDS95A13CF0": {
@@ -1023,18 +1009,6 @@
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
                     },
-                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEGERENTEDataSource4D7C2A2EName": {
-                        "Fn::GetAtt": [
-                            "GERENTE",
-                            "Outputs.transformerrootstackGERENTEGERENTEDataSource4D7C2A2EName"
-                        ]
-                    },
-                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEGERENTETable0AB190DARef": {
-                        "Fn::GetAtt": [
-                            "GERENTE",
-                            "Outputs.transformerrootstackGERENTEGERENTETable0AB190DARef"
-                        ]
-                    },
                     "referencetotransformerrootstackClienteNestedStackClienteNestedStackResource8F30DB91OutputstransformerrootstackClienteClienteDataSourceC4527987Name": {
                         "Fn::GetAtt": [
                             "Cliente",
@@ -1059,16 +1033,16 @@
                             "Outputs.transformerrootstackVendedoresVendedoresTable385AE33DRef"
                         ]
                     },
-                    "referencetotransformerrootstackOPTICANestedStackOPTICANestedStackResource803BF2BDOutputstransformerrootstackOPTICAOPTICADataSourceDC2E6AFFName": {
+                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEGERENTEDataSource4D7C2A2EName": {
                         "Fn::GetAtt": [
-                            "OPTICA",
-                            "Outputs.transformerrootstackOPTICAOPTICADataSourceDC2E6AFFName"
+                            "GERENTE",
+                            "Outputs.transformerrootstackGERENTEGERENTEDataSource4D7C2A2EName"
                         ]
                     },
-                    "referencetotransformerrootstackOPTICANestedStackOPTICANestedStackResource803BF2BDOutputstransformerrootstackOPTICAOPTICATableA2BBDF52Ref": {
+                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEGERENTETable0AB190DARef": {
                         "Fn::GetAtt": [
-                            "OPTICA",
-                            "Outputs.transformerrootstackOPTICAOPTICATableA2BBDF52Ref"
+                            "GERENTE",
+                            "Outputs.transformerrootstackGERENTEGERENTETable0AB190DARef"
                         ]
                     }
                 }
@@ -1077,7 +1051,6 @@
                 "Cliente",
                 "GERENTE",
                 "GraphQLAPITransformerSchema3CB2AE18",
-                "OPTICA",
                 "Orden",
                 "Vendedores"
             ]

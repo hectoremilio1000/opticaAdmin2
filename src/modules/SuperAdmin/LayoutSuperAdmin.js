@@ -18,7 +18,6 @@ function LayoutSuperAdmin({ user, signOut }) {
   };
   const cambiarComponent = (e) => {
     setCurrent(e.key);
-    console.log(e.key);
   };
   return (
     <Layout>

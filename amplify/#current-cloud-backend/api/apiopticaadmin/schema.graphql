@@ -33,13 +33,12 @@ type GERENTE @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombres: String!
   userName: String!
-  laboratorioID: ID! @index(name: "byOPTICA")
   email: String
   phoneNumber: String
   confirmed: Boolean
   blocked: Boolean
   createdBy: String!
-  OPTICA: OPTICA @belongsTo(fields: ["laboratorioID"])
+  opticaID: ID! @index(name: "byOPTICA")
 }
 
 type Cliente @model @auth(rules: [{allow: public}]) {
@@ -65,9 +64,9 @@ type OPTICA @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombre: String!
   createdBy: String!
-  GERENTES: [GERENTE] @hasMany(indexName: "byOPTICA", fields: ["id"])
   Clientes: [Cliente] @hasMany(indexName: "byOPTICA", fields: ["id"])
   Ordens: [Orden] @hasMany(indexName: "byOPTICA", fields: ["id"])
   Vendedores: [Vendedores] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  GERENTES: [GERENTE] @hasMany(indexName: "byOPTICA", fields: ["id"])
 }
  

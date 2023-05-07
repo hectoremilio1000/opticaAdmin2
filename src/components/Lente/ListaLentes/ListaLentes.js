@@ -17,7 +17,7 @@ import { API, DataStore, graphqlOperation } from "aws-amplify";
 import * as mutations from "../../../graphql/mutations";
 import * as queries from "../../../graphql/queries";
 // import { useNavigate } from "react-router-dom";
-import {LENTE} from '../../../models'
+import { LENTE } from "../../../models";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -33,13 +33,14 @@ function ListaLentes() {
   const [tipoArmazon, setTipoArmazon] = useState("");
   const [imagen, setImagen] = useState("");
   const [tipoMaterial, setTipoMaterial] = useState("");
-  const [lenteResult, setLenteResult] = useState();
+  const [lenteResult, setLenteResult] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [filtergrupos, setFiltergrupos] = useState([]);
 
   // const navigate = useNavigate();
   const [lentes, setLentes] = useState([]);
   const searchGrupos = () => {
-    const grupos = [...new Set(lentes.map((lente) => lente.grupo))];
+    const grupos = [...new Set(lenteResult.map((lente) => lente.grupo))];
     const items = [];
     for (let index = 0; index < grupos.length; index++) {
       const grup = { text: grupos[index], value: grupos[index] };
@@ -199,38 +200,18 @@ function ListaLentes() {
   const fetchLente = async () => {
     const result = await DataStore.query(LENTE);
     setLenteResult(result);
-  }
+  };
 
   useEffect(() => {
     fetchLente();
-    
-  }, [id]);
-
-  console.log(lenteResult);
- 
+  }, []);
 
   const deletehandle = async () => {
     console.log(id);
-    
 
     try {
-      // console.log(lenteResult);
-      // const lenteDetail = {
-      //   id:id,
-      // };
-     
-
-   
-
-      // await DataStore.delete(result)
-      // console.log(result);
-      // await DataStore.delete(result);
-      // API.graphql({
-      //   query: mutations.deleteLENTE,
-      //   variables:{input:lenteDetail}
-      // }
-      
-      // console.log(result);
+      await DataStore.delete(LENTE, id);
+      fetchLente();
       message.success("El lente se ha eliminado correctamente");
     } catch (error) {
       console.log(error);
@@ -239,36 +220,30 @@ function ListaLentes() {
   };
 
   const onFinish = async () => {
-    // try {
-    //   const updateLentes = {
-    //     id,
-    //     grupo,
-    //     proveedor,
-    //     costo,
-    //     precioVenta,
-    //     tiempoEntrega,
-    //     color,
-    //     tipoArmazon,
-    //     imagen,
-    //     tipoMaterial,
-    //   };
-    //   console.log(updateLentes);
-    //   const result = await API.graphql(
-    //     graphqlOperation(mutations.updateLENTE, { input: updateLentes })
-    //   );
-    //   console.log(result);
-    //   message.success("El lente se ha actualizado");
-    //   fetchLentes();
-    //   setIsEditing(false);
-    // } catch (error) {
-    //   console.log(error);
-    //   message.error("Hubo un error contacta al administrador");
-    // }
-  };
+    try {
+      const original = await DataStore.query(LENTE, id);
+      console.log(original);
 
-  useEffect(() => {
-    fetchLentes();
-  }, []);
+      await DataStore.save(
+        LENTE.copyOf(original, (updated) => {
+          updated.grupo = grupo;
+          updated.proveedor = proveedor;
+          updated.costo = costo;
+          updated.precioVenta = precioVenta;
+          updated.tiempoEntrega = tiempoEntrega;
+          updated.color = color;
+          updated.tipoArmazon = tipoArmazon;
+          updated.imagen = imagen;
+          updated.tipoMaterial = tipoMaterial;
+        })
+      );
+      fetchLente();
+      setIsEditing(false);
+      message.success("El lente se ha actualizado");
+    } catch (error) {
+      message.error("Hubo un error contacta al administrador");
+    }
+  };
 
   return (
     <Content>
@@ -277,7 +252,7 @@ function ListaLentes() {
         <Table
           scroll={{ x: 400 }}
           rowKey={(record) => record.id}
-          dataSource={lentes}
+          dataSource={lenteResult}
           columns={columns}
           rowClassName="editable-row"
           // onRow={(lentes) => ({

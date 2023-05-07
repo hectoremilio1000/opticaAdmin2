@@ -6,7 +6,6 @@ import ListaLentes from "../../components/Lente/ListaLentes/ListaLentes";
 const { Content } = Layout;
 
 function ContentLayoutSuperAdmin({ current }) {
-  console.log(current);
   return (
     <Content style={{ padding: "30px" }}>
       {current === "10" ? (

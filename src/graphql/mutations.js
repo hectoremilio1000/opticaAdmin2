@@ -52,9 +52,9 @@ export const updateLENTE = /* GraphQL */ `
 export const deleteLENTE = /* GraphQL */ `
   mutation DeleteLENTE(
     $input: DeleteLENTEInput!
-    
+    $condition: ModelLENTEConditionInput
   ) {
-    deleteLENTE(input: $input) {
+    deleteLENTE(input: $input, condition: $condition) {
       id
       grupo
       proveedor
@@ -136,38 +136,12 @@ export const createGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -185,38 +159,12 @@ export const updateGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -234,38 +182,12 @@ export const deleteGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -448,26 +370,6 @@ export const createOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -507,6 +409,26 @@ export const createOPTICA = /* GraphQL */ `
         items {
           id
           nombres
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
           opticaID
           createdAt
           updatedAt
@@ -534,26 +456,6 @@ export const updateOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -593,6 +495,26 @@ export const updateOPTICA = /* GraphQL */ `
         items {
           id
           nombres
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
           opticaID
           createdAt
           updatedAt
@@ -620,26 +542,6 @@ export const deleteOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -679,6 +581,26 @@ export const deleteOPTICA = /* GraphQL */ `
         items {
           id
           nombres
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
           opticaID
           createdAt
           updatedAt

@@ -221,38 +221,12 @@ export const getGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -272,22 +246,12 @@ export const listGERENTES = /* GraphQL */ `
         id
         nombres
         userName
-        laboratorioID
         email
         phoneNumber
         confirmed
         blocked
         createdBy
-        OPTICA {
-          id
-          nombre
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
+        opticaID
         createdAt
         updatedAt
         _version
@@ -316,22 +280,12 @@ export const syncGERENTES = /* GraphQL */ `
         id
         nombres
         userName
-        laboratorioID
         email
         phoneNumber
         confirmed
         blocked
         createdBy
-        OPTICA {
-          id
-          nombre
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
+        opticaID
         createdAt
         updatedAt
         _version
@@ -343,16 +297,16 @@ export const syncGERENTES = /* GraphQL */ `
     }
   }
 `;
-export const gERENTESByLaboratorioID = /* GraphQL */ `
-  query GERENTESByLaboratorioID(
-    $laboratorioID: ID!
+export const gERENTESByOpticaID = /* GraphQL */ `
+  query GERENTESByOpticaID(
+    $opticaID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelGERENTEFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    gERENTESByLaboratorioID(
-      laboratorioID: $laboratorioID
+    gERENTESByOpticaID(
+      opticaID: $opticaID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -362,22 +316,12 @@ export const gERENTESByLaboratorioID = /* GraphQL */ `
         id
         nombres
         userName
-        laboratorioID
         email
         phoneNumber
         confirmed
         blocked
         createdBy
-        OPTICA {
-          id
-          nombre
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
+        opticaID
         createdAt
         updatedAt
         _version
@@ -634,26 +578,6 @@ export const getOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -703,6 +627,26 @@ export const getOPTICA = /* GraphQL */ `
         nextToken
         startedAt
       }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -722,10 +666,6 @@ export const listOPTICAS = /* GraphQL */ `
         id
         nombre
         createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
         Clientes {
           nextToken
           startedAt
@@ -735,6 +675,10 @@ export const listOPTICAS = /* GraphQL */ `
           startedAt
         }
         Vendedores {
+          nextToken
+          startedAt
+        }
+        GERENTES {
           nextToken
           startedAt
         }
@@ -766,10 +710,6 @@ export const syncOPTICAS = /* GraphQL */ `
         id
         nombre
         createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
         Clientes {
           nextToken
           startedAt
@@ -779,6 +719,10 @@ export const syncOPTICAS = /* GraphQL */ `
           startedAt
         }
         Vendedores {
+          nextToken
+          startedAt
+        }
+        GERENTES {
           nextToken
           startedAt
         }

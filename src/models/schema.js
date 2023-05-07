@@ -234,13 +234,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "laboratorioID": {
-                    "name": "laboratorioID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
                 "email": {
                     "name": "email",
                     "isArray": false,
@@ -276,20 +269,12 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "OPTICA": {
-                    "name": "OPTICA",
+                "opticaID": {
+                    "name": "opticaID",
                     "isArray": false,
-                    "type": {
-                        "model": "OPTICA"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetNames": [
-                            "laboratorioID"
-                        ]
-                    }
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -320,7 +305,7 @@ export const schema = {
                     "properties": {
                         "name": "byOPTICA",
                         "fields": [
-                            "laboratorioID"
+                            "opticaID"
                         ]
                     }
                 },
@@ -574,22 +559,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "GERENTES": {
-                    "name": "GERENTES",
-                    "isArray": true,
-                    "type": {
-                        "model": "GERENTE"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "OPTICA"
-                        ]
-                    }
-                },
                 "Clientes": {
                     "name": "Clientes",
                     "isArray": true,
@@ -627,6 +596,22 @@ export const schema = {
                     "isArray": true,
                     "type": {
                         "model": "Vendedores"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "GERENTES": {
+                    "name": "GERENTES",
+                    "isArray": true,
+                    "type": {
+                        "model": "GERENTE"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -700,5 +685,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "2863a219249b1dd4c9ca7ad0b9783b2d"
+    "version": "c983f16768b216a297c1b1c33492dfac"
 };

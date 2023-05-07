@@ -115,38 +115,12 @@ export const onCreateGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -161,38 +135,12 @@ export const onUpdateGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -207,38 +155,12 @@ export const onDeleteGERENTE = /* GraphQL */ `
       id
       nombres
       userName
-      laboratorioID
       email
       phoneNumber
       confirmed
       blocked
       createdBy
-      OPTICA {
-        id
-        nombre
-        createdBy
-        GERENTES {
-          nextToken
-          startedAt
-        }
-        Clientes {
-          nextToken
-          startedAt
-        }
-        Ordens {
-          nextToken
-          startedAt
-        }
-        Vendedores {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
+      opticaID
       createdAt
       updatedAt
       _version
@@ -406,26 +328,6 @@ export const onCreateOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -465,6 +367,26 @@ export const onCreateOPTICA = /* GraphQL */ `
         items {
           id
           nombres
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
           opticaID
           createdAt
           updatedAt
@@ -489,26 +411,6 @@ export const onUpdateOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -548,6 +450,26 @@ export const onUpdateOPTICA = /* GraphQL */ `
         items {
           id
           nombres
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
           opticaID
           createdAt
           updatedAt
@@ -572,26 +494,6 @@ export const onDeleteOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      GERENTES {
-        items {
-          id
-          nombres
-          userName
-          laboratorioID
-          email
-          phoneNumber
-          confirmed
-          blocked
-          createdBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
       Clientes {
         items {
           id
@@ -631,6 +533,26 @@ export const onDeleteOPTICA = /* GraphQL */ `
         items {
           id
           nombres
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GERENTES {
+        items {
+          id
+          nombres
+          userName
+          email
+          phoneNumber
+          confirmed
+          blocked
+          createdBy
           opticaID
           createdAt
           updatedAt

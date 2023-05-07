@@ -2,11 +2,5 @@
   "AppSyncApiName": "apiopticaadmin",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-05-06T15:11:39.583Z",
-  "AuthCognitoUserPoolId": {
-    "Fn::GetAtt": [
-      "authopticaadmind48f139d",
-      "Outputs.UserPoolId"
-    ]
-  }
+  "AuthModeLastUpdated": "2023-05-06T18:05:00.281Z"
 }

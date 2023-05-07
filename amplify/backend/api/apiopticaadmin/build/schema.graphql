@@ -44,13 +44,12 @@ type GERENTE @aws_iam @aws_api_key {
   id: ID!
   nombres: String!
   userName: String!
-  laboratorioID: ID!
   email: String
   phoneNumber: String
   confirmed: Boolean
   blocked: Boolean
   createdBy: String!
-  OPTICA: OPTICA
+  opticaID: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -91,10 +90,10 @@ type OPTICA @aws_iam @aws_api_key {
   id: ID!
   nombre: String!
   createdBy: String!
-  GERENTES(filter: ModelGERENTEFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGERENTEConnection
   Clientes(filter: ModelClienteFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelClienteConnection
   Ordens(filter: ModelOrdenFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrdenConnection
   Vendedores(filter: ModelVendedoresFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelVendedoresConnection
+  GERENTES(filter: ModelGERENTEFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGERENTEConnection
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -291,7 +290,7 @@ type Query {
   getGERENTE(id: ID!): GERENTE @aws_api_key @aws_iam
   listGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
   syncGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGERENTEConnection @aws_api_key @aws_iam
-  gERENTESByLaboratorioID(laboratorioID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
+  gERENTESByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
   getCliente(id: ID!): Cliente @aws_api_key @aws_iam
   listClientes(filter: ModelClienteFilterInput, limit: Int, nextToken: String): ModelClienteConnection @aws_api_key @aws_iam
   syncClientes(filter: ModelClienteFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelClienteConnection @aws_api_key @aws_iam
@@ -480,12 +479,12 @@ input ModelGERENTEFilterInput {
   id: ModelIDInput
   nombres: ModelStringInput
   userName: ModelStringInput
-  laboratorioID: ModelIDInput
   email: ModelStringInput
   phoneNumber: ModelStringInput
   confirmed: ModelBooleanInput
   blocked: ModelBooleanInput
   createdBy: ModelStringInput
+  opticaID: ModelIDInput
   and: [ModelGERENTEFilterInput]
   or: [ModelGERENTEFilterInput]
   not: ModelGERENTEFilterInput
@@ -494,12 +493,12 @@ input ModelGERENTEFilterInput {
 input ModelGERENTEConditionInput {
   nombres: ModelStringInput
   userName: ModelStringInput
-  laboratorioID: ModelIDInput
   email: ModelStringInput
   phoneNumber: ModelStringInput
   confirmed: ModelBooleanInput
   blocked: ModelBooleanInput
   createdBy: ModelStringInput
+  opticaID: ModelIDInput
   and: [ModelGERENTEConditionInput]
   or: [ModelGERENTEConditionInput]
   not: ModelGERENTEConditionInput
@@ -509,12 +508,12 @@ input CreateGERENTEInput {
   id: ID
   nombres: String!
   userName: String!
-  laboratorioID: ID!
   email: String
   phoneNumber: String
   confirmed: Boolean
   blocked: Boolean
   createdBy: String!
+  opticaID: ID!
   _version: Int
 }
 
@@ -522,12 +521,12 @@ input UpdateGERENTEInput {
   id: ID!
   nombres: String
   userName: String
-  laboratorioID: ID
   email: String
   phoneNumber: String
   confirmed: Boolean
   blocked: Boolean
   createdBy: String
+  opticaID: ID
   _version: Int
 }
 
@@ -540,12 +539,12 @@ input ModelSubscriptionGERENTEFilterInput {
   id: ModelSubscriptionIDInput
   nombres: ModelSubscriptionStringInput
   userName: ModelSubscriptionStringInput
-  laboratorioID: ModelSubscriptionIDInput
   email: ModelSubscriptionStringInput
   phoneNumber: ModelSubscriptionStringInput
   confirmed: ModelSubscriptionBooleanInput
   blocked: ModelSubscriptionBooleanInput
   createdBy: ModelSubscriptionStringInput
+  opticaID: ModelSubscriptionIDInput
   and: [ModelSubscriptionGERENTEFilterInput]
   or: [ModelSubscriptionGERENTEFilterInput]
 }

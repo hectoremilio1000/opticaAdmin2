@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncItem, AsyncCollection } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/datastore";
 
 export enum Enumgrupo {
   DAMA = "DAMA",
@@ -99,13 +99,12 @@ type EagerGERENTE = {
   readonly id: string;
   readonly nombres: string;
   readonly userName: string;
-  readonly laboratorioID: string;
   readonly email?: string | null;
   readonly phoneNumber?: string | null;
   readonly confirmed?: boolean | null;
   readonly blocked?: boolean | null;
   readonly createdBy: string;
-  readonly OPTICA?: OPTICA | null;
+  readonly opticaID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -118,13 +117,12 @@ type LazyGERENTE = {
   readonly id: string;
   readonly nombres: string;
   readonly userName: string;
-  readonly laboratorioID: string;
   readonly email?: string | null;
   readonly phoneNumber?: string | null;
   readonly confirmed?: boolean | null;
   readonly blocked?: boolean | null;
   readonly createdBy: string;
-  readonly OPTICA: AsyncItem<OPTICA | undefined>;
+  readonly opticaID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -217,10 +215,10 @@ type EagerOPTICA = {
   readonly id: string;
   readonly nombre: string;
   readonly createdBy: string;
-  readonly GERENTES?: (GERENTE | null)[] | null;
   readonly Clientes?: (Cliente | null)[] | null;
   readonly Ordens?: (Orden | null)[] | null;
   readonly Vendedores?: (Vendedores | null)[] | null;
+  readonly GERENTES?: (GERENTE | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -233,10 +231,10 @@ type LazyOPTICA = {
   readonly id: string;
   readonly nombre: string;
   readonly createdBy: string;
-  readonly GERENTES: AsyncCollection<GERENTE>;
   readonly Clientes: AsyncCollection<Cliente>;
   readonly Ordens: AsyncCollection<Orden>;
   readonly Vendedores: AsyncCollection<Vendedores>;
+  readonly GERENTES: AsyncCollection<GERENTE>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
