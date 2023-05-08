@@ -1,14 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Button, Form, Input, Select, message } from "antd";
 // import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 // import type { FormInstance } from "antd/es/form";
 
 // amplify API
-import { API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation, Storage, DataStore } from "aws-amplify";
 import * as mutations from "../../../graphql/mutations";
 import { MenuContext } from "../../../contexts/MenuContext";
 import { v4 as uuidv4 } from "uuid";
 import config from "../../../aws-exports";
+import { INVENTARIO, OPTICA } from "../../../models";
 
 const {
   aws_user_files_s3_bucket_region: region,
@@ -17,59 +18,73 @@ const {
 
 const { Option } = Select;
 
-function CrearLente() {
+function CrearInventario() {
   // usesate url y key
 
   const { cambiarComponent } = useContext(MenuContext);
+  const [nombreProducto, setNombreProducto] = useState("");
+  const [categoria, setCategoria] = useState("");
   const [proveedor, setProveedor] = useState("");
   const [costo, setCosto] = useState(0);
   const [precioVenta, setPrecioVenta] = useState(0);
-  const [tiempoEntrega, setTiempoEntrega] = useState("");
   const [color, setColor] = useState("");
-  const [tipoArmazon, setTipoArmazon] = useState("");
-  const [imagen, setImagen] = useState("");
+  const [tipoEstructura, setTipoEstructura] = useState("");
+  const [urlImagen, setUrlImagen] = useState("");
   const [tipoMaterial, setTipoMaterial] = useState("");
+  const [opticaID, setOpticaID] = useState("");
+  const [opticas, setOpticas] = useState([]);
 
   // const onChange = (value: number | string) => {
   //   console.log("changed", value);
   // };
-  const onFinish = async (values) => {
-    const { grupo } = values;
-    console.log(grupo);
+  const searchOpticas = async () => {
+    try {
+      const result = await DataStore.query(OPTICA);
+      setOpticas(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    searchOpticas();
+  }, []);
+
+  const onFinish = async () => {
     console.log(
+      opticaID,
+      categoria,
+      nombreProducto,
       proveedor,
       costo,
       precioVenta,
-      tiempoEntrega,
       color,
-      tipoArmazon,
-      imagen,
+      tipoEstructura,
+      urlImagen,
       tipoMaterial
     );
     try {
-      const newLente = {
-        grupo,
-        proveedor,
-        costo,
-        precioVenta,
-        tiempoEntrega,
-        color,
-        tipoArmazon,
-        imagen,
-        tipoMaterial,
-      };
-      await API.graphql(
-        graphqlOperation(mutations.createINVENTARIO, { input: newLente })
+      const result = await DataStore.save(
+        new INVENTARIO({
+          opticaID,
+          categoria,
+          nombreProducto,
+          proveedor,
+          costo,
+          precioVenta,
+          color,
+          tipoEstructura,
+          urlImagen,
+          tipoMaterial,
+        })
       );
+      console.log(result);
       message.success("El lente se ha creado");
-      cambiarComponent({ key: "11" });
+      //   cambiarComponent({ key: "11" });
     } catch (error) {
+      console.log(error);
       message.error("Hubo un error contacta al administrador");
     }
   };
-  // const handleImage = (e) => {
-  //   console.log(e.file);
-  // };
   const handleImage = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -85,19 +100,18 @@ function CrearLente() {
         contentType: file.type,
       });
       // const image1 = await Storage.get(keys, { level: "public" });
-      setImagen(urls);
+      setUrlImagen(urls);
       console.log("archivo guardado");
-      message.success("imagen 1 cargada exitósamente");
+      message.success("Imagen cargada exitósamente");
     } catch (error) {
       console.log(error);
       message.error("No se subió correctamente, contacta al administrador");
     }
   };
-  console.log(imagen);
   return (
     <div>
-      <h1>CREAR LENTES</h1>
-      <Form onFinish={onFinish} layout="vertical" name="crearLente">
+      <h1>CREAR PRODUCTO</h1>
+      <Form layout="vertical" name="crearLente">
         <div
           style={{
             display: "grid",
@@ -106,24 +120,54 @@ function CrearLente() {
           }}
         >
           <Form.Item
-            label="Grupo"
-            name="grupo"
+            label="Nombre Producto"
             rules={[{ required: true, message: "Este campo es requerido" }]}
           >
-            <Select placeholder="Select un grupo DAMA/CABALERO/BOY">
+            <Input
+              value={nombreProducto}
+              onChange={(e) => setNombreProducto(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Categoria"
+            rules={[{ required: true, message: "Este campo es requerido" }]}
+          >
+            <Select
+              //   defaultValue={categoria}
+              onSelect={(e) => setCategoria(e)}
+              placeholder="Select una Categoria"
+            >
               <Option value="DAMA">DAMA</Option>
               <Option value="CABALLERO">CABALLERO</Option>
               <Option value="BOY">BOY</Option>
             </Select>
           </Form.Item>
           <Form.Item
-            value={proveedor}
-            onChange={(e) => setProveedor(e.target.value)}
-            label="Proveedor"
-            name="proveedor"
+            label="Optica"
             rules={[{ required: true, message: "Este campo es requerido" }]}
           >
-            <Input />
+            <Select
+              //   defaultValue={categoria}
+              onSelect={(e) => setOpticaID(e)}
+              placeholder="Select una Optica"
+            >
+              {opticas.map((optica) => {
+                return (
+                  <Option key={optica.id} value={optica.id}>
+                    {optica.nombre}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Proveedor"
+            rules={[{ required: true, message: "Este campo es requerido" }]}
+          >
+            <Input
+              value={proveedor}
+              onChange={(e) => setProveedor(e.target.value)}
+            />
           </Form.Item>
 
           <Form.Item
@@ -137,7 +181,7 @@ function CrearLente() {
                 if (e.target.value === "") {
                   setCosto(0);
                 } else {
-                  setCosto(e.target.value);
+                  setCosto(Number(e.target.value));
                 }
               }}
             />
@@ -153,25 +197,10 @@ function CrearLente() {
                 if (e.target.value === "") {
                   setPrecioVenta(0);
                 } else {
-                  setPrecioVenta(e.target.value);
+                  setPrecioVenta(Number(e.target.value));
                 }
               }}
               style={{ width: "100%" }}
-              // formatter={(value) =>
-              //   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              // }
-              // parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-              // onChange={onChange}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Tiempo Entrega"
-            name="tiempoEntrega"
-            // rules={[{ required: true, message: "Este campo es requerido" }]}
-          >
-            <Input
-              value={tiempoEntrega}
-              onChange={(e) => setTiempoEntrega(e.target.value)}
             />
           </Form.Item>
           <Form.Item
@@ -182,18 +211,18 @@ function CrearLente() {
             <Input value={color} onChange={(e) => setColor(e.target.value)} />
           </Form.Item>
           <Form.Item
-            label="Tipo Armazon"
-            name="tipoArmazon"
+            label="Tipo Estructura"
+            name="tipoEstructura"
             // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
-              value={tipoArmazon}
-              onChange={(e) => setTipoArmazon(e.target.value)}
+              value={tipoEstructura}
+              onChange={(e) => setTipoEstructura(e.target.value)}
             />
           </Form.Item>
           <Form.Item
             label="Imagen"
-            name="imagen"
+            name="urlImagen"
             // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input type="file" accept="jpg" onChange={(e) => handleImage(e)} />
@@ -220,7 +249,12 @@ function CrearLente() {
           </Form.Item>
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button title="Save" htmlType="submit" type="primary">
+          <Button
+            onClick={onFinish}
+            title="Save"
+            htmlType="submit"
+            type="primary"
+          >
             Guardar
           </Button>
         </div>
@@ -229,4 +263,4 @@ function CrearLente() {
   );
 }
 
-export default CrearLente;
+export default CrearInventario;
