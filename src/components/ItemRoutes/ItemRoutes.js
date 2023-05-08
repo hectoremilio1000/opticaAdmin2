@@ -17,9 +17,9 @@ function getItem(label, key, icon, children, type) {
 }
 
 const ItemsRoutes = [
-  getItem("Lentes", "sub6", <AppstoreOutlined />, [
-    getItem("Crear Lente", "10", <PlusCircleOutlined />),
-    getItem("Lista Lentes", "11", <EyeOutlined />),
+  getItem("Inventario", "sub6", <AppstoreOutlined />, [
+    getItem("Crear Producto", "10", <PlusCircleOutlined />),
+    getItem("Lista Productos", "11", <EyeOutlined />),
   ]),
   getItem("Optica", "sub7", <AppstoreOutlined />, [
     getItem("Crear Optica", "12", <PlusCircleOutlined />),

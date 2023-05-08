@@ -1,9 +1,9 @@
 import React from "react";
 import { Layout } from "antd";
-import CrearLente from "../../components/Lente/CrearLente/CrearLente";
-import ListaLentes from "../../components/Lente/ListaLentes/ListaLentes";
 import CrearOptica from "../../components/Optica/CrearOptica/CrearOptica";
 import ListaOptica from "../../components/Optica/ListaOpticas/ListaOptica";
+import CrearInventario from "../../components/Inventario/CrearInventario/CrearInventario";
+import ListaInventario from "../../components/Inventario/LIstaInventario/ListaInventario";
 
 const { Content } = Layout;
 
@@ -12,11 +12,11 @@ function ContentLayoutSuperAdmin({ current }) {
     <Content style={{ padding: "30px" }}>
       {current === "10" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
-          <CrearLente />
+          <CrearInventario />
         </div>
       ) : current === "11" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
-          <ListaLentes />
+          <ListaInventario />
         </div>
       ) : current === "12" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>

@@ -17,42 +17,50 @@ import { API, DataStore, graphqlOperation } from "aws-amplify";
 import * as mutations from "../../../graphql/mutations";
 import * as queries from "../../../graphql/queries";
 // import { useNavigate } from "react-router-dom";
-import { INVENTARIO } from "../../../models";
+import { INVENTARIO, OPTICA } from "../../../models";
 
 const { Content } = Layout;
 const { Option } = Select;
-function ListaLentes() {
+function ListaInventario() {
   // use state de form modal
-  const [grupo, setGrupo] = useState("");
+  const [categoria, setCategoria] = useState("");
   const [id, setId] = useState("");
+  const [nombreProducto, setNombreProducto] = useState("");
   const [proveedor, setProveedor] = useState("");
   const [costo, setCosto] = useState(0);
   const [precioVenta, setPrecioVenta] = useState(0);
   const [tiempoEntrega, setTiempoEntrega] = useState("");
   const [color, setColor] = useState("");
-  const [tipoArmazon, setTipoArmazon] = useState("");
-  const [imagen, setImagen] = useState("");
+  const [tipoEstructura, settipoEstructura] = useState("");
+  const [urlImagen, setUrlImagen] = useState("");
   const [tipoMaterial, setTipoMaterial] = useState("");
-  const [lenteResult, setLenteResult] = useState([]);
+  const [inventario, setInventario] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [filtergrupos, setFiltergrupos] = useState([]);
+  const [opticaID, setOpticaID] = useState("");
+  const [filtercategorias, setFiltercategorias] = useState([]);
+  const [opticas, setOpticas] = useState([]);
 
   // const navigate = useNavigate();
   const [lentes, setLentes] = useState([]);
-  const searchGrupos = () => {
-    const grupos = [...new Set(lenteResult.map((lente) => lente.grupo))];
+  const searchcategorias = () => {
+    const categorias = [...new Set(inventario.map((inv) => inv.categoria))];
     const items = [];
-    for (let index = 0; index < grupos.length; index++) {
-      const grup = { text: grupos[index], value: grupos[index] };
-      items.push(grup);
+    for (let index = 0; index < categorias.length; index++) {
+      const cat = { text: categorias[index], value: categorias[index] };
+      items.push(cat);
     }
     return items;
   };
   const columns = [
     {
-      title: "Grupo",
-      key: "grupo",
-      dataIndex: "grupo",
+      title: "Nombre",
+      dataIndex: "nombreProducto",
+      key: "nombreProducto",
+    },
+    {
+      title: "Categoria",
+      key: "categoria",
+      dataIndex: "categoria",
       render: (text, record) => {
         let color = "";
         if (text === "DAMA") {
@@ -66,10 +74,10 @@ function ListaLentes() {
         }
         return <Tag color={color}>{text}</Tag>;
       },
-      filters: searchGrupos(),
+      filters: searchcategorias(),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.grupo.startsWith(value),
+      onFilter: (value, record) => record.categoria.startsWith(value),
     },
     {
       title: "Proveedor",
@@ -87,25 +95,20 @@ function ListaLentes() {
       key: "precioVenta",
     },
     {
-      title: "Tiempo Entrega",
-      dataIndex: "tiempoEntrega",
-      key: "tiempoEntrega",
-    },
-    {
       title: "Color",
       dataIndex: "color",
       key: "color",
     },
     {
-      title: "Tipo Armazon",
-      dataIndex: "tipoArmazon",
-      key: "tipoArmazon",
+      title: "Tipo Estructura",
+      dataIndex: "tipoEstructura",
+      key: "tipoEstructura",
     },
     {
       title: "Imagen",
-      dataIndex: "imagen",
-      key: "imagen",
-      render: (imagen) => {
+      dataIndex: "urlImagen",
+      key: "urlImagen",
+      render: (urlImagen) => {
         // const extension = imagen.split("/");
         // const key = "images/" + extension[extension.length - 1];
         // console.log(key);
@@ -120,7 +123,7 @@ function ListaLentes() {
               objectPosition: "center",
               overflow: "hidden",
             }}
-            src={imagen}
+            src={urlImagen}
             alt="iamgen prueba"
           />
         );
@@ -161,49 +164,44 @@ function ListaLentes() {
       },
     },
   ];
-
-  const fetchLentes = async () => {
-    const lentes = await API.graphql(graphqlOperation(queries.listINVENTARIOS));
-    const items = lentes?.data?.listLENTES?.items;
-    setLentes(
-      items.sort(function (a, b) {
-        if (a.proveedor > b.proveedor) {
-          return 1;
-        }
-        if (a.proveedor < b.proveedor) {
-          return -1;
-        }
-        // a must be equal to b
-        return 0;
-      })
-    );
+  const searchOpticas = async () => {
+    try {
+      const result = await DataStore.query(OPTICA);
+      setOpticas(result);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  useEffect(() => {
+    searchOpticas();
+  }, []);
 
   const edithandle = (record) => {
     setId(record?.id);
-    setGrupo(record?.grupo);
+    setOpticaID(record.opticaID);
+    setNombreProducto(record?.nombreProducto);
+    setCategoria(record?.categoria);
     setProveedor(record?.proveedor);
     setCosto(record?.costo);
     setPrecioVenta(record?.precioVenta);
-    setTiempoEntrega(record?.tiempoEntrega);
     setColor(record?.color);
-    setTipoArmazon(record?.tipoArmazon);
+    settipoEstructura(record?.tipoEstructura);
     setTipoMaterial(record?.tipoMaterial);
     setIsEditing(true);
-    setImagen(record?.imagen);
+    setUrlImagen(record?.urlImagen);
   };
 
   const changeDelete = (record) => {
     setId(record?.id);
   };
 
-  const fetchLente = async () => {
+  const fetchInventario = async () => {
     const result = await DataStore.query(INVENTARIO);
-    setLenteResult(result);
+    setInventario(result);
   };
 
   useEffect(() => {
-    fetchLente();
+    fetchInventario();
   }, []);
 
   const deletehandle = async () => {
@@ -211,7 +209,7 @@ function ListaLentes() {
 
     try {
       await DataStore.delete(INVENTARIO, id);
-      fetchLente();
+      fetchInventario();
       message.success("El lente se ha eliminado correctamente");
     } catch (error) {
       console.log(error);
@@ -226,20 +224,21 @@ function ListaLentes() {
 
       await DataStore.save(
         INVENTARIO.copyOf(original, (updated) => {
-          updated.grupo = grupo;
+          updated.categoria = categoria;
           updated.proveedor = proveedor;
           updated.costo = costo;
           updated.precioVenta = precioVenta;
-          updated.tiempoEntrega = tiempoEntrega;
+          updated.nombreProducto = nombreProducto;
           updated.color = color;
-          updated.tipoArmazon = tipoArmazon;
-          updated.imagen = imagen;
+          updated.tipoEstructura = tipoEstructura;
+          updated.urlImagen = urlImagen;
           updated.tipoMaterial = tipoMaterial;
+          updated.opticaID = opticaID;
         })
       );
-      fetchLente();
+      fetchInventario();
       setIsEditing(false);
-      message.success("El lente se ha actualizado");
+      message.success("El producto se ha actualizado");
     } catch (error) {
       message.error("Hubo un error contacta al administrador");
     }
@@ -248,11 +247,11 @@ function ListaLentes() {
   return (
     <Content>
       <div>
-        <p>NUESTOS LENTES</p>
+        <h1>NUESTROS PRODUCTOS</h1>
         <Table
           scroll={{ x: 400 }}
           rowKey={(record) => record.id}
-          dataSource={lenteResult}
+          dataSource={inventario}
           columns={columns}
           rowClassName="editable-row"
           // onRow={(lentes) => ({
@@ -276,17 +275,44 @@ function ListaLentes() {
               }}
             >
               <Form.Item
-                label="Grupo"
+                label="Nombre"
+                rules={[{ required: true, message: "Este campo es requerido" }]}
+              >
+                <Input
+                  value={nombreProducto}
+                  onChange={(e) => setNombreProducto(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Categoria"
                 rules={[{ required: true, message: "Este campo es requerido" }]}
               >
                 <Select
-                  defaultValue={grupo}
-                  onSelect={(e) => setGrupo(e)}
-                  placeholder="Select un grupo DAMA/CABALERO/BOY"
+                  defaultValue={categoria}
+                  onSelect={(e) => setCategoria(e)}
+                  placeholder="Select un categoria DAMA/CABALERO/BOY"
                 >
                   <Option value="DAMA">DAMA</Option>
                   <Option value="CABALLERO">CABALLERO</Option>
                   <Option value="BOY">BOY</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Optica"
+                rules={[{ required: true, message: "Este campo es requerido" }]}
+              >
+                <Select
+                  defaultValue={opticaID}
+                  onSelect={(e) => setOpticaID(e)}
+                  placeholder="Select una Optica"
+                >
+                  {opticas.map((optica) => {
+                    return (
+                      <Option key={optica.id} value={optica.id}>
+                        {optica.nombre}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </Form.Item>
               <Form.Item
@@ -336,16 +362,6 @@ function ListaLentes() {
                 />
               </Form.Item>
               <Form.Item
-                label="Tiempo Entrega"
-
-                // rules={[{ required: true, message: "Este campo es requerido" }]}
-              >
-                <Input
-                  value={tiempoEntrega}
-                  onChange={(e) => setTiempoEntrega(e.target.value)}
-                />
-              </Form.Item>
-              <Form.Item
                 label="Color"
                 // rules={[{ required: true, message: "Este campo es requerido" }]}
               >
@@ -360,8 +376,8 @@ function ListaLentes() {
                 // rules={[{ required: true, message: "Este campo es requerido" }]}
               >
                 <Input
-                  value={tipoArmazon}
-                  onChange={(e) => setTipoArmazon(e.target.value)}
+                  value={tipoEstructura}
+                  onChange={(e) => settipoEstructura(e.target.value)}
                 />
               </Form.Item>
               <Form.Item
@@ -400,4 +416,4 @@ function ListaLentes() {
   );
 }
 
-export default ListaLentes;
+export default ListaInventario;
