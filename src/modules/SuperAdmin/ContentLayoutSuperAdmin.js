@@ -3,6 +3,7 @@ import { Layout } from "antd";
 import CrearLente from "../../components/Lente/CrearLente/CrearLente";
 import ListaLentes from "../../components/Lente/ListaLentes/ListaLentes";
 import CrearOptica from "../../components/Optica/CrearOptica/CrearOptica";
+import ListaOptica from "../../components/Optica/ListaOpticas/ListaOptica";
 
 const { Content } = Layout;
 
@@ -20,6 +21,10 @@ function ContentLayoutSuperAdmin({ current }) {
       ) : current === "12" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
           <CrearOptica />
+        </div>
+      ) : current === "13" ? (
+        <div className="site-layout-background" style={{ minHeight: 100 }}>
+          <ListaOptica />
         </div>
       ) : (
         <div style={{}}>Aun no se ha creado las demas rutas</div>
