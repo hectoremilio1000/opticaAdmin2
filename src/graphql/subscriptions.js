@@ -1,19 +1,16 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateLENTE = /* GraphQL */ `
-  subscription OnCreateLENTE($filter: ModelSubscriptionLENTEFilterInput) {
-    onCreateLENTE(filter: $filter) {
+export const onCreateINVENTARIOORDENITEMS = /* GraphQL */ `
+  subscription OnCreateINVENTARIOORDENITEMS(
+    $filter: ModelSubscriptionINVENTARIOORDENITEMSFilterInput
+  ) {
+    onCreateINVENTARIOORDENITEMS(filter: $filter) {
       id
-      grupo
-      proveedor
+      cantidad
       costo
-      precioVenta
-      tiempoEntrega
-      color
-      tipoArmazon
-      imagen
-      tipoMaterial
+      inventarioID
+      ordenID
       createdAt
       updatedAt
       _version
@@ -22,19 +19,16 @@ export const onCreateLENTE = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateLENTE = /* GraphQL */ `
-  subscription OnUpdateLENTE($filter: ModelSubscriptionLENTEFilterInput) {
-    onUpdateLENTE(filter: $filter) {
+export const onUpdateINVENTARIOORDENITEMS = /* GraphQL */ `
+  subscription OnUpdateINVENTARIOORDENITEMS(
+    $filter: ModelSubscriptionINVENTARIOORDENITEMSFilterInput
+  ) {
+    onUpdateINVENTARIOORDENITEMS(filter: $filter) {
       id
-      grupo
-      proveedor
+      cantidad
       costo
-      precioVenta
-      tiempoEntrega
-      color
-      tipoArmazon
-      imagen
-      tipoMaterial
+      inventarioID
+      ordenID
       createdAt
       updatedAt
       _version
@@ -43,64 +37,16 @@ export const onUpdateLENTE = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteLENTE = /* GraphQL */ `
-  subscription OnDeleteLENTE($filter: ModelSubscriptionLENTEFilterInput) {
-    onDeleteLENTE(filter: $filter) {
+export const onDeleteINVENTARIOORDENITEMS = /* GraphQL */ `
+  subscription OnDeleteINVENTARIOORDENITEMS(
+    $filter: ModelSubscriptionINVENTARIOORDENITEMSFilterInput
+  ) {
+    onDeleteINVENTARIOORDENITEMS(filter: $filter) {
       id
-      grupo
-      proveedor
+      cantidad
       costo
-      precioVenta
-      tiempoEntrega
-      color
-      tipoArmazon
-      imagen
-      tipoMaterial
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onCreateOrden = /* GraphQL */ `
-  subscription OnCreateOrden($filter: ModelSubscriptionOrdenFilterInput) {
-    onCreateOrden(filter: $filter) {
-      id
-      opticaID
-      tipo
-      clienteID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onUpdateOrden = /* GraphQL */ `
-  subscription OnUpdateOrden($filter: ModelSubscriptionOrdenFilterInput) {
-    onUpdateOrden(filter: $filter) {
-      id
-      opticaID
-      tipo
-      clienteID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onDeleteOrden = /* GraphQL */ `
-  subscription OnDeleteOrden($filter: ModelSubscriptionOrdenFilterInput) {
-    onDeleteOrden(filter: $filter) {
-      id
-      opticaID
-      tipo
-      clienteID
+      inventarioID
+      ordenID
       createdAt
       updatedAt
       _version
@@ -169,24 +115,350 @@ export const onDeleteGERENTE = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCliente = /* GraphQL */ `
-  subscription OnCreateCliente($filter: ModelSubscriptionClienteFilterInput) {
-    onCreateCliente(filter: $filter) {
+export const onCreateVENDEDORES = /* GraphQL */ `
+  subscription OnCreateVENDEDORES(
+    $filter: ModelSubscriptionVENDEDORESFilterInput
+  ) {
+    onCreateVENDEDORES(filter: $filter) {
       id
       nombres
       apellidoPaterno
       apellidoMaterno
       whats
       email
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateVENDEDORES = /* GraphQL */ `
+  subscription OnUpdateVENDEDORES(
+    $filter: ModelSubscriptionVENDEDORESFilterInput
+  ) {
+    onUpdateVENDEDORES(filter: $filter) {
+      id
+      nombres
+      apellidoPaterno
+      apellidoMaterno
+      whats
+      email
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteVENDEDORES = /* GraphQL */ `
+  subscription OnDeleteVENDEDORES(
+    $filter: ModelSubscriptionVENDEDORESFilterInput
+  ) {
+    onDeleteVENDEDORES(filter: $filter) {
+      id
+      nombres
+      apellidoPaterno
+      apellidoMaterno
+      whats
+      email
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onCreateINVENTARIO = /* GraphQL */ `
+  subscription OnCreateINVENTARIO(
+    $filter: ModelSubscriptionINVENTARIOFilterInput
+  ) {
+    onCreateINVENTARIO(filter: $filter) {
+      id
+      nombreProducto
+      proveedor
+      costo
+      precioVenta
+      color
+      tipoEstructura
+      urlImagen
+      tipoMaterial
+      categoria
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateINVENTARIO = /* GraphQL */ `
+  subscription OnUpdateINVENTARIO(
+    $filter: ModelSubscriptionINVENTARIOFilterInput
+  ) {
+    onUpdateINVENTARIO(filter: $filter) {
+      id
+      nombreProducto
+      proveedor
+      costo
+      precioVenta
+      color
+      tipoEstructura
+      urlImagen
+      tipoMaterial
+      categoria
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteINVENTARIO = /* GraphQL */ `
+  subscription OnDeleteINVENTARIO(
+    $filter: ModelSubscriptionINVENTARIOFilterInput
+  ) {
+    onDeleteINVENTARIO(filter: $filter) {
+      id
+      nombreProducto
+      proveedor
+      costo
+      precioVenta
+      color
+      tipoEstructura
+      urlImagen
+      tipoMaterial
+      categoria
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onCreateORDEN = /* GraphQL */ `
+  subscription OnCreateORDEN($filter: ModelSubscriptionORDENFilterInput) {
+    onCreateORDEN(filter: $filter) {
+      id
+      opticaID
+      tipoOrden
+      clientesID
+      usadoLentes
+      fechaOrden
+      horaOrden
+      precioTotal
+      referencia
+      fechaEntrega
+      seRealizoExamen
+      graduacionDerechaVieja
+      graduacionIzquierdaVieja
+      graduacionDerechaNueva
+      graduacionIzquierdaNueva
+      fechaExamen
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ordenStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateORDEN = /* GraphQL */ `
+  subscription OnUpdateORDEN($filter: ModelSubscriptionORDENFilterInput) {
+    onUpdateORDEN(filter: $filter) {
+      id
+      opticaID
+      tipoOrden
+      clientesID
+      usadoLentes
+      fechaOrden
+      horaOrden
+      precioTotal
+      referencia
+      fechaEntrega
+      seRealizoExamen
+      graduacionDerechaVieja
+      graduacionIzquierdaVieja
+      graduacionDerechaNueva
+      graduacionIzquierdaNueva
+      fechaExamen
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ordenStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteORDEN = /* GraphQL */ `
+  subscription OnDeleteORDEN($filter: ModelSubscriptionORDENFilterInput) {
+    onDeleteORDEN(filter: $filter) {
+      id
+      opticaID
+      tipoOrden
+      clientesID
+      usadoLentes
+      fechaOrden
+      horaOrden
+      precioTotal
+      referencia
+      fechaEntrega
+      seRealizoExamen
+      graduacionDerechaVieja
+      graduacionIzquierdaVieja
+      graduacionDerechaNueva
+      graduacionIzquierdaNueva
+      fechaExamen
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ordenStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onCreateCLIENTES = /* GraphQL */ `
+  subscription OnCreateCLIENTES($filter: ModelSubscriptionCLIENTESFilterInput) {
+    onCreateCLIENTES(filter: $filter) {
+      id
+      nombres
+      apellidoPaterno
+      apellidoMaterno
       fechaNacimiento
       edad
+      whats
+      sexo
+      email
       opticaID
-      Ordens {
+      ORDENS {
         items {
           id
           opticaID
-          tipo
-          clienteID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
           createdAt
           updatedAt
           _version
@@ -204,24 +476,38 @@ export const onCreateCliente = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateCliente = /* GraphQL */ `
-  subscription OnUpdateCliente($filter: ModelSubscriptionClienteFilterInput) {
-    onUpdateCliente(filter: $filter) {
+export const onUpdateCLIENTES = /* GraphQL */ `
+  subscription OnUpdateCLIENTES($filter: ModelSubscriptionCLIENTESFilterInput) {
+    onUpdateCLIENTES(filter: $filter) {
       id
       nombres
       apellidoPaterno
       apellidoMaterno
-      whats
-      email
       fechaNacimiento
       edad
+      whats
+      sexo
+      email
       opticaID
-      Ordens {
+      ORDENS {
         items {
           id
           opticaID
-          tipo
-          clienteID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
           createdAt
           updatedAt
           _version
@@ -239,24 +525,38 @@ export const onUpdateCliente = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteCliente = /* GraphQL */ `
-  subscription OnDeleteCliente($filter: ModelSubscriptionClienteFilterInput) {
-    onDeleteCliente(filter: $filter) {
+export const onDeleteCLIENTES = /* GraphQL */ `
+  subscription OnDeleteCLIENTES($filter: ModelSubscriptionCLIENTESFilterInput) {
+    onDeleteCLIENTES(filter: $filter) {
       id
       nombres
       apellidoPaterno
       apellidoMaterno
-      whats
-      email
       fechaNacimiento
       edad
+      whats
+      sexo
+      email
       opticaID
-      Ordens {
+      ORDENS {
         items {
           id
           opticaID
-          tipo
-          clienteID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
           createdAt
           updatedAt
           _version
@@ -266,54 +566,6 @@ export const onDeleteCliente = /* GraphQL */ `
         nextToken
         startedAt
       }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onCreateVendedores = /* GraphQL */ `
-  subscription OnCreateVendedores(
-    $filter: ModelSubscriptionVendedoresFilterInput
-  ) {
-    onCreateVendedores(filter: $filter) {
-      id
-      nombres
-      opticaID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onUpdateVendedores = /* GraphQL */ `
-  subscription OnUpdateVendedores(
-    $filter: ModelSubscriptionVendedoresFilterInput
-  ) {
-    onUpdateVendedores(filter: $filter) {
-      id
-      nombres
-      opticaID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onDeleteVendedores = /* GraphQL */ `
-  subscription OnDeleteVendedores(
-    $filter: ModelSubscriptionVendedoresFilterInput
-  ) {
-    onDeleteVendedores(filter: $filter) {
-      id
-      nombres
-      opticaID
       createdAt
       updatedAt
       _version
@@ -328,7 +580,7 @@ export const onCreateOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      Clientes {
+      VENDEDORES {
         items {
           id
           nombres
@@ -336,37 +588,6 @@ export const onCreateOPTICA = /* GraphQL */ `
           apellidoMaterno
           whats
           email
-          fechaNacimiento
-          edad
-          opticaID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Ordens {
-        items {
-          id
-          opticaID
-          tipo
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Vendedores {
-        items {
-          id
-          nombres
           opticaID
           createdAt
           updatedAt
@@ -387,6 +608,77 @@ export const onCreateOPTICA = /* GraphQL */ `
           confirmed
           blocked
           createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CLIENTES {
+        items {
+          id
+          nombres
+          apellidoPaterno
+          apellidoMaterno
+          fechaNacimiento
+          edad
+          whats
+          sexo
+          email
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      INVENTARIOS {
+        items {
+          id
+          nombreProducto
+          proveedor
+          costo
+          precioVenta
+          color
+          tipoEstructura
+          urlImagen
+          tipoMaterial
+          categoria
           opticaID
           createdAt
           updatedAt
@@ -411,7 +703,7 @@ export const onUpdateOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      Clientes {
+      VENDEDORES {
         items {
           id
           nombres
@@ -419,37 +711,6 @@ export const onUpdateOPTICA = /* GraphQL */ `
           apellidoMaterno
           whats
           email
-          fechaNacimiento
-          edad
-          opticaID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Ordens {
-        items {
-          id
-          opticaID
-          tipo
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Vendedores {
-        items {
-          id
-          nombres
           opticaID
           createdAt
           updatedAt
@@ -470,6 +731,77 @@ export const onUpdateOPTICA = /* GraphQL */ `
           confirmed
           blocked
           createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CLIENTES {
+        items {
+          id
+          nombres
+          apellidoPaterno
+          apellidoMaterno
+          fechaNacimiento
+          edad
+          whats
+          sexo
+          email
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      INVENTARIOS {
+        items {
+          id
+          nombreProducto
+          proveedor
+          costo
+          precioVenta
+          color
+          tipoEstructura
+          urlImagen
+          tipoMaterial
+          categoria
           opticaID
           createdAt
           updatedAt
@@ -494,7 +826,7 @@ export const onDeleteOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      Clientes {
+      VENDEDORES {
         items {
           id
           nombres
@@ -502,37 +834,6 @@ export const onDeleteOPTICA = /* GraphQL */ `
           apellidoMaterno
           whats
           email
-          fechaNacimiento
-          edad
-          opticaID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Ordens {
-        items {
-          id
-          opticaID
-          tipo
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Vendedores {
-        items {
-          id
-          nombres
           opticaID
           createdAt
           updatedAt
@@ -553,6 +854,77 @@ export const onDeleteOPTICA = /* GraphQL */ `
           confirmed
           blocked
           createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CLIENTES {
+        items {
+          id
+          nombres
+          apellidoPaterno
+          apellidoMaterno
+          fechaNacimiento
+          edad
+          whats
+          sexo
+          email
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      INVENTARIOS {
+        items {
+          id
+          nombreProducto
+          proveedor
+          costo
+          precioVenta
+          color
+          tipoEstructura
+          urlImagen
+          tipoMaterial
+          categoria
           opticaID
           createdAt
           updatedAt

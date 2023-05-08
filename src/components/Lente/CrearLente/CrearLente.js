@@ -59,7 +59,7 @@ function CrearLente() {
         tipoMaterial,
       };
       await API.graphql(
-        graphqlOperation(mutations.createLENTE, { input: newLente })
+        graphqlOperation(mutations.createINVENTARIO, { input: newLente })
       );
       message.success("El lente se ha creado");
       cambiarComponent({ key: "11" });

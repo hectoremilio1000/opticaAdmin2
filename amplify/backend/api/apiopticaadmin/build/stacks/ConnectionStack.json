@@ -1,6 +1,6 @@
 {
   "Resources": {
-    "ClienteOrdensauth0FunctionClienteOrdensauth0FunctionAppSyncFunction10D02411": {
+    "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
@@ -9,7 +9,7 @@
         "DataSourceName": {
           "Ref": "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name"
         },
-        "Name": "ClienteOrdensauth0Function",
+        "Name": "INVENTARIOINVENTARIOORDENITEMSauth0Function",
         "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
@@ -23,23 +23,23 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Cliente.Ordens.auth.1.req.vtl"
+              "/resolvers/INVENTARIO.INVENTARIOORDENITEMS.auth.1.req.vtl"
             ]
           ]
         },
         "ResponseMappingTemplate": "$util.toJson({})"
       }
     },
-    "ClienteOrdensDataResolverFnClienteOrdensDataResolverFnAppSyncFunction8A0AEAB8": {
+    "INVENTARIOINVENTARIOORDENITEMSDataResolverFnINVENTARIOINVENTARIOORDENITEMSDataResolverFnAppSyncFunction9DDCCEF0": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
         "DataSourceName": {
-          "Ref": "referencetotransformerrootstackOrdenNestedStackOrdenNestedStackResource7A15394BOutputstransformerrootstackOrdenOrdenDataSource400758B1Name"
+          "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSINVENTARIOORDENITEMSDataSource449BA78EName"
         },
-        "Name": "ClienteOrdensDataResolverFn",
+        "Name": "INVENTARIOINVENTARIOORDENITEMSDataResolverFn",
         "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
@@ -53,7 +53,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Cliente.Ordens.req.vtl"
+              "/resolvers/INVENTARIO.INVENTARIOORDENITEMS.req.vtl"
             ]
           ]
         },
@@ -69,7 +69,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Cliente.Ordens.res.vtl"
+              "/resolvers/INVENTARIO.INVENTARIOORDENITEMS.res.vtl"
             ]
           ]
         },
@@ -79,26 +79,26 @@
         }
       }
     },
-    "ClienteOrdensResolver": {
+    "INVENTARIOINVENTARIOORDENITEMSResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "Ordens",
-        "TypeName": "Cliente",
+        "FieldName": "INVENTARIOORDENITEMS",
+        "TypeName": "INVENTARIO",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
             {
               "Fn::GetAtt": [
-                "ClienteOrdensauth0FunctionClienteOrdensauth0FunctionAppSyncFunction10D02411",
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
                 "FunctionId"
               ]
             },
             {
               "Fn::GetAtt": [
-                "ClienteOrdensDataResolverFnClienteOrdensDataResolverFnAppSyncFunction8A0AEAB8",
+                "INVENTARIOINVENTARIOORDENITEMSDataResolverFnINVENTARIOINVENTARIOORDENITEMSDataResolverFnAppSyncFunction9DDCCEF0",
                 "FunctionId"
               ]
             }
@@ -108,13 +108,13 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"Cliente\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"Ordens\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"INVENTARIO\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"INVENTARIOORDENITEMS\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
               "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
               {
-                "Ref": "referencetotransformerrootstackOrdenNestedStackOrdenNestedStackResource7A15394BOutputstransformerrootstackOrdenOrdenTable1F5FD278Ref"
+                "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSINVENTARIOORDENITEMSTableCEA7C8E6Ref"
               },
               "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
               {
@@ -139,16 +139,16 @@
         "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
       }
     },
-    "OPTICAClientesDataResolverFnOPTICAClientesDataResolverFnAppSyncFunction638BDCEB": {
+    "ORDENINVENTARIOORDENITEMSDataResolverFnORDENINVENTARIOORDENITEMSDataResolverFnAppSyncFunction42FBE2E2": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
         "DataSourceName": {
-          "Ref": "referencetotransformerrootstackClienteNestedStackClienteNestedStackResource8F30DB91OutputstransformerrootstackClienteClienteDataSourceC4527987Name"
+          "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSINVENTARIOORDENITEMSDataSource449BA78EName"
         },
-        "Name": "OPTICAClientesDataResolverFn",
+        "Name": "ORDENINVENTARIOORDENITEMSDataResolverFn",
         "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
@@ -162,7 +162,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/OPTICA.Clientes.req.vtl"
+              "/resolvers/ORDEN.INVENTARIOORDENITEMS.req.vtl"
             ]
           ]
         },
@@ -178,7 +178,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/OPTICA.Clientes.res.vtl"
+              "/resolvers/ORDEN.INVENTARIOORDENITEMS.res.vtl"
             ]
           ]
         },
@@ -188,26 +188,26 @@
         }
       }
     },
-    "OPTICAClientesResolver": {
+    "ORDENINVENTARIOORDENITEMSResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "Clientes",
-        "TypeName": "OPTICA",
+        "FieldName": "INVENTARIOORDENITEMS",
+        "TypeName": "ORDEN",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
             {
               "Fn::GetAtt": [
-                "ClienteOrdensauth0FunctionClienteOrdensauth0FunctionAppSyncFunction10D02411",
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
                 "FunctionId"
               ]
             },
             {
               "Fn::GetAtt": [
-                "OPTICAClientesDataResolverFnOPTICAClientesDataResolverFnAppSyncFunction638BDCEB",
+                "ORDENINVENTARIOORDENITEMSDataResolverFnORDENINVENTARIOORDENITEMSDataResolverFnAppSyncFunction42FBE2E2",
                 "FunctionId"
               ]
             }
@@ -217,13 +217,13 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"Clientes\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"ORDEN\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"INVENTARIOORDENITEMS\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
               "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
               {
-                "Ref": "referencetotransformerrootstackClienteNestedStackClienteNestedStackResource8F30DB91OutputstransformerrootstackClienteClienteTableFDD6347ARef"
+                "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSINVENTARIOORDENITEMSTableCEA7C8E6Ref"
               },
               "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
               {
@@ -248,16 +248,16 @@
         "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
       }
     },
-    "OPTICAOrdensDataResolverFnOPTICAOrdensDataResolverFnAppSyncFunction0EBFF216": {
+    "CLIENTESORDENSDataResolverFnCLIENTESORDENSDataResolverFnAppSyncFunction54BEC67D": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
         "DataSourceName": {
-          "Ref": "referencetotransformerrootstackOrdenNestedStackOrdenNestedStackResource7A15394BOutputstransformerrootstackOrdenOrdenDataSource400758B1Name"
+          "Ref": "referencetotransformerrootstackORDENNestedStackORDENNestedStackResource142F871COutputstransformerrootstackORDENORDENDataSourceD7735B10Name"
         },
-        "Name": "OPTICAOrdensDataResolverFn",
+        "Name": "CLIENTESORDENSDataResolverFn",
         "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
@@ -271,7 +271,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/OPTICA.Ordens.req.vtl"
+              "/resolvers/CLIENTES.ORDENS.req.vtl"
             ]
           ]
         },
@@ -287,7 +287,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/OPTICA.Ordens.res.vtl"
+              "/resolvers/CLIENTES.ORDENS.res.vtl"
             ]
           ]
         },
@@ -297,26 +297,26 @@
         }
       }
     },
-    "OPTICAOrdensResolver": {
+    "CLIENTESORDENSResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "Ordens",
-        "TypeName": "OPTICA",
+        "FieldName": "ORDENS",
+        "TypeName": "CLIENTES",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
             {
               "Fn::GetAtt": [
-                "ClienteOrdensauth0FunctionClienteOrdensauth0FunctionAppSyncFunction10D02411",
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
                 "FunctionId"
               ]
             },
             {
               "Fn::GetAtt": [
-                "OPTICAOrdensDataResolverFnOPTICAOrdensDataResolverFnAppSyncFunction0EBFF216",
+                "CLIENTESORDENSDataResolverFnCLIENTESORDENSDataResolverFnAppSyncFunction54BEC67D",
                 "FunctionId"
               ]
             }
@@ -326,13 +326,13 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"Ordens\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"CLIENTES\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"ORDENS\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
               "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
               {
-                "Ref": "referencetotransformerrootstackOrdenNestedStackOrdenNestedStackResource7A15394BOutputstransformerrootstackOrdenOrdenTable1F5FD278Ref"
+                "Ref": "referencetotransformerrootstackORDENNestedStackORDENNestedStackResource142F871COutputstransformerrootstackORDENORDENTableB97F7BE7Ref"
               },
               "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
               {
@@ -357,16 +357,16 @@
         "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
       }
     },
-    "OPTICAVendedoresDataResolverFnOPTICAVendedoresDataResolverFnAppSyncFunction3B7AC68D": {
+    "OPTICAVENDEDORESDataResolverFnOPTICAVENDEDORESDataResolverFnAppSyncFunction0853DEF7": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
         "DataSourceName": {
-          "Ref": "referencetotransformerrootstackVendedoresNestedStackVendedoresNestedStackResource63B36A18OutputstransformerrootstackVendedoresVendedoresDataSource78033736Name"
+          "Ref": "referencetotransformerrootstackVENDEDORESNestedStackVENDEDORESNestedStackResource8D7659BAOutputstransformerrootstackVENDEDORESVENDEDORESDataSource41D5BF3DName"
         },
-        "Name": "OPTICAVendedoresDataResolverFn",
+        "Name": "OPTICAVENDEDORESDataResolverFn",
         "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
@@ -380,7 +380,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/OPTICA.Vendedores.req.vtl"
+              "/resolvers/OPTICA.VENDEDORES.req.vtl"
             ]
           ]
         },
@@ -396,7 +396,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/OPTICA.Vendedores.res.vtl"
+              "/resolvers/OPTICA.VENDEDORES.res.vtl"
             ]
           ]
         },
@@ -406,26 +406,26 @@
         }
       }
     },
-    "OPTICAVendedoresResolver": {
+    "OPTICAVENDEDORESResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "Vendedores",
+        "FieldName": "VENDEDORES",
         "TypeName": "OPTICA",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
             {
               "Fn::GetAtt": [
-                "ClienteOrdensauth0FunctionClienteOrdensauth0FunctionAppSyncFunction10D02411",
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
                 "FunctionId"
               ]
             },
             {
               "Fn::GetAtt": [
-                "OPTICAVendedoresDataResolverFnOPTICAVendedoresDataResolverFnAppSyncFunction3B7AC68D",
+                "OPTICAVENDEDORESDataResolverFnOPTICAVENDEDORESDataResolverFnAppSyncFunction0853DEF7",
                 "FunctionId"
               ]
             }
@@ -435,13 +435,13 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"Vendedores\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"VENDEDORES\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
               "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
               {
-                "Ref": "referencetotransformerrootstackVendedoresNestedStackVendedoresNestedStackResource63B36A18OutputstransformerrootstackVendedoresVendedoresTable385AE33DRef"
+                "Ref": "referencetotransformerrootstackVENDEDORESNestedStackVENDEDORESNestedStackResource8D7659BAOutputstransformerrootstackVENDEDORESVENDEDORESTable12AE7D33Ref"
               },
               "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
               {
@@ -528,7 +528,7 @@
           "Functions": [
             {
               "Fn::GetAtt": [
-                "ClienteOrdensauth0FunctionClienteOrdensauth0FunctionAppSyncFunction10D02411",
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
                 "FunctionId"
               ]
             },
@@ -574,6 +574,333 @@
         },
         "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
       }
+    },
+    "OPTICAORDENSDataResolverFnOPTICAORDENSDataResolverFnAppSyncFunction577D1133": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Ref": "referencetotransformerrootstackORDENNestedStackORDENNestedStackResource142F871COutputstransformerrootstackORDENORDENDataSourceD7735B10Name"
+        },
+        "Name": "OPTICAORDENSDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/OPTICA.ORDENS.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/OPTICA.ORDENS.res.vtl"
+            ]
+          ]
+        },
+        "SyncConfig": {
+          "ConflictDetection": "VERSION",
+          "ConflictHandler": "AUTOMERGE"
+        }
+      }
+    },
+    "OPTICAORDENSResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "ORDENS",
+        "TypeName": "OPTICA",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Fn::GetAtt": [
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
+                "FunctionId"
+              ]
+            },
+            {
+              "Fn::GetAtt": [
+                "OPTICAORDENSDataResolverFnOPTICAORDENSDataResolverFnAppSyncFunction577D1133",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"ORDENS\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "referencetotransformerrootstackORDENNestedStackORDENNestedStackResource142F871COutputstransformerrootstackORDENORDENTableB97F7BE7Ref"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":assumed-role/",
+              {
+                "Ref": "referencetotransformerrootstackauthRoleNameFB872D50Ref"
+              },
+              "/CognitoIdentityCredentials\"))\n$util.qr($ctx.stash.put(\"unauthRole\", \"arn:aws:sts::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":assumed-role/",
+              {
+                "Ref": "referencetotransformerrootstackunauthRoleName49F3C1FERef"
+              },
+              "/CognitoIdentityCredentials\"))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "OPTICACLIENTESDataResolverFnOPTICACLIENTESDataResolverFnAppSyncFunction05074E7B": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Ref": "referencetotransformerrootstackCLIENTESNestedStackCLIENTESNestedStackResourceC8631979OutputstransformerrootstackCLIENTESCLIENTESDataSourceBE3B34EDName"
+        },
+        "Name": "OPTICACLIENTESDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/OPTICA.CLIENTES.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/OPTICA.CLIENTES.res.vtl"
+            ]
+          ]
+        },
+        "SyncConfig": {
+          "ConflictDetection": "VERSION",
+          "ConflictHandler": "AUTOMERGE"
+        }
+      }
+    },
+    "OPTICACLIENTESResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "CLIENTES",
+        "TypeName": "OPTICA",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Fn::GetAtt": [
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
+                "FunctionId"
+              ]
+            },
+            {
+              "Fn::GetAtt": [
+                "OPTICACLIENTESDataResolverFnOPTICACLIENTESDataResolverFnAppSyncFunction05074E7B",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"CLIENTES\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "referencetotransformerrootstackCLIENTESNestedStackCLIENTESNestedStackResourceC8631979OutputstransformerrootstackCLIENTESCLIENTESTableD673FE12Ref"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":assumed-role/",
+              {
+                "Ref": "referencetotransformerrootstackauthRoleNameFB872D50Ref"
+              },
+              "/CognitoIdentityCredentials\"))\n$util.qr($ctx.stash.put(\"unauthRole\", \"arn:aws:sts::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":assumed-role/",
+              {
+                "Ref": "referencetotransformerrootstackunauthRoleName49F3C1FERef"
+              },
+              "/CognitoIdentityCredentials\"))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
+    },
+    "OPTICAINVENTARIOSDataResolverFnOPTICAINVENTARIOSDataResolverFnAppSyncFunctionF74E58A5": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Ref": "referencetotransformerrootstackINVENTARIONestedStackINVENTARIONestedStackResource67B1E77EOutputstransformerrootstackINVENTARIOINVENTARIODataSource2309BBABName"
+        },
+        "Name": "OPTICAINVENTARIOSDataResolverFn",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/OPTICA.INVENTARIOS.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/OPTICA.INVENTARIOS.res.vtl"
+            ]
+          ]
+        },
+        "SyncConfig": {
+          "ConflictDetection": "VERSION",
+          "ConflictHandler": "AUTOMERGE"
+        }
+      }
+    },
+    "OPTICAINVENTARIOSResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "INVENTARIOS",
+        "TypeName": "OPTICA",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Fn::GetAtt": [
+                "INVENTARIOINVENTARIOORDENITEMSauth0FunctionINVENTARIOINVENTARIOORDENITEMSauth0FunctionAppSyncFunction11432F2B",
+                "FunctionId"
+              ]
+            },
+            {
+              "Fn::GetAtt": [
+                "OPTICAINVENTARIOSDataResolverFnOPTICAINVENTARIOSDataResolverFnAppSyncFunctionF74E58A5",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"OPTICA\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"INVENTARIOS\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "referencetotransformerrootstackINVENTARIONestedStackINVENTARIONestedStackResource67B1E77EOutputstransformerrootstackINVENTARIOINVENTARIOTable4763D53BRef"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"authRole\", \"arn:aws:sts::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":assumed-role/",
+              {
+                "Ref": "referencetotransformerrootstackauthRoleNameFB872D50Ref"
+              },
+              "/CognitoIdentityCredentials\"))\n$util.qr($ctx.stash.put(\"unauthRole\", \"arn:aws:sts::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":assumed-role/",
+              {
+                "Ref": "referencetotransformerrootstackunauthRoleName49F3C1FERef"
+              },
+              "/CognitoIdentityCredentials\"))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)"
+      }
     }
   },
   "Parameters": {
@@ -589,10 +916,10 @@
     "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
       "Type": "String"
     },
-    "referencetotransformerrootstackOrdenNestedStackOrdenNestedStackResource7A15394BOutputstransformerrootstackOrdenOrdenDataSource400758B1Name": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSINVENTARIOORDENITEMSDataSource449BA78EName": {
       "Type": "String"
     },
-    "referencetotransformerrootstackOrdenNestedStackOrdenNestedStackResource7A15394BOutputstransformerrootstackOrdenOrdenTable1F5FD278Ref": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSINVENTARIOORDENITEMSTableCEA7C8E6Ref": {
       "Type": "String"
     },
     "referencetotransformerrootstackauthRoleNameFB872D50Ref": {
@@ -601,22 +928,34 @@
     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
       "Type": "String"
     },
-    "referencetotransformerrootstackClienteNestedStackClienteNestedStackResource8F30DB91OutputstransformerrootstackClienteClienteDataSourceC4527987Name": {
+    "referencetotransformerrootstackORDENNestedStackORDENNestedStackResource142F871COutputstransformerrootstackORDENORDENDataSourceD7735B10Name": {
       "Type": "String"
     },
-    "referencetotransformerrootstackClienteNestedStackClienteNestedStackResource8F30DB91OutputstransformerrootstackClienteClienteTableFDD6347ARef": {
+    "referencetotransformerrootstackORDENNestedStackORDENNestedStackResource142F871COutputstransformerrootstackORDENORDENTableB97F7BE7Ref": {
       "Type": "String"
     },
-    "referencetotransformerrootstackVendedoresNestedStackVendedoresNestedStackResource63B36A18OutputstransformerrootstackVendedoresVendedoresDataSource78033736Name": {
+    "referencetotransformerrootstackVENDEDORESNestedStackVENDEDORESNestedStackResource8D7659BAOutputstransformerrootstackVENDEDORESVENDEDORESDataSource41D5BF3DName": {
       "Type": "String"
     },
-    "referencetotransformerrootstackVendedoresNestedStackVendedoresNestedStackResource63B36A18OutputstransformerrootstackVendedoresVendedoresTable385AE33DRef": {
+    "referencetotransformerrootstackVENDEDORESNestedStackVENDEDORESNestedStackResource8D7659BAOutputstransformerrootstackVENDEDORESVENDEDORESTable12AE7D33Ref": {
       "Type": "String"
     },
     "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEGERENTEDataSource4D7C2A2EName": {
       "Type": "String"
     },
     "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEGERENTETable0AB190DARef": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCLIENTESNestedStackCLIENTESNestedStackResourceC8631979OutputstransformerrootstackCLIENTESCLIENTESDataSourceBE3B34EDName": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackCLIENTESNestedStackCLIENTESNestedStackResourceC8631979OutputstransformerrootstackCLIENTESCLIENTESTableD673FE12Ref": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackINVENTARIONestedStackINVENTARIONestedStackResource67B1E77EOutputstransformerrootstackINVENTARIOINVENTARIODataSource2309BBABName": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackINVENTARIONestedStackINVENTARIONestedStackResource67B1E77EOutputstransformerrootstackINVENTARIOINVENTARIOTable4763D53BRef": {
       "Type": "String"
     }
   }

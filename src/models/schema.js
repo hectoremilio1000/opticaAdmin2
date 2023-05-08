@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "LENTE": {
-            "name": "LENTE",
+        "INVENTARIOORDENITEMS": {
+            "name": "INVENTARIOORDENITEMS",
             "fields": {
                 "id": {
                     "name": "id",
@@ -10,141 +10,29 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "grupo": {
-                    "name": "grupo",
+                "cantidad": {
+                    "name": "cantidad",
                     "isArray": false,
-                    "type": {
-                        "enum": "Enumgrupo"
-                    },
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "proveedor": {
-                    "name": "proveedor",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
+                    "type": "Int",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "costo": {
                     "name": "costo",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "precioVenta": {
-                    "name": "precioVenta",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "tiempoEntrega": {
-                    "name": "tiempoEntrega",
-                    "isArray": false,
-                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "color": {
-                    "name": "color",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "tipoArmazon": {
-                    "name": "tipoArmazon",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "imagen": {
-                    "name": "imagen",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "tipoMaterial": {
-                    "name": "tipoMaterial",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "LENTES",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Orden": {
-            "name": "Orden",
-            "fields": {
-                "id": {
-                    "name": "id",
+                "inventarioID": {
+                    "name": "inventarioID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
                 },
-                "opticaID": {
-                    "name": "opticaID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "tipo": {
-                    "name": "tipo",
-                    "isArray": false,
-                    "type": {
-                        "enum": "Tipo"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "clienteID": {
-                    "name": "clienteID",
+                "ordenID": {
+                    "name": "ordenID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
@@ -168,7 +56,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Ordens",
+            "pluralName": "INVENTARIOORDENITEMS",
             "attributes": [
                 {
                     "type": "model",
@@ -177,18 +65,18 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byOPTICA",
+                        "name": "byINVENTARIO",
                         "fields": [
-                            "opticaID"
+                            "inventarioID"
                         ]
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byCliente",
+                        "name": "byORDEN",
                         "fields": [
-                            "clienteID"
+                            "ordenID"
                         ]
                     }
                 },
@@ -327,8 +215,8 @@ export const schema = {
                 }
             ]
         },
-        "Cliente": {
-            "name": "Cliente",
+        "VENDEDORES": {
+            "name": "VENDEDORES",
             "fields": {
                 "id": {
                     "name": "id",
@@ -372,42 +260,12 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "fechaNacimiento": {
-                    "name": "fechaNacimiento",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "edad": {
-                    "name": "edad",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "opticaID": {
                     "name": "opticaID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
-                },
-                "Ordens": {
-                    "name": "Ordens",
-                    "isArray": true,
-                    "type": {
-                        "model": "Orden"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "clienteID"
-                        ]
-                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -427,7 +285,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Clientes",
+            "pluralName": "VENDEDORES",
             "attributes": [
                 {
                     "type": "model",
@@ -460,8 +318,8 @@ export const schema = {
                 }
             ]
         },
-        "Vendedores": {
-            "name": "Vendedores",
+        "INVENTARIO": {
+            "name": "INVENTARIO",
             "fields": {
                 "id": {
                     "name": "id",
@@ -470,12 +328,86 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "nombres": {
-                    "name": "nombres",
+                "nombreProducto": {
+                    "name": "nombreProducto",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "proveedor": {
+                    "name": "proveedor",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "costo": {
+                    "name": "costo",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "precioVenta": {
+                    "name": "precioVenta",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "color": {
+                    "name": "color",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tipoEstructura": {
+                    "name": "tipoEstructura",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "urlImagen": {
+                    "name": "urlImagen",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tipoMaterial": {
+                    "name": "tipoMaterial",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "categoria": {
+                    "name": "categoria",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Enumcategoria"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "INVENTARIOORDENITEMS": {
+                    "name": "INVENTARIOORDENITEMS",
+                    "isArray": true,
+                    "type": {
+                        "model": "INVENTARIOORDENITEMS"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "inventarioID"
+                        ]
+                    }
                 },
                 "opticaID": {
                     "name": "opticaID",
@@ -502,7 +434,349 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Vendedores",
+            "pluralName": "INVENTARIOS",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "ORDEN": {
+            "name": "ORDEN",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "tipoOrden": {
+                    "name": "tipoOrden",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Tipoorden"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "clientesID": {
+                    "name": "clientesID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "usadoLentes": {
+                    "name": "usadoLentes",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaOrden": {
+                    "name": "fechaOrden",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "horaOrden": {
+                    "name": "horaOrden",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "precioTotal": {
+                    "name": "precioTotal",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "referencia": {
+                    "name": "referencia",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaEntrega": {
+                    "name": "fechaEntrega",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "seRealizoExamen": {
+                    "name": "seRealizoExamen",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "graduacionDerechaVieja": {
+                    "name": "graduacionDerechaVieja",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "graduacionIzquierdaVieja": {
+                    "name": "graduacionIzquierdaVieja",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "graduacionDerechaNueva": {
+                    "name": "graduacionDerechaNueva",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "graduacionIzquierdaNueva": {
+                    "name": "graduacionIzquierdaNueva",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaExamen": {
+                    "name": "fechaExamen",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "INVENTARIOORDENITEMS": {
+                    "name": "INVENTARIOORDENITEMS",
+                    "isArray": true,
+                    "type": {
+                        "model": "INVENTARIOORDENITEMS"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "ordenID"
+                        ]
+                    }
+                },
+                "ordenStatus": {
+                    "name": "ordenStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Ordenstatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "ORDENS",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byCLIENTES",
+                        "fields": [
+                            "clientesID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "CLIENTES": {
+            "name": "CLIENTES",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "nombres": {
+                    "name": "nombres",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "apellidoPaterno": {
+                    "name": "apellidoPaterno",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "apellidoMaterno": {
+                    "name": "apellidoMaterno",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaNacimiento": {
+                    "name": "fechaNacimiento",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "edad": {
+                    "name": "edad",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "whats": {
+                    "name": "whats",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "sexo": {
+                    "name": "sexo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "ORDENS": {
+                    "name": "ORDENS",
+                    "isArray": true,
+                    "type": {
+                        "model": "ORDEN"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "clientesID"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "CLIENTES",
             "attributes": [
                 {
                     "type": "model",
@@ -559,43 +833,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "Clientes": {
-                    "name": "Clientes",
+                "VENDEDORES": {
+                    "name": "VENDEDORES",
                     "isArray": true,
                     "type": {
-                        "model": "Cliente"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "opticaID"
-                        ]
-                    }
-                },
-                "Ordens": {
-                    "name": "Ordens",
-                    "isArray": true,
-                    "type": {
-                        "model": "Orden"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "opticaID"
-                        ]
-                    }
-                },
-                "Vendedores": {
-                    "name": "Vendedores",
-                    "isArray": true,
-                    "type": {
-                        "model": "Vendedores"
+                        "model": "VENDEDORES"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -612,6 +854,54 @@ export const schema = {
                     "isArray": true,
                     "type": {
                         "model": "GERENTE"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "ORDENS": {
+                    "name": "ORDENS",
+                    "isArray": true,
+                    "type": {
+                        "model": "ORDEN"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "CLIENTES": {
+                    "name": "CLIENTES",
+                    "isArray": true,
+                    "type": {
+                        "model": "CLIENTES"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "INVENTARIOS": {
+                    "name": "INVENTARIOS",
+                    "isArray": true,
+                    "type": {
+                        "model": "INVENTARIO"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -667,23 +957,32 @@ export const schema = {
         }
     },
     "enums": {
-        "Enumgrupo": {
-            "name": "Enumgrupo",
+        "Ordenstatus": {
+            "name": "Ordenstatus",
+            "values": [
+                "CREADA",
+                "ENVIADAMAQUILA",
+                "ENTREGADA",
+                "CONPROBLEMAS"
+            ]
+        },
+        "Tipoorden": {
+            "name": "Tipoorden",
+            "values": [
+                "COTIZACION",
+                "ORDEN"
+            ]
+        },
+        "Enumcategoria": {
+            "name": "Enumcategoria",
             "values": [
                 "DAMA",
                 "CABALLERO",
                 "BOY"
             ]
-        },
-        "Tipo": {
-            "name": "Tipo",
-            "values": [
-                "COTIZACION",
-                "NUEVO"
-            ]
         }
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "c983f16768b216a297c1b1c33492dfac"
+    "version": "4fdec1d1c2d53b21bf5c4f45784ad344"
 };

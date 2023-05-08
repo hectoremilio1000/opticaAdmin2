@@ -1,32 +1,21 @@
-enum ENUMGRUPO {
-  DAMA
-  CABALLERO
-  BOY
+enum ORDENSTATUS {
+  CREADA
+  ENVIADAMAQUILA
+  ENTREGADA
+  CONPROBLEMAS
 }
 
-type LENTE @model @auth(rules: [{allow: public}]) {
+type INVENTARIOORDENITEMS @model @auth(rules: [{allow: public}]) {
   id: ID!
-  grupo: ENUMGRUPO!
-  proveedor: String!
-  costo: Float!
-  precioVenta: Float!
-  tiempoEntrega: String
-  color: String
-  tipoArmazon: String
-  imagen: String
-  tipoMaterial: String
+  cantidad: Int
+  costo: Float
+  inventarioID: ID! @index(name: "byINVENTARIO")
+  ordenID: ID! @index(name: "byORDEN")
 }
 
-enum TIPO {
+enum TIPOORDEN {
   COTIZACION
-  NUEVO
-}
-
-type Orden @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  opticaID: ID! @index(name: "byOPTICA")
-  tipo: TIPO
-  clienteID: ID! @index(name: "byCliente")
+  ORDEN
 }
 
 type GERENTE @model @auth(rules: [{allow: public}]) {
@@ -41,32 +30,80 @@ type GERENTE @model @auth(rules: [{allow: public}]) {
   opticaID: ID! @index(name: "byOPTICA")
 }
 
-type Cliente @model @auth(rules: [{allow: public}]) {
+type VENDEDORES @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombres: String
   apellidoPaterno: String
   apellidoMaterno: String
   whats: String
   email: String
-  fechaNacimiento: String
-  edad: Int
   opticaID: ID! @index(name: "byOPTICA")
-  Ordens: [Orden] @hasMany(indexName: "byCliente", fields: ["id"])
 }
 
-type Vendedores @model @auth(rules: [{allow: public}]) {
+enum ENUMCATEGORIA {
+  DAMA
+  CABALLERO
+  BOY
+}
+
+type INVENTARIO @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nombreProducto: String
+  proveedor: String
+  costo: Float!
+  precioVenta: Float!
+  color: String
+  tipoEstructura: String
+  urlImagen: String
+  tipoMaterial: String
+  categoria: ENUMCATEGORIA!
+  INVENTARIOORDENITEMS: [INVENTARIOORDENITEMS] @hasMany(indexName: "byINVENTARIO", fields: ["id"])
+  opticaID: ID! @index(name: "byOPTICA")
+}
+
+type ORDEN @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  opticaID: ID! @index(name: "byOPTICA")
+  tipoOrden: TIPOORDEN
+  clientesID: ID! @index(name: "byCLIENTES")
+  usadoLentes: String
+  fechaOrden: String
+  horaOrden: String
+  precioTotal: String
+  referencia: String
+  fechaEntrega: String
+  seRealizoExamen: String
+  graduacionDerechaVieja: String
+  graduacionIzquierdaVieja: String
+  graduacionDerechaNueva: String
+  graduacionIzquierdaNueva: String
+  fechaExamen: String
+  INVENTARIOORDENITEMS: [INVENTARIOORDENITEMS] @hasMany(indexName: "byORDEN", fields: ["id"])
+  ordenStatus: ORDENSTATUS
+}
+
+type CLIENTES @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  fechaNacimiento: String
+  edad: String
+  whats: String
+  sexo: String
+  email: String
   opticaID: ID! @index(name: "byOPTICA")
+  ORDENS: [ORDEN] @hasMany(indexName: "byCLIENTES", fields: ["id"])
 }
 
 type OPTICA @model @auth(rules: [{allow: public}]) {
   id: ID!
   nombre: String!
   createdBy: String!
-  Clientes: [Cliente] @hasMany(indexName: "byOPTICA", fields: ["id"])
-  Ordens: [Orden] @hasMany(indexName: "byOPTICA", fields: ["id"])
-  Vendedores: [Vendedores] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  VENDEDORES: [VENDEDORES] @hasMany(indexName: "byOPTICA", fields: ["id"])
   GERENTES: [GERENTE] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  ORDENS: [ORDEN] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  CLIENTES: [CLIENTES] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  INVENTARIOS: [INVENTARIO] @hasMany(indexName: "byOPTICA", fields: ["id"])
 }
  

@@ -1,22 +1,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createLENTE = /* GraphQL */ `
-  mutation CreateLENTE(
-    $input: CreateLENTEInput!
-    $condition: ModelLENTEConditionInput
+export const createINVENTARIOORDENITEMS = /* GraphQL */ `
+  mutation CreateINVENTARIOORDENITEMS(
+    $input: CreateINVENTARIOORDENITEMSInput!
+    $condition: ModelINVENTARIOORDENITEMSConditionInput
   ) {
-    createLENTE(input: $input, condition: $condition) {
+    createINVENTARIOORDENITEMS(input: $input, condition: $condition) {
       id
-      grupo
-      proveedor
+      cantidad
       costo
-      precioVenta
-      tiempoEntrega
-      color
-      tipoArmazon
-      imagen
-      tipoMaterial
+      inventarioID
+      ordenID
       createdAt
       updatedAt
       _version
@@ -25,22 +20,17 @@ export const createLENTE = /* GraphQL */ `
     }
   }
 `;
-export const updateLENTE = /* GraphQL */ `
-  mutation UpdateLENTE(
-    $input: UpdateLENTEInput!
-    $condition: ModelLENTEConditionInput
+export const updateINVENTARIOORDENITEMS = /* GraphQL */ `
+  mutation UpdateINVENTARIOORDENITEMS(
+    $input: UpdateINVENTARIOORDENITEMSInput!
+    $condition: ModelINVENTARIOORDENITEMSConditionInput
   ) {
-    updateLENTE(input: $input, condition: $condition) {
+    updateINVENTARIOORDENITEMS(input: $input, condition: $condition) {
       id
-      grupo
-      proveedor
+      cantidad
       costo
-      precioVenta
-      tiempoEntrega
-      color
-      tipoArmazon
-      imagen
-      tipoMaterial
+      inventarioID
+      ordenID
       createdAt
       updatedAt
       _version
@@ -49,76 +39,17 @@ export const updateLENTE = /* GraphQL */ `
     }
   }
 `;
-export const deleteLENTE = /* GraphQL */ `
-  mutation DeleteLENTE(
-    $input: DeleteLENTEInput!
-    $condition: ModelLENTEConditionInput
+export const deleteINVENTARIOORDENITEMS = /* GraphQL */ `
+  mutation DeleteINVENTARIOORDENITEMS(
+    $input: DeleteINVENTARIOORDENITEMSInput!
+    $condition: ModelINVENTARIOORDENITEMSConditionInput
   ) {
-    deleteLENTE(input: $input, condition: $condition) {
+    deleteINVENTARIOORDENITEMS(input: $input, condition: $condition) {
       id
-      grupo
-      proveedor
+      cantidad
       costo
-      precioVenta
-      tiempoEntrega
-      color
-      tipoArmazon
-      imagen
-      tipoMaterial
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const createOrden = /* GraphQL */ `
-  mutation CreateOrden(
-    $input: CreateOrdenInput!
-    $condition: ModelOrdenConditionInput
-  ) {
-    createOrden(input: $input, condition: $condition) {
-      id
-      opticaID
-      tipo
-      clienteID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const updateOrden = /* GraphQL */ `
-  mutation UpdateOrden(
-    $input: UpdateOrdenInput!
-    $condition: ModelOrdenConditionInput
-  ) {
-    updateOrden(input: $input, condition: $condition) {
-      id
-      opticaID
-      tipo
-      clienteID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const deleteOrden = /* GraphQL */ `
-  mutation DeleteOrden(
-    $input: DeleteOrdenInput!
-    $condition: ModelOrdenConditionInput
-  ) {
-    deleteOrden(input: $input, condition: $condition) {
-      id
-      opticaID
-      tipo
-      clienteID
+      inventarioID
+      ordenID
       createdAt
       updatedAt
       _version
@@ -196,27 +127,368 @@ export const deleteGERENTE = /* GraphQL */ `
     }
   }
 `;
-export const createCliente = /* GraphQL */ `
-  mutation CreateCliente(
-    $input: CreateClienteInput!
-    $condition: ModelClienteConditionInput
+export const createVENDEDORES = /* GraphQL */ `
+  mutation CreateVENDEDORES(
+    $input: CreateVENDEDORESInput!
+    $condition: ModelVENDEDORESConditionInput
   ) {
-    createCliente(input: $input, condition: $condition) {
+    createVENDEDORES(input: $input, condition: $condition) {
       id
       nombres
       apellidoPaterno
       apellidoMaterno
       whats
       email
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateVENDEDORES = /* GraphQL */ `
+  mutation UpdateVENDEDORES(
+    $input: UpdateVENDEDORESInput!
+    $condition: ModelVENDEDORESConditionInput
+  ) {
+    updateVENDEDORES(input: $input, condition: $condition) {
+      id
+      nombres
+      apellidoPaterno
+      apellidoMaterno
+      whats
+      email
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteVENDEDORES = /* GraphQL */ `
+  mutation DeleteVENDEDORES(
+    $input: DeleteVENDEDORESInput!
+    $condition: ModelVENDEDORESConditionInput
+  ) {
+    deleteVENDEDORES(input: $input, condition: $condition) {
+      id
+      nombres
+      apellidoPaterno
+      apellidoMaterno
+      whats
+      email
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createINVENTARIO = /* GraphQL */ `
+  mutation CreateINVENTARIO(
+    $input: CreateINVENTARIOInput!
+    $condition: ModelINVENTARIOConditionInput
+  ) {
+    createINVENTARIO(input: $input, condition: $condition) {
+      id
+      nombreProducto
+      proveedor
+      costo
+      precioVenta
+      color
+      tipoEstructura
+      urlImagen
+      tipoMaterial
+      categoria
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateINVENTARIO = /* GraphQL */ `
+  mutation UpdateINVENTARIO(
+    $input: UpdateINVENTARIOInput!
+    $condition: ModelINVENTARIOConditionInput
+  ) {
+    updateINVENTARIO(input: $input, condition: $condition) {
+      id
+      nombreProducto
+      proveedor
+      costo
+      precioVenta
+      color
+      tipoEstructura
+      urlImagen
+      tipoMaterial
+      categoria
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteINVENTARIO = /* GraphQL */ `
+  mutation DeleteINVENTARIO(
+    $input: DeleteINVENTARIOInput!
+    $condition: ModelINVENTARIOConditionInput
+  ) {
+    deleteINVENTARIO(input: $input, condition: $condition) {
+      id
+      nombreProducto
+      proveedor
+      costo
+      precioVenta
+      color
+      tipoEstructura
+      urlImagen
+      tipoMaterial
+      categoria
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createORDEN = /* GraphQL */ `
+  mutation CreateORDEN(
+    $input: CreateORDENInput!
+    $condition: ModelORDENConditionInput
+  ) {
+    createORDEN(input: $input, condition: $condition) {
+      id
+      opticaID
+      tipoOrden
+      clientesID
+      usadoLentes
+      fechaOrden
+      horaOrden
+      precioTotal
+      referencia
+      fechaEntrega
+      seRealizoExamen
+      graduacionDerechaVieja
+      graduacionIzquierdaVieja
+      graduacionDerechaNueva
+      graduacionIzquierdaNueva
+      fechaExamen
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ordenStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateORDEN = /* GraphQL */ `
+  mutation UpdateORDEN(
+    $input: UpdateORDENInput!
+    $condition: ModelORDENConditionInput
+  ) {
+    updateORDEN(input: $input, condition: $condition) {
+      id
+      opticaID
+      tipoOrden
+      clientesID
+      usadoLentes
+      fechaOrden
+      horaOrden
+      precioTotal
+      referencia
+      fechaEntrega
+      seRealizoExamen
+      graduacionDerechaVieja
+      graduacionIzquierdaVieja
+      graduacionDerechaNueva
+      graduacionIzquierdaNueva
+      fechaExamen
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ordenStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteORDEN = /* GraphQL */ `
+  mutation DeleteORDEN(
+    $input: DeleteORDENInput!
+    $condition: ModelORDENConditionInput
+  ) {
+    deleteORDEN(input: $input, condition: $condition) {
+      id
+      opticaID
+      tipoOrden
+      clientesID
+      usadoLentes
+      fechaOrden
+      horaOrden
+      precioTotal
+      referencia
+      fechaEntrega
+      seRealizoExamen
+      graduacionDerechaVieja
+      graduacionIzquierdaVieja
+      graduacionDerechaNueva
+      graduacionIzquierdaNueva
+      fechaExamen
+      INVENTARIOORDENITEMS {
+        items {
+          id
+          cantidad
+          costo
+          inventarioID
+          ordenID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ordenStatus
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createCLIENTES = /* GraphQL */ `
+  mutation CreateCLIENTES(
+    $input: CreateCLIENTESInput!
+    $condition: ModelCLIENTESConditionInput
+  ) {
+    createCLIENTES(input: $input, condition: $condition) {
+      id
+      nombres
+      apellidoPaterno
+      apellidoMaterno
       fechaNacimiento
       edad
+      whats
+      sexo
+      email
       opticaID
-      Ordens {
+      ORDENS {
         items {
           id
           opticaID
-          tipo
-          clienteID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
           createdAt
           updatedAt
           _version
@@ -234,27 +506,41 @@ export const createCliente = /* GraphQL */ `
     }
   }
 `;
-export const updateCliente = /* GraphQL */ `
-  mutation UpdateCliente(
-    $input: UpdateClienteInput!
-    $condition: ModelClienteConditionInput
+export const updateCLIENTES = /* GraphQL */ `
+  mutation UpdateCLIENTES(
+    $input: UpdateCLIENTESInput!
+    $condition: ModelCLIENTESConditionInput
   ) {
-    updateCliente(input: $input, condition: $condition) {
+    updateCLIENTES(input: $input, condition: $condition) {
       id
       nombres
       apellidoPaterno
       apellidoMaterno
-      whats
-      email
       fechaNacimiento
       edad
+      whats
+      sexo
+      email
       opticaID
-      Ordens {
+      ORDENS {
         items {
           id
           opticaID
-          tipo
-          clienteID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
           createdAt
           updatedAt
           _version
@@ -272,27 +558,41 @@ export const updateCliente = /* GraphQL */ `
     }
   }
 `;
-export const deleteCliente = /* GraphQL */ `
-  mutation DeleteCliente(
-    $input: DeleteClienteInput!
-    $condition: ModelClienteConditionInput
+export const deleteCLIENTES = /* GraphQL */ `
+  mutation DeleteCLIENTES(
+    $input: DeleteCLIENTESInput!
+    $condition: ModelCLIENTESConditionInput
   ) {
-    deleteCliente(input: $input, condition: $condition) {
+    deleteCLIENTES(input: $input, condition: $condition) {
       id
       nombres
       apellidoPaterno
       apellidoMaterno
-      whats
-      email
       fechaNacimiento
       edad
+      whats
+      sexo
+      email
       opticaID
-      Ordens {
+      ORDENS {
         items {
           id
           opticaID
-          tipo
-          clienteID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
           createdAt
           updatedAt
           _version
@@ -302,57 +602,6 @@ export const deleteCliente = /* GraphQL */ `
         nextToken
         startedAt
       }
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const createVendedores = /* GraphQL */ `
-  mutation CreateVendedores(
-    $input: CreateVendedoresInput!
-    $condition: ModelVendedoresConditionInput
-  ) {
-    createVendedores(input: $input, condition: $condition) {
-      id
-      nombres
-      opticaID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const updateVendedores = /* GraphQL */ `
-  mutation UpdateVendedores(
-    $input: UpdateVendedoresInput!
-    $condition: ModelVendedoresConditionInput
-  ) {
-    updateVendedores(input: $input, condition: $condition) {
-      id
-      nombres
-      opticaID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const deleteVendedores = /* GraphQL */ `
-  mutation DeleteVendedores(
-    $input: DeleteVendedoresInput!
-    $condition: ModelVendedoresConditionInput
-  ) {
-    deleteVendedores(input: $input, condition: $condition) {
-      id
-      nombres
-      opticaID
       createdAt
       updatedAt
       _version
@@ -370,7 +619,7 @@ export const createOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      Clientes {
+      VENDEDORES {
         items {
           id
           nombres
@@ -378,37 +627,6 @@ export const createOPTICA = /* GraphQL */ `
           apellidoMaterno
           whats
           email
-          fechaNacimiento
-          edad
-          opticaID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Ordens {
-        items {
-          id
-          opticaID
-          tipo
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Vendedores {
-        items {
-          id
-          nombres
           opticaID
           createdAt
           updatedAt
@@ -429,6 +647,77 @@ export const createOPTICA = /* GraphQL */ `
           confirmed
           blocked
           createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CLIENTES {
+        items {
+          id
+          nombres
+          apellidoPaterno
+          apellidoMaterno
+          fechaNacimiento
+          edad
+          whats
+          sexo
+          email
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      INVENTARIOS {
+        items {
+          id
+          nombreProducto
+          proveedor
+          costo
+          precioVenta
+          color
+          tipoEstructura
+          urlImagen
+          tipoMaterial
+          categoria
           opticaID
           createdAt
           updatedAt
@@ -456,7 +745,7 @@ export const updateOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      Clientes {
+      VENDEDORES {
         items {
           id
           nombres
@@ -464,37 +753,6 @@ export const updateOPTICA = /* GraphQL */ `
           apellidoMaterno
           whats
           email
-          fechaNacimiento
-          edad
-          opticaID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Ordens {
-        items {
-          id
-          opticaID
-          tipo
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Vendedores {
-        items {
-          id
-          nombres
           opticaID
           createdAt
           updatedAt
@@ -515,6 +773,77 @@ export const updateOPTICA = /* GraphQL */ `
           confirmed
           blocked
           createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CLIENTES {
+        items {
+          id
+          nombres
+          apellidoPaterno
+          apellidoMaterno
+          fechaNacimiento
+          edad
+          whats
+          sexo
+          email
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      INVENTARIOS {
+        items {
+          id
+          nombreProducto
+          proveedor
+          costo
+          precioVenta
+          color
+          tipoEstructura
+          urlImagen
+          tipoMaterial
+          categoria
           opticaID
           createdAt
           updatedAt
@@ -542,7 +871,7 @@ export const deleteOPTICA = /* GraphQL */ `
       id
       nombre
       createdBy
-      Clientes {
+      VENDEDORES {
         items {
           id
           nombres
@@ -550,37 +879,6 @@ export const deleteOPTICA = /* GraphQL */ `
           apellidoMaterno
           whats
           email
-          fechaNacimiento
-          edad
-          opticaID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Ordens {
-        items {
-          id
-          opticaID
-          tipo
-          clienteID
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
-      }
-      Vendedores {
-        items {
-          id
-          nombres
           opticaID
           createdAt
           updatedAt
@@ -601,6 +899,77 @@ export const deleteOPTICA = /* GraphQL */ `
           confirmed
           blocked
           createdBy
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CLIENTES {
+        items {
+          id
+          nombres
+          apellidoPaterno
+          apellidoMaterno
+          fechaNacimiento
+          edad
+          whats
+          sexo
+          email
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      INVENTARIOS {
+        items {
+          id
+          nombreProducto
+          proveedor
+          costo
+          precioVenta
+          color
+          tipoEstructura
+          urlImagen
+          tipoMaterial
+          categoria
           opticaID
           createdAt
           updatedAt

@@ -1,21 +1,17 @@
 
-enum ENUMGRUPO {
-  DAMA
-  CABALLERO
-  BOY
+enum ORDENSTATUS {
+  CREADA
+  ENVIADAMAQUILA
+  ENTREGADA
+  CONPROBLEMAS
 }
 
-type LENTE @aws_iam @aws_api_key {
+type INVENTARIOORDENITEMS @aws_iam @aws_api_key {
   id: ID!
-  grupo: ENUMGRUPO!
-  proveedor: String!
-  costo: Float!
-  precioVenta: Float!
-  tiempoEntrega: String
-  color: String
-  tipoArmazon: String
-  imagen: String
-  tipoMaterial: String
+  cantidad: Int
+  costo: Float
+  inventarioID: ID!
+  ordenID: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -23,21 +19,9 @@ type LENTE @aws_iam @aws_api_key {
   _lastChangedAt: AWSTimestamp!
 }
 
-enum TIPO {
+enum TIPOORDEN {
   COTIZACION
-  NUEVO
-}
-
-type Orden @aws_iam @aws_api_key {
-  id: ID!
-  opticaID: ID!
-  tipo: TIPO
-  clienteID: ID!
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-  _version: Int!
-  _deleted: Boolean
-  _lastChangedAt: AWSTimestamp!
+  ORDEN
 }
 
 type GERENTE @aws_iam @aws_api_key {
@@ -57,17 +41,14 @@ type GERENTE @aws_iam @aws_api_key {
   _lastChangedAt: AWSTimestamp!
 }
 
-type Cliente @aws_iam @aws_api_key {
+type VENDEDORES @aws_iam @aws_api_key {
   id: ID!
   nombres: String
   apellidoPaterno: String
   apellidoMaterno: String
   whats: String
   email: String
-  fechaNacimiento: String
-  edad: Int
   opticaID: ID!
-  Ordens(filter: ModelOrdenFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrdenConnection
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -75,10 +56,70 @@ type Cliente @aws_iam @aws_api_key {
   _lastChangedAt: AWSTimestamp!
 }
 
-type Vendedores @aws_iam @aws_api_key {
+enum ENUMCATEGORIA {
+  DAMA
+  CABALLERO
+  BOY
+}
+
+type INVENTARIO @aws_iam @aws_api_key {
+  id: ID!
+  nombreProducto: String
+  proveedor: String
+  costo: Float!
+  precioVenta: Float!
+  color: String
+  tipoEstructura: String
+  urlImagen: String
+  tipoMaterial: String
+  categoria: ENUMCATEGORIA!
+  INVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection
+  opticaID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type ORDEN @aws_iam @aws_api_key {
+  id: ID!
+  opticaID: ID!
+  tipoOrden: TIPOORDEN
+  clientesID: ID!
+  usadoLentes: String
+  fechaOrden: String
+  horaOrden: String
+  precioTotal: String
+  referencia: String
+  fechaEntrega: String
+  seRealizoExamen: String
+  graduacionDerechaVieja: String
+  graduacionIzquierdaVieja: String
+  graduacionDerechaNueva: String
+  graduacionIzquierdaNueva: String
+  fechaExamen: String
+  INVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection
+  ordenStatus: ORDENSTATUS
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type CLIENTES @aws_iam @aws_api_key {
   id: ID!
   nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  fechaNacimiento: String
+  edad: String
+  whats: String
+  sexo: String
+  email: String
   opticaID: ID!
+  ORDENS(filter: ModelORDENFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelORDENConnection
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -90,10 +131,11 @@ type OPTICA @aws_iam @aws_api_key {
   id: ID!
   nombre: String!
   createdBy: String!
-  Clientes(filter: ModelClienteFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelClienteConnection
-  Ordens(filter: ModelOrdenFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrdenConnection
-  Vendedores(filter: ModelVendedoresFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelVendedoresConnection
+  VENDEDORES(filter: ModelVENDEDORESFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelVENDEDORESConnection
   GERENTES(filter: ModelGERENTEFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGERENTEConnection
+  ORDENS(filter: ModelORDENFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelORDENConnection
+  CLIENTES(filter: ModelCLIENTESFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelCLIENTESConnection
+  INVENTARIOS(filter: ModelINVENTARIOFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOConnection
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -251,222 +293,144 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelLENTEConnection @aws_api_key @aws_iam {
-  items: [LENTE]!
+type ModelINVENTARIOORDENITEMSConnection @aws_api_key @aws_iam {
+  items: [INVENTARIOORDENITEMS]!
   nextToken: String
   startedAt: AWSTimestamp
 }
 
-input ModelENUMGRUPOInput {
-  eq: ENUMGRUPO
-  ne: ENUMGRUPO
-}
-
-input ModelLENTEFilterInput {
+input ModelINVENTARIOORDENITEMSFilterInput {
   id: ModelIDInput
-  grupo: ModelENUMGRUPOInput
-  proveedor: ModelStringInput
+  cantidad: ModelIntInput
   costo: ModelFloatInput
-  precioVenta: ModelFloatInput
-  tiempoEntrega: ModelStringInput
-  color: ModelStringInput
-  tipoArmazon: ModelStringInput
-  imagen: ModelStringInput
-  tipoMaterial: ModelStringInput
-  and: [ModelLENTEFilterInput]
-  or: [ModelLENTEFilterInput]
-  not: ModelLENTEFilterInput
+  inventarioID: ModelIDInput
+  ordenID: ModelIDInput
+  and: [ModelINVENTARIOORDENITEMSFilterInput]
+  or: [ModelINVENTARIOORDENITEMSFilterInput]
+  not: ModelINVENTARIOORDENITEMSFilterInput
 }
 
 type Query {
-  getLENTE(id: ID!): LENTE @aws_api_key @aws_iam
-  listLENTES(filter: ModelLENTEFilterInput, limit: Int, nextToken: String): ModelLENTEConnection @aws_api_key @aws_iam
-  syncLENTES(filter: ModelLENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelLENTEConnection @aws_api_key @aws_iam
-  getOrden(id: ID!): Orden @aws_api_key @aws_iam
-  listOrdens(filter: ModelOrdenFilterInput, limit: Int, nextToken: String): ModelOrdenConnection @aws_api_key @aws_iam
-  syncOrdens(filter: ModelOrdenFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOrdenConnection @aws_api_key @aws_iam
-  ordensByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelOrdenFilterInput, limit: Int, nextToken: String): ModelOrdenConnection @aws_api_key @aws_iam
-  ordensByClienteID(clienteID: ID!, sortDirection: ModelSortDirection, filter: ModelOrdenFilterInput, limit: Int, nextToken: String): ModelOrdenConnection @aws_api_key @aws_iam
+  getINVENTARIOORDENITEMS(id: ID!): INVENTARIOORDENITEMS @aws_api_key @aws_iam
+  listINVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection @aws_api_key @aws_iam
+  syncINVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelINVENTARIOORDENITEMSConnection @aws_api_key @aws_iam
+  iNVENTARIOORDENITEMSByInventarioID(inventarioID: ID!, sortDirection: ModelSortDirection, filter: ModelINVENTARIOORDENITEMSFilterInput, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection @aws_api_key @aws_iam
+  iNVENTARIOORDENITEMSByOrdenID(ordenID: ID!, sortDirection: ModelSortDirection, filter: ModelINVENTARIOORDENITEMSFilterInput, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection @aws_api_key @aws_iam
   getGERENTE(id: ID!): GERENTE @aws_api_key @aws_iam
   listGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
   syncGERENTES(filter: ModelGERENTEFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGERENTEConnection @aws_api_key @aws_iam
   gERENTESByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelGERENTEFilterInput, limit: Int, nextToken: String): ModelGERENTEConnection @aws_api_key @aws_iam
-  getCliente(id: ID!): Cliente @aws_api_key @aws_iam
-  listClientes(filter: ModelClienteFilterInput, limit: Int, nextToken: String): ModelClienteConnection @aws_api_key @aws_iam
-  syncClientes(filter: ModelClienteFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelClienteConnection @aws_api_key @aws_iam
-  clientesByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelClienteFilterInput, limit: Int, nextToken: String): ModelClienteConnection @aws_api_key @aws_iam
-  getVendedores(id: ID!): Vendedores @aws_api_key @aws_iam
-  listVendedores(filter: ModelVendedoresFilterInput, limit: Int, nextToken: String): ModelVendedoresConnection @aws_api_key @aws_iam
-  syncVendedores(filter: ModelVendedoresFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelVendedoresConnection @aws_api_key @aws_iam
-  vendedoresByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelVendedoresFilterInput, limit: Int, nextToken: String): ModelVendedoresConnection @aws_api_key @aws_iam
+  getVENDEDORES(id: ID!): VENDEDORES @aws_api_key @aws_iam
+  listVENDEDORES(filter: ModelVENDEDORESFilterInput, limit: Int, nextToken: String): ModelVENDEDORESConnection @aws_api_key @aws_iam
+  syncVENDEDORES(filter: ModelVENDEDORESFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelVENDEDORESConnection @aws_api_key @aws_iam
+  vENDEDORESByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelVENDEDORESFilterInput, limit: Int, nextToken: String): ModelVENDEDORESConnection @aws_api_key @aws_iam
+  getINVENTARIO(id: ID!): INVENTARIO @aws_api_key @aws_iam
+  listINVENTARIOS(filter: ModelINVENTARIOFilterInput, limit: Int, nextToken: String): ModelINVENTARIOConnection @aws_api_key @aws_iam
+  syncINVENTARIOS(filter: ModelINVENTARIOFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelINVENTARIOConnection @aws_api_key @aws_iam
+  iNVENTARIOSByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelINVENTARIOFilterInput, limit: Int, nextToken: String): ModelINVENTARIOConnection @aws_api_key @aws_iam
+  getORDEN(id: ID!): ORDEN @aws_api_key @aws_iam
+  listORDENS(filter: ModelORDENFilterInput, limit: Int, nextToken: String): ModelORDENConnection @aws_api_key @aws_iam
+  syncORDENS(filter: ModelORDENFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelORDENConnection @aws_api_key @aws_iam
+  oRDENSByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelORDENFilterInput, limit: Int, nextToken: String): ModelORDENConnection @aws_api_key @aws_iam
+  oRDENSByClientesID(clientesID: ID!, sortDirection: ModelSortDirection, filter: ModelORDENFilterInput, limit: Int, nextToken: String): ModelORDENConnection @aws_api_key @aws_iam
+  getCLIENTES(id: ID!): CLIENTES @aws_api_key @aws_iam
+  listCLIENTES(filter: ModelCLIENTESFilterInput, limit: Int, nextToken: String): ModelCLIENTESConnection @aws_api_key @aws_iam
+  syncCLIENTES(filter: ModelCLIENTESFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelCLIENTESConnection @aws_api_key @aws_iam
+  cLIENTESByOpticaID(opticaID: ID!, sortDirection: ModelSortDirection, filter: ModelCLIENTESFilterInput, limit: Int, nextToken: String): ModelCLIENTESConnection @aws_api_key @aws_iam
   getOPTICA(id: ID!): OPTICA @aws_api_key @aws_iam
   listOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String): ModelOPTICAConnection @aws_api_key @aws_iam
   syncOPTICAS(filter: ModelOPTICAFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOPTICAConnection @aws_api_key @aws_iam
 }
 
-input ModelLENTEConditionInput {
-  grupo: ModelENUMGRUPOInput
-  proveedor: ModelStringInput
+input ModelINVENTARIOORDENITEMSConditionInput {
+  cantidad: ModelIntInput
   costo: ModelFloatInput
-  precioVenta: ModelFloatInput
-  tiempoEntrega: ModelStringInput
-  color: ModelStringInput
-  tipoArmazon: ModelStringInput
-  imagen: ModelStringInput
-  tipoMaterial: ModelStringInput
-  and: [ModelLENTEConditionInput]
-  or: [ModelLENTEConditionInput]
-  not: ModelLENTEConditionInput
+  inventarioID: ModelIDInput
+  ordenID: ModelIDInput
+  and: [ModelINVENTARIOORDENITEMSConditionInput]
+  or: [ModelINVENTARIOORDENITEMSConditionInput]
+  not: ModelINVENTARIOORDENITEMSConditionInput
 }
 
-input CreateLENTEInput {
+input CreateINVENTARIOORDENITEMSInput {
   id: ID
-  grupo: ENUMGRUPO!
-  proveedor: String!
-  costo: Float!
-  precioVenta: Float!
-  tiempoEntrega: String
-  color: String
-  tipoArmazon: String
-  imagen: String
-  tipoMaterial: String
-  _version: Int
-}
-
-input UpdateLENTEInput {
-  id: ID!
-  grupo: ENUMGRUPO
-  proveedor: String
+  cantidad: Int
   costo: Float
-  precioVenta: Float
-  tiempoEntrega: String
-  color: String
-  tipoArmazon: String
-  imagen: String
-  tipoMaterial: String
+  inventarioID: ID!
+  ordenID: ID!
   _version: Int
 }
 
-input DeleteLENTEInput {
+input UpdateINVENTARIOORDENITEMSInput {
+  id: ID!
+  cantidad: Int
+  costo: Float
+  inventarioID: ID
+  ordenID: ID
+  _version: Int
+}
+
+input DeleteINVENTARIOORDENITEMSInput {
   id: ID!
   _version: Int
 }
 
 type Mutation {
-  createLENTE(input: CreateLENTEInput!, condition: ModelLENTEConditionInput): LENTE @aws_api_key @aws_iam
-  updateLENTE(input: UpdateLENTEInput!, condition: ModelLENTEConditionInput): LENTE @aws_api_key @aws_iam
-  deleteLENTE(input: DeleteLENTEInput!, condition: ModelLENTEConditionInput): LENTE @aws_api_key @aws_iam
-  createOrden(input: CreateOrdenInput!, condition: ModelOrdenConditionInput): Orden @aws_api_key @aws_iam
-  updateOrden(input: UpdateOrdenInput!, condition: ModelOrdenConditionInput): Orden @aws_api_key @aws_iam
-  deleteOrden(input: DeleteOrdenInput!, condition: ModelOrdenConditionInput): Orden @aws_api_key @aws_iam
+  createINVENTARIOORDENITEMS(input: CreateINVENTARIOORDENITEMSInput!, condition: ModelINVENTARIOORDENITEMSConditionInput): INVENTARIOORDENITEMS @aws_api_key @aws_iam
+  updateINVENTARIOORDENITEMS(input: UpdateINVENTARIOORDENITEMSInput!, condition: ModelINVENTARIOORDENITEMSConditionInput): INVENTARIOORDENITEMS @aws_api_key @aws_iam
+  deleteINVENTARIOORDENITEMS(input: DeleteINVENTARIOORDENITEMSInput!, condition: ModelINVENTARIOORDENITEMSConditionInput): INVENTARIOORDENITEMS @aws_api_key @aws_iam
   createGERENTE(input: CreateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
   updateGERENTE(input: UpdateGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
   deleteGERENTE(input: DeleteGERENTEInput!, condition: ModelGERENTEConditionInput): GERENTE @aws_api_key @aws_iam
-  createCliente(input: CreateClienteInput!, condition: ModelClienteConditionInput): Cliente @aws_api_key @aws_iam
-  updateCliente(input: UpdateClienteInput!, condition: ModelClienteConditionInput): Cliente @aws_api_key @aws_iam
-  deleteCliente(input: DeleteClienteInput!, condition: ModelClienteConditionInput): Cliente @aws_api_key @aws_iam
-  createVendedores(input: CreateVendedoresInput!, condition: ModelVendedoresConditionInput): Vendedores @aws_api_key @aws_iam
-  updateVendedores(input: UpdateVendedoresInput!, condition: ModelVendedoresConditionInput): Vendedores @aws_api_key @aws_iam
-  deleteVendedores(input: DeleteVendedoresInput!, condition: ModelVendedoresConditionInput): Vendedores @aws_api_key @aws_iam
+  createVENDEDORES(input: CreateVENDEDORESInput!, condition: ModelVENDEDORESConditionInput): VENDEDORES @aws_api_key @aws_iam
+  updateVENDEDORES(input: UpdateVENDEDORESInput!, condition: ModelVENDEDORESConditionInput): VENDEDORES @aws_api_key @aws_iam
+  deleteVENDEDORES(input: DeleteVENDEDORESInput!, condition: ModelVENDEDORESConditionInput): VENDEDORES @aws_api_key @aws_iam
+  createINVENTARIO(input: CreateINVENTARIOInput!, condition: ModelINVENTARIOConditionInput): INVENTARIO @aws_api_key @aws_iam
+  updateINVENTARIO(input: UpdateINVENTARIOInput!, condition: ModelINVENTARIOConditionInput): INVENTARIO @aws_api_key @aws_iam
+  deleteINVENTARIO(input: DeleteINVENTARIOInput!, condition: ModelINVENTARIOConditionInput): INVENTARIO @aws_api_key @aws_iam
+  createORDEN(input: CreateORDENInput!, condition: ModelORDENConditionInput): ORDEN @aws_api_key @aws_iam
+  updateORDEN(input: UpdateORDENInput!, condition: ModelORDENConditionInput): ORDEN @aws_api_key @aws_iam
+  deleteORDEN(input: DeleteORDENInput!, condition: ModelORDENConditionInput): ORDEN @aws_api_key @aws_iam
+  createCLIENTES(input: CreateCLIENTESInput!, condition: ModelCLIENTESConditionInput): CLIENTES @aws_api_key @aws_iam
+  updateCLIENTES(input: UpdateCLIENTESInput!, condition: ModelCLIENTESConditionInput): CLIENTES @aws_api_key @aws_iam
+  deleteCLIENTES(input: DeleteCLIENTESInput!, condition: ModelCLIENTESConditionInput): CLIENTES @aws_api_key @aws_iam
   createOPTICA(input: CreateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
   updateOPTICA(input: UpdateOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
   deleteOPTICA(input: DeleteOPTICAInput!, condition: ModelOPTICAConditionInput): OPTICA @aws_api_key @aws_iam
 }
 
-input ModelSubscriptionLENTEFilterInput {
+input ModelSubscriptionINVENTARIOORDENITEMSFilterInput {
   id: ModelSubscriptionIDInput
-  grupo: ModelSubscriptionStringInput
-  proveedor: ModelSubscriptionStringInput
+  cantidad: ModelSubscriptionIntInput
   costo: ModelSubscriptionFloatInput
-  precioVenta: ModelSubscriptionFloatInput
-  tiempoEntrega: ModelSubscriptionStringInput
-  color: ModelSubscriptionStringInput
-  tipoArmazon: ModelSubscriptionStringInput
-  imagen: ModelSubscriptionStringInput
-  tipoMaterial: ModelSubscriptionStringInput
-  and: [ModelSubscriptionLENTEFilterInput]
-  or: [ModelSubscriptionLENTEFilterInput]
+  inventarioID: ModelSubscriptionIDInput
+  ordenID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionINVENTARIOORDENITEMSFilterInput]
+  or: [ModelSubscriptionINVENTARIOORDENITEMSFilterInput]
 }
 
 type Subscription {
-  onCreateLENTE(filter: ModelSubscriptionLENTEFilterInput): LENTE @aws_subscribe(mutations: ["createLENTE"]) @aws_api_key @aws_iam
-  onUpdateLENTE(filter: ModelSubscriptionLENTEFilterInput): LENTE @aws_subscribe(mutations: ["updateLENTE"]) @aws_api_key @aws_iam
-  onDeleteLENTE(filter: ModelSubscriptionLENTEFilterInput): LENTE @aws_subscribe(mutations: ["deleteLENTE"]) @aws_api_key @aws_iam
-  onCreateOrden(filter: ModelSubscriptionOrdenFilterInput): Orden @aws_subscribe(mutations: ["createOrden"]) @aws_api_key @aws_iam
-  onUpdateOrden(filter: ModelSubscriptionOrdenFilterInput): Orden @aws_subscribe(mutations: ["updateOrden"]) @aws_api_key @aws_iam
-  onDeleteOrden(filter: ModelSubscriptionOrdenFilterInput): Orden @aws_subscribe(mutations: ["deleteOrden"]) @aws_api_key @aws_iam
+  onCreateINVENTARIOORDENITEMS(filter: ModelSubscriptionINVENTARIOORDENITEMSFilterInput): INVENTARIOORDENITEMS @aws_subscribe(mutations: ["createINVENTARIOORDENITEMS"]) @aws_api_key @aws_iam
+  onUpdateINVENTARIOORDENITEMS(filter: ModelSubscriptionINVENTARIOORDENITEMSFilterInput): INVENTARIOORDENITEMS @aws_subscribe(mutations: ["updateINVENTARIOORDENITEMS"]) @aws_api_key @aws_iam
+  onDeleteINVENTARIOORDENITEMS(filter: ModelSubscriptionINVENTARIOORDENITEMSFilterInput): INVENTARIOORDENITEMS @aws_subscribe(mutations: ["deleteINVENTARIOORDENITEMS"]) @aws_api_key @aws_iam
   onCreateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["createGERENTE"]) @aws_api_key @aws_iam
   onUpdateGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["updateGERENTE"]) @aws_api_key @aws_iam
   onDeleteGERENTE(filter: ModelSubscriptionGERENTEFilterInput): GERENTE @aws_subscribe(mutations: ["deleteGERENTE"]) @aws_api_key @aws_iam
-  onCreateCliente(filter: ModelSubscriptionClienteFilterInput): Cliente @aws_subscribe(mutations: ["createCliente"]) @aws_api_key @aws_iam
-  onUpdateCliente(filter: ModelSubscriptionClienteFilterInput): Cliente @aws_subscribe(mutations: ["updateCliente"]) @aws_api_key @aws_iam
-  onDeleteCliente(filter: ModelSubscriptionClienteFilterInput): Cliente @aws_subscribe(mutations: ["deleteCliente"]) @aws_api_key @aws_iam
-  onCreateVendedores(filter: ModelSubscriptionVendedoresFilterInput): Vendedores @aws_subscribe(mutations: ["createVendedores"]) @aws_api_key @aws_iam
-  onUpdateVendedores(filter: ModelSubscriptionVendedoresFilterInput): Vendedores @aws_subscribe(mutations: ["updateVendedores"]) @aws_api_key @aws_iam
-  onDeleteVendedores(filter: ModelSubscriptionVendedoresFilterInput): Vendedores @aws_subscribe(mutations: ["deleteVendedores"]) @aws_api_key @aws_iam
+  onCreateVENDEDORES(filter: ModelSubscriptionVENDEDORESFilterInput): VENDEDORES @aws_subscribe(mutations: ["createVENDEDORES"]) @aws_api_key @aws_iam
+  onUpdateVENDEDORES(filter: ModelSubscriptionVENDEDORESFilterInput): VENDEDORES @aws_subscribe(mutations: ["updateVENDEDORES"]) @aws_api_key @aws_iam
+  onDeleteVENDEDORES(filter: ModelSubscriptionVENDEDORESFilterInput): VENDEDORES @aws_subscribe(mutations: ["deleteVENDEDORES"]) @aws_api_key @aws_iam
+  onCreateINVENTARIO(filter: ModelSubscriptionINVENTARIOFilterInput): INVENTARIO @aws_subscribe(mutations: ["createINVENTARIO"]) @aws_api_key @aws_iam
+  onUpdateINVENTARIO(filter: ModelSubscriptionINVENTARIOFilterInput): INVENTARIO @aws_subscribe(mutations: ["updateINVENTARIO"]) @aws_api_key @aws_iam
+  onDeleteINVENTARIO(filter: ModelSubscriptionINVENTARIOFilterInput): INVENTARIO @aws_subscribe(mutations: ["deleteINVENTARIO"]) @aws_api_key @aws_iam
+  onCreateORDEN(filter: ModelSubscriptionORDENFilterInput): ORDEN @aws_subscribe(mutations: ["createORDEN"]) @aws_api_key @aws_iam
+  onUpdateORDEN(filter: ModelSubscriptionORDENFilterInput): ORDEN @aws_subscribe(mutations: ["updateORDEN"]) @aws_api_key @aws_iam
+  onDeleteORDEN(filter: ModelSubscriptionORDENFilterInput): ORDEN @aws_subscribe(mutations: ["deleteORDEN"]) @aws_api_key @aws_iam
+  onCreateCLIENTES(filter: ModelSubscriptionCLIENTESFilterInput): CLIENTES @aws_subscribe(mutations: ["createCLIENTES"]) @aws_api_key @aws_iam
+  onUpdateCLIENTES(filter: ModelSubscriptionCLIENTESFilterInput): CLIENTES @aws_subscribe(mutations: ["updateCLIENTES"]) @aws_api_key @aws_iam
+  onDeleteCLIENTES(filter: ModelSubscriptionCLIENTESFilterInput): CLIENTES @aws_subscribe(mutations: ["deleteCLIENTES"]) @aws_api_key @aws_iam
   onCreateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["createOPTICA"]) @aws_api_key @aws_iam
   onUpdateOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["updateOPTICA"]) @aws_api_key @aws_iam
   onDeleteOPTICA(filter: ModelSubscriptionOPTICAFilterInput): OPTICA @aws_subscribe(mutations: ["deleteOPTICA"]) @aws_api_key @aws_iam
-}
-
-type ModelOrdenConnection @aws_api_key @aws_iam {
-  items: [Orden]!
-  nextToken: String
-  startedAt: AWSTimestamp
-}
-
-input ModelTIPOInput {
-  eq: TIPO
-  ne: TIPO
-}
-
-input ModelOrdenFilterInput {
-  id: ModelIDInput
-  opticaID: ModelIDInput
-  tipo: ModelTIPOInput
-  clienteID: ModelIDInput
-  and: [ModelOrdenFilterInput]
-  or: [ModelOrdenFilterInput]
-  not: ModelOrdenFilterInput
-}
-
-input ModelOrdenConditionInput {
-  opticaID: ModelIDInput
-  tipo: ModelTIPOInput
-  clienteID: ModelIDInput
-  and: [ModelOrdenConditionInput]
-  or: [ModelOrdenConditionInput]
-  not: ModelOrdenConditionInput
-}
-
-input CreateOrdenInput {
-  id: ID
-  opticaID: ID!
-  tipo: TIPO
-  clienteID: ID!
-  _version: Int
-}
-
-input UpdateOrdenInput {
-  id: ID!
-  opticaID: ID
-  tipo: TIPO
-  clienteID: ID
-  _version: Int
-}
-
-input DeleteOrdenInput {
-  id: ID!
-  _version: Int
-}
-
-input ModelSubscriptionOrdenFilterInput {
-  id: ModelSubscriptionIDInput
-  opticaID: ModelSubscriptionIDInput
-  tipo: ModelSubscriptionStringInput
-  clienteID: ModelSubscriptionIDInput
-  and: [ModelSubscriptionOrdenFilterInput]
-  or: [ModelSubscriptionOrdenFilterInput]
 }
 
 type ModelGERENTEConnection @aws_api_key @aws_iam {
@@ -549,134 +513,384 @@ input ModelSubscriptionGERENTEFilterInput {
   or: [ModelSubscriptionGERENTEFilterInput]
 }
 
-type ModelClienteConnection @aws_api_key @aws_iam {
-  items: [Cliente]!
+type ModelVENDEDORESConnection @aws_api_key @aws_iam {
+  items: [VENDEDORES]!
   nextToken: String
   startedAt: AWSTimestamp
 }
 
-input ModelClienteFilterInput {
+input ModelVENDEDORESFilterInput {
   id: ModelIDInput
   nombres: ModelStringInput
   apellidoPaterno: ModelStringInput
   apellidoMaterno: ModelStringInput
   whats: ModelStringInput
   email: ModelStringInput
-  fechaNacimiento: ModelStringInput
-  edad: ModelIntInput
   opticaID: ModelIDInput
-  and: [ModelClienteFilterInput]
-  or: [ModelClienteFilterInput]
-  not: ModelClienteFilterInput
+  and: [ModelVENDEDORESFilterInput]
+  or: [ModelVENDEDORESFilterInput]
+  not: ModelVENDEDORESFilterInput
 }
 
-input ModelClienteConditionInput {
+input ModelVENDEDORESConditionInput {
   nombres: ModelStringInput
   apellidoPaterno: ModelStringInput
   apellidoMaterno: ModelStringInput
   whats: ModelStringInput
   email: ModelStringInput
-  fechaNacimiento: ModelStringInput
-  edad: ModelIntInput
   opticaID: ModelIDInput
-  and: [ModelClienteConditionInput]
-  or: [ModelClienteConditionInput]
-  not: ModelClienteConditionInput
+  and: [ModelVENDEDORESConditionInput]
+  or: [ModelVENDEDORESConditionInput]
+  not: ModelVENDEDORESConditionInput
 }
 
-input CreateClienteInput {
+input CreateVENDEDORESInput {
   id: ID
   nombres: String
   apellidoPaterno: String
   apellidoMaterno: String
   whats: String
   email: String
-  fechaNacimiento: String
-  edad: Int
   opticaID: ID!
   _version: Int
 }
 
-input UpdateClienteInput {
+input UpdateVENDEDORESInput {
   id: ID!
   nombres: String
   apellidoPaterno: String
   apellidoMaterno: String
   whats: String
   email: String
-  fechaNacimiento: String
-  edad: Int
   opticaID: ID
   _version: Int
 }
 
-input DeleteClienteInput {
+input DeleteVENDEDORESInput {
   id: ID!
   _version: Int
 }
 
-input ModelSubscriptionClienteFilterInput {
+input ModelSubscriptionVENDEDORESFilterInput {
   id: ModelSubscriptionIDInput
   nombres: ModelSubscriptionStringInput
   apellidoPaterno: ModelSubscriptionStringInput
   apellidoMaterno: ModelSubscriptionStringInput
   whats: ModelSubscriptionStringInput
   email: ModelSubscriptionStringInput
-  fechaNacimiento: ModelSubscriptionStringInput
-  edad: ModelSubscriptionIntInput
   opticaID: ModelSubscriptionIDInput
-  and: [ModelSubscriptionClienteFilterInput]
-  or: [ModelSubscriptionClienteFilterInput]
+  and: [ModelSubscriptionVENDEDORESFilterInput]
+  or: [ModelSubscriptionVENDEDORESFilterInput]
 }
 
-type ModelVendedoresConnection @aws_api_key @aws_iam {
-  items: [Vendedores]!
+type ModelINVENTARIOConnection @aws_api_key @aws_iam {
+  items: [INVENTARIO]!
   nextToken: String
   startedAt: AWSTimestamp
 }
 
-input ModelVendedoresFilterInput {
+input ModelENUMCATEGORIAInput {
+  eq: ENUMCATEGORIA
+  ne: ENUMCATEGORIA
+}
+
+input ModelINVENTARIOFilterInput {
   id: ModelIDInput
-  nombres: ModelStringInput
+  nombreProducto: ModelStringInput
+  proveedor: ModelStringInput
+  costo: ModelFloatInput
+  precioVenta: ModelFloatInput
+  color: ModelStringInput
+  tipoEstructura: ModelStringInput
+  urlImagen: ModelStringInput
+  tipoMaterial: ModelStringInput
+  categoria: ModelENUMCATEGORIAInput
   opticaID: ModelIDInput
-  and: [ModelVendedoresFilterInput]
-  or: [ModelVendedoresFilterInput]
-  not: ModelVendedoresFilterInput
+  and: [ModelINVENTARIOFilterInput]
+  or: [ModelINVENTARIOFilterInput]
+  not: ModelINVENTARIOFilterInput
 }
 
-input ModelVendedoresConditionInput {
-  nombres: ModelStringInput
+input ModelINVENTARIOConditionInput {
+  nombreProducto: ModelStringInput
+  proveedor: ModelStringInput
+  costo: ModelFloatInput
+  precioVenta: ModelFloatInput
+  color: ModelStringInput
+  tipoEstructura: ModelStringInput
+  urlImagen: ModelStringInput
+  tipoMaterial: ModelStringInput
+  categoria: ModelENUMCATEGORIAInput
   opticaID: ModelIDInput
-  and: [ModelVendedoresConditionInput]
-  or: [ModelVendedoresConditionInput]
-  not: ModelVendedoresConditionInput
+  and: [ModelINVENTARIOConditionInput]
+  or: [ModelINVENTARIOConditionInput]
+  not: ModelINVENTARIOConditionInput
 }
 
-input CreateVendedoresInput {
+input CreateINVENTARIOInput {
   id: ID
-  nombres: String
+  nombreProducto: String
+  proveedor: String
+  costo: Float!
+  precioVenta: Float!
+  color: String
+  tipoEstructura: String
+  urlImagen: String
+  tipoMaterial: String
+  categoria: ENUMCATEGORIA!
   opticaID: ID!
   _version: Int
 }
 
-input UpdateVendedoresInput {
+input UpdateINVENTARIOInput {
   id: ID!
-  nombres: String
+  nombreProducto: String
+  proveedor: String
+  costo: Float
+  precioVenta: Float
+  color: String
+  tipoEstructura: String
+  urlImagen: String
+  tipoMaterial: String
+  categoria: ENUMCATEGORIA
   opticaID: ID
   _version: Int
 }
 
-input DeleteVendedoresInput {
+input DeleteINVENTARIOInput {
   id: ID!
   _version: Int
 }
 
-input ModelSubscriptionVendedoresFilterInput {
+input ModelSubscriptionINVENTARIOFilterInput {
+  id: ModelSubscriptionIDInput
+  nombreProducto: ModelSubscriptionStringInput
+  proveedor: ModelSubscriptionStringInput
+  costo: ModelSubscriptionFloatInput
+  precioVenta: ModelSubscriptionFloatInput
+  color: ModelSubscriptionStringInput
+  tipoEstructura: ModelSubscriptionStringInput
+  urlImagen: ModelSubscriptionStringInput
+  tipoMaterial: ModelSubscriptionStringInput
+  categoria: ModelSubscriptionStringInput
+  opticaID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionINVENTARIOFilterInput]
+  or: [ModelSubscriptionINVENTARIOFilterInput]
+}
+
+type ModelORDENConnection @aws_api_key @aws_iam {
+  items: [ORDEN]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelTIPOORDENInput {
+  eq: TIPOORDEN
+  ne: TIPOORDEN
+}
+
+input ModelORDENSTATUSInput {
+  eq: ORDENSTATUS
+  ne: ORDENSTATUS
+}
+
+input ModelORDENFilterInput {
+  id: ModelIDInput
+  opticaID: ModelIDInput
+  tipoOrden: ModelTIPOORDENInput
+  clientesID: ModelIDInput
+  usadoLentes: ModelStringInput
+  fechaOrden: ModelStringInput
+  horaOrden: ModelStringInput
+  precioTotal: ModelStringInput
+  referencia: ModelStringInput
+  fechaEntrega: ModelStringInput
+  seRealizoExamen: ModelStringInput
+  graduacionDerechaVieja: ModelStringInput
+  graduacionIzquierdaVieja: ModelStringInput
+  graduacionDerechaNueva: ModelStringInput
+  graduacionIzquierdaNueva: ModelStringInput
+  fechaExamen: ModelStringInput
+  ordenStatus: ModelORDENSTATUSInput
+  and: [ModelORDENFilterInput]
+  or: [ModelORDENFilterInput]
+  not: ModelORDENFilterInput
+}
+
+input ModelORDENConditionInput {
+  opticaID: ModelIDInput
+  tipoOrden: ModelTIPOORDENInput
+  clientesID: ModelIDInput
+  usadoLentes: ModelStringInput
+  fechaOrden: ModelStringInput
+  horaOrden: ModelStringInput
+  precioTotal: ModelStringInput
+  referencia: ModelStringInput
+  fechaEntrega: ModelStringInput
+  seRealizoExamen: ModelStringInput
+  graduacionDerechaVieja: ModelStringInput
+  graduacionIzquierdaVieja: ModelStringInput
+  graduacionDerechaNueva: ModelStringInput
+  graduacionIzquierdaNueva: ModelStringInput
+  fechaExamen: ModelStringInput
+  ordenStatus: ModelORDENSTATUSInput
+  and: [ModelORDENConditionInput]
+  or: [ModelORDENConditionInput]
+  not: ModelORDENConditionInput
+}
+
+input CreateORDENInput {
+  id: ID
+  opticaID: ID!
+  tipoOrden: TIPOORDEN
+  clientesID: ID!
+  usadoLentes: String
+  fechaOrden: String
+  horaOrden: String
+  precioTotal: String
+  referencia: String
+  fechaEntrega: String
+  seRealizoExamen: String
+  graduacionDerechaVieja: String
+  graduacionIzquierdaVieja: String
+  graduacionDerechaNueva: String
+  graduacionIzquierdaNueva: String
+  fechaExamen: String
+  ordenStatus: ORDENSTATUS
+  _version: Int
+}
+
+input UpdateORDENInput {
+  id: ID!
+  opticaID: ID
+  tipoOrden: TIPOORDEN
+  clientesID: ID
+  usadoLentes: String
+  fechaOrden: String
+  horaOrden: String
+  precioTotal: String
+  referencia: String
+  fechaEntrega: String
+  seRealizoExamen: String
+  graduacionDerechaVieja: String
+  graduacionIzquierdaVieja: String
+  graduacionDerechaNueva: String
+  graduacionIzquierdaNueva: String
+  fechaExamen: String
+  ordenStatus: ORDENSTATUS
+  _version: Int
+}
+
+input DeleteORDENInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionORDENFilterInput {
+  id: ModelSubscriptionIDInput
+  opticaID: ModelSubscriptionIDInput
+  tipoOrden: ModelSubscriptionStringInput
+  clientesID: ModelSubscriptionIDInput
+  usadoLentes: ModelSubscriptionStringInput
+  fechaOrden: ModelSubscriptionStringInput
+  horaOrden: ModelSubscriptionStringInput
+  precioTotal: ModelSubscriptionStringInput
+  referencia: ModelSubscriptionStringInput
+  fechaEntrega: ModelSubscriptionStringInput
+  seRealizoExamen: ModelSubscriptionStringInput
+  graduacionDerechaVieja: ModelSubscriptionStringInput
+  graduacionIzquierdaVieja: ModelSubscriptionStringInput
+  graduacionDerechaNueva: ModelSubscriptionStringInput
+  graduacionIzquierdaNueva: ModelSubscriptionStringInput
+  fechaExamen: ModelSubscriptionStringInput
+  ordenStatus: ModelSubscriptionStringInput
+  and: [ModelSubscriptionORDENFilterInput]
+  or: [ModelSubscriptionORDENFilterInput]
+}
+
+type ModelCLIENTESConnection @aws_api_key @aws_iam {
+  items: [CLIENTES]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelCLIENTESFilterInput {
+  id: ModelIDInput
+  nombres: ModelStringInput
+  apellidoPaterno: ModelStringInput
+  apellidoMaterno: ModelStringInput
+  fechaNacimiento: ModelStringInput
+  edad: ModelStringInput
+  whats: ModelStringInput
+  sexo: ModelStringInput
+  email: ModelStringInput
+  opticaID: ModelIDInput
+  and: [ModelCLIENTESFilterInput]
+  or: [ModelCLIENTESFilterInput]
+  not: ModelCLIENTESFilterInput
+}
+
+input ModelCLIENTESConditionInput {
+  nombres: ModelStringInput
+  apellidoPaterno: ModelStringInput
+  apellidoMaterno: ModelStringInput
+  fechaNacimiento: ModelStringInput
+  edad: ModelStringInput
+  whats: ModelStringInput
+  sexo: ModelStringInput
+  email: ModelStringInput
+  opticaID: ModelIDInput
+  and: [ModelCLIENTESConditionInput]
+  or: [ModelCLIENTESConditionInput]
+  not: ModelCLIENTESConditionInput
+}
+
+input CreateCLIENTESInput {
+  id: ID
+  nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  fechaNacimiento: String
+  edad: String
+  whats: String
+  sexo: String
+  email: String
+  opticaID: ID!
+  _version: Int
+}
+
+input UpdateCLIENTESInput {
+  id: ID!
+  nombres: String
+  apellidoPaterno: String
+  apellidoMaterno: String
+  fechaNacimiento: String
+  edad: String
+  whats: String
+  sexo: String
+  email: String
+  opticaID: ID
+  _version: Int
+}
+
+input DeleteCLIENTESInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionCLIENTESFilterInput {
   id: ModelSubscriptionIDInput
   nombres: ModelSubscriptionStringInput
+  apellidoPaterno: ModelSubscriptionStringInput
+  apellidoMaterno: ModelSubscriptionStringInput
+  fechaNacimiento: ModelSubscriptionStringInput
+  edad: ModelSubscriptionStringInput
+  whats: ModelSubscriptionStringInput
+  sexo: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
   opticaID: ModelSubscriptionIDInput
-  and: [ModelSubscriptionVendedoresFilterInput]
-  or: [ModelSubscriptionVendedoresFilterInput]
+  and: [ModelSubscriptionCLIENTESFilterInput]
+  or: [ModelSubscriptionCLIENTESFilterInput]
 }
 
 type ModelOPTICAConnection @aws_api_key @aws_iam {

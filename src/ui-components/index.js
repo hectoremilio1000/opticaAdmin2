@@ -5,7 +5,5 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
-export { default as LENTECreateForm } from "./LENTECreateForm";
-export { default as LENTEUpdateForm } from "./LENTEUpdateForm";
 export { default as OPTICACreateForm } from "./OPTICACreateForm";
 export { default as OPTICAUpdateForm } from "./OPTICAUpdateForm";

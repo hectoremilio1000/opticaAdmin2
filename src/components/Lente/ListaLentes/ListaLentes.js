@@ -17,7 +17,7 @@ import { API, DataStore, graphqlOperation } from "aws-amplify";
 import * as mutations from "../../../graphql/mutations";
 import * as queries from "../../../graphql/queries";
 // import { useNavigate } from "react-router-dom";
-import { LENTE } from "../../../models";
+import { INVENTARIO } from "../../../models";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -163,7 +163,7 @@ function ListaLentes() {
   ];
 
   const fetchLentes = async () => {
-    const lentes = await API.graphql(graphqlOperation(queries.listLENTES));
+    const lentes = await API.graphql(graphqlOperation(queries.listINVENTARIOS));
     const items = lentes?.data?.listLENTES?.items;
     setLentes(
       items.sort(function (a, b) {
@@ -198,7 +198,7 @@ function ListaLentes() {
   };
 
   const fetchLente = async () => {
-    const result = await DataStore.query(LENTE);
+    const result = await DataStore.query(INVENTARIO);
     setLenteResult(result);
   };
 
@@ -210,7 +210,7 @@ function ListaLentes() {
     console.log(id);
 
     try {
-      await DataStore.delete(LENTE, id);
+      await DataStore.delete(INVENTARIO, id);
       fetchLente();
       message.success("El lente se ha eliminado correctamente");
     } catch (error) {
@@ -221,11 +221,11 @@ function ListaLentes() {
 
   const onFinish = async () => {
     try {
-      const original = await DataStore.query(LENTE, id);
+      const original = await DataStore.query(INVENTARIO, id);
       console.log(original);
 
       await DataStore.save(
-        LENTE.copyOf(original, (updated) => {
+        INVENTARIO.copyOf(original, (updated) => {
           updated.grupo = grupo;
           updated.proveedor = proveedor;
           updated.costo = costo;

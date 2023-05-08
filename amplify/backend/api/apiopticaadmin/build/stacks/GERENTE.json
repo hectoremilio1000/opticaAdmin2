@@ -49,10 +49,10 @@
     "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEauth0FunctionQuerygetLENTEauth0FunctionAppSyncFunctionF1EF76A1FunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSauth0FunctionQuerygetINVENTARIOORDENITEMSauth0FunctionAp0166A51F": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0": {
       "Type": "String"
     },
     "referencetotransformerrootstackauthRoleNameFB872D50Ref": {
@@ -61,19 +61,19 @@
     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEMutationcreateLENTEinit0FunctionMutationcreateLENTEinit0FunctionAppSyncFunctionEDAA087FFunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEMutationcreateLENTEauth0FunctionMutationcreateLENTEauth0FunctionAppSyncFunctionE201A2BDFunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSauth0FunctionMutationcreateINVENTARIOORDENITEMSautD352FE1B": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEMutationupdateLENTEinit0FunctionMutationupdateLENTEinit0FunctionAppSyncFunction24419371FunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationupdateINVENTARIOORDENITEMSinit0FunctionMutationupdateINVENTARIOORDENITEMSini221EFA68": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptiononCreateLENTEauth0FunctionSubscriptiononCreateLENTEauth0FunctionAppSyncFunctionBEF86FA9FunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptiononCreateINVENTARIOORDENITEMSauth0FunctionSubscriptiononCreateINVENTARIOO8B3905E0": {
       "Type": "String"
     },
-    "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptionOnCreateLENTEDataResolverFnSubscriptionOnCreateLENTEDataResolverFnAppSyncFunctionD5C85799FunctionId": {
+    "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptionOnCreateINVENTARIOORDENITEMSDataResolverFnSubscriptionOnCreateINVENTARIO16E0E40A": {
       "Type": "String"
     }
   },
@@ -556,10 +556,10 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEauth0FunctionQuerygetLENTEauth0FunctionAppSyncFunctionF1EF76A1FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSauth0FunctionQuerygetINVENTARIOORDENITEMSauth0FunctionAp0166A51F"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [
@@ -671,10 +671,10 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEauth0FunctionQuerygetLENTEauth0FunctionAppSyncFunctionF1EF76A1FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSauth0FunctionQuerygetINVENTARIOORDENITEMSauth0FunctionAp0166A51F"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [
@@ -828,10 +828,10 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEauth0FunctionQuerygetLENTEauth0FunctionAppSyncFunctionF1EF76A1FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSauth0FunctionQuerygetINVENTARIOORDENITEMSauth0FunctionAp0166A51F"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [
@@ -943,13 +943,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEMutationcreateLENTEinit0FunctionMutationcreateLENTEinit0FunctionAppSyncFunctionEDAA087FFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEMutationcreateLENTEauth0FunctionMutationcreateLENTEauth0FunctionAppSyncFunctionE201A2BDFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSauth0FunctionMutationcreateINVENTARIOORDENITEMSautD352FE1B"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [
@@ -1112,7 +1112,7 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEMutationupdateLENTEinit0FunctionMutationupdateLENTEinit0FunctionAppSyncFunction24419371FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationupdateINVENTARIOORDENITEMSinit0FunctionMutationupdateINVENTARIOORDENITEMSini221EFA68"
             },
             {
               "Fn::GetAtt": [
@@ -1121,7 +1121,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [
@@ -1290,7 +1290,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [
@@ -1347,13 +1347,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptiononCreateLENTEauth0FunctionSubscriptiononCreateLENTEauth0FunctionAppSyncFunctionBEF86FA9FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptiononCreateINVENTARIOORDENITEMSauth0FunctionSubscriptiononCreateINVENTARIOO8B3905E0"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptionOnCreateLENTEDataResolverFnSubscriptionOnCreateLENTEDataResolverFnAppSyncFunctionD5C85799FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptionOnCreateINVENTARIOORDENITEMSDataResolverFnSubscriptionOnCreateINVENTARIO16E0E40A"
             }
           ]
         },
@@ -1400,13 +1400,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptiononCreateLENTEauth0FunctionSubscriptiononCreateLENTEauth0FunctionAppSyncFunctionBEF86FA9FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptiononCreateINVENTARIOORDENITEMSauth0FunctionSubscriptiononCreateINVENTARIOO8B3905E0"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptionOnCreateLENTEDataResolverFnSubscriptionOnCreateLENTEDataResolverFnAppSyncFunctionD5C85799FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptionOnCreateINVENTARIOORDENITEMSDataResolverFnSubscriptionOnCreateINVENTARIO16E0E40A"
             }
           ]
         },
@@ -1453,13 +1453,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptiononCreateLENTEauth0FunctionSubscriptiononCreateLENTEauth0FunctionAppSyncFunctionBEF86FA9FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptiononCreateINVENTARIOORDENITEMSauth0FunctionSubscriptiononCreateINVENTARIOO8B3905E0"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTESubscriptionOnCreateLENTEDataResolverFnSubscriptionOnCreateLENTEDataResolverFnAppSyncFunctionD5C85799FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSSubscriptionOnCreateINVENTARIOORDENITEMSDataResolverFnSubscriptionOnCreateINVENTARIO16E0E40A"
             }
           ]
         },
@@ -1561,10 +1561,10 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEauth0FunctionQuerygetLENTEauth0FunctionAppSyncFunctionF1EF76A1FunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSauth0FunctionQuerygetINVENTARIOORDENITEMSauth0FunctionAp0166A51F"
             },
             {
-              "Ref": "referencetotransformerrootstackLENTENestedStackLENTENestedStackResource9CCA69B5OutputstransformerrootstackLENTEQuerygetLENTEpostAuth0FunctionQuerygetLENTEpostAuth0FunctionAppSyncFunction21D248FAFunctionId"
+              "Ref": "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSQuerygetINVENTARIOORDENITEMSpostAuth0FunctionQuerygetINVENTARIOORDENITEMSpostAuth0Fu5BAB92B0"
             },
             {
               "Fn::GetAtt": [

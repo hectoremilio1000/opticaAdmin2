@@ -2,93 +2,58 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/datastore";
 
-export enum Enumgrupo {
+export enum Ordenstatus {
+  CREADA = "CREADA",
+  ENVIADAMAQUILA = "ENVIADAMAQUILA",
+  ENTREGADA = "ENTREGADA",
+  CONPROBLEMAS = "CONPROBLEMAS"
+}
+
+export enum Tipoorden {
+  COTIZACION = "COTIZACION",
+  ORDEN = "ORDEN"
+}
+
+export enum Enumcategoria {
   DAMA = "DAMA",
   CABALLERO = "CABALLERO",
   BOY = "BOY"
 }
 
-export enum Tipo {
-  COTIZACION = "COTIZACION",
-  NUEVO = "NUEVO"
-}
 
 
-
-type EagerLENTE = {
+type EagerINVENTARIOORDENITEMS = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<LENTE, 'id'>;
+    identifier: ManagedIdentifier<INVENTARIOORDENITEMS, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly grupo: Enumgrupo | keyof typeof Enumgrupo;
-  readonly proveedor: string;
-  readonly costo: number;
-  readonly precioVenta: number;
-  readonly tiempoEntrega?: string | null;
-  readonly color?: string | null;
-  readonly tipoArmazon?: string | null;
-  readonly imagen?: string | null;
-  readonly tipoMaterial?: string | null;
+  readonly cantidad?: number | null;
+  readonly costo?: number | null;
+  readonly inventarioID: string;
+  readonly ordenID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyLENTE = {
+type LazyINVENTARIOORDENITEMS = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<LENTE, 'id'>;
+    identifier: ManagedIdentifier<INVENTARIOORDENITEMS, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly grupo: Enumgrupo | keyof typeof Enumgrupo;
-  readonly proveedor: string;
-  readonly costo: number;
-  readonly precioVenta: number;
-  readonly tiempoEntrega?: string | null;
-  readonly color?: string | null;
-  readonly tipoArmazon?: string | null;
-  readonly imagen?: string | null;
-  readonly tipoMaterial?: string | null;
+  readonly cantidad?: number | null;
+  readonly costo?: number | null;
+  readonly inventarioID: string;
+  readonly ordenID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type LENTE = LazyLoading extends LazyLoadingDisabled ? EagerLENTE : LazyLENTE
+export declare type INVENTARIOORDENITEMS = LazyLoading extends LazyLoadingDisabled ? EagerINVENTARIOORDENITEMS : LazyINVENTARIOORDENITEMS
 
-export declare const LENTE: (new (init: ModelInit<LENTE>) => LENTE) & {
-  copyOf(source: LENTE, mutator: (draft: MutableModel<LENTE>) => MutableModel<LENTE> | void): LENTE;
-}
-
-type EagerOrden = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Orden, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly opticaID: string;
-  readonly tipo?: Tipo | keyof typeof Tipo | null;
-  readonly clienteID: string;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-type LazyOrden = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Orden, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly opticaID: string;
-  readonly tipo?: Tipo | keyof typeof Tipo | null;
-  readonly clienteID: string;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-export declare type Orden = LazyLoading extends LazyLoadingDisabled ? EagerOrden : LazyOrden
-
-export declare const Orden: (new (init: ModelInit<Orden>) => Orden) & {
-  copyOf(source: Orden, mutator: (draft: MutableModel<Orden>) => MutableModel<Orden> | void): Orden;
+export declare const INVENTARIOORDENITEMS: (new (init: ModelInit<INVENTARIOORDENITEMS>) => INVENTARIOORDENITEMS) & {
+  copyOf(source: INVENTARIOORDENITEMS, mutator: (draft: MutableModel<INVENTARIOORDENITEMS>) => MutableModel<INVENTARIOORDENITEMS> | void): INVENTARIOORDENITEMS;
 }
 
 type EagerGERENTE = {
@@ -133,9 +98,9 @@ export declare const GERENTE: (new (init: ModelInit<GERENTE>) => GERENTE) & {
   copyOf(source: GERENTE, mutator: (draft: MutableModel<GERENTE>) => MutableModel<GERENTE> | void): GERENTE;
 }
 
-type EagerCliente = {
+type EagerVENDEDORES = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Cliente, 'id'>;
+    identifier: ManagedIdentifier<VENDEDORES, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
@@ -144,17 +109,14 @@ type EagerCliente = {
   readonly apellidoMaterno?: string | null;
   readonly whats?: string | null;
   readonly email?: string | null;
-  readonly fechaNacimiento?: string | null;
-  readonly edad?: number | null;
   readonly opticaID: string;
-  readonly Ordens?: (Orden | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyCliente = {
+type LazyVENDEDORES = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Cliente, 'id'>;
+    identifier: ManagedIdentifier<VENDEDORES, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
@@ -163,48 +125,169 @@ type LazyCliente = {
   readonly apellidoMaterno?: string | null;
   readonly whats?: string | null;
   readonly email?: string | null;
+  readonly opticaID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type VENDEDORES = LazyLoading extends LazyLoadingDisabled ? EagerVENDEDORES : LazyVENDEDORES
+
+export declare const VENDEDORES: (new (init: ModelInit<VENDEDORES>) => VENDEDORES) & {
+  copyOf(source: VENDEDORES, mutator: (draft: MutableModel<VENDEDORES>) => MutableModel<VENDEDORES> | void): VENDEDORES;
+}
+
+type EagerINVENTARIO = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<INVENTARIO, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly nombreProducto?: string | null;
+  readonly proveedor?: string | null;
+  readonly costo: number;
+  readonly precioVenta: number;
+  readonly color?: string | null;
+  readonly tipoEstructura?: string | null;
+  readonly urlImagen?: string | null;
+  readonly tipoMaterial?: string | null;
+  readonly categoria: Enumcategoria | keyof typeof Enumcategoria;
+  readonly INVENTARIOORDENITEMS?: (INVENTARIOORDENITEMS | null)[] | null;
+  readonly opticaID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyINVENTARIO = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<INVENTARIO, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly nombreProducto?: string | null;
+  readonly proveedor?: string | null;
+  readonly costo: number;
+  readonly precioVenta: number;
+  readonly color?: string | null;
+  readonly tipoEstructura?: string | null;
+  readonly urlImagen?: string | null;
+  readonly tipoMaterial?: string | null;
+  readonly categoria: Enumcategoria | keyof typeof Enumcategoria;
+  readonly INVENTARIOORDENITEMS: AsyncCollection<INVENTARIOORDENITEMS>;
+  readonly opticaID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type INVENTARIO = LazyLoading extends LazyLoadingDisabled ? EagerINVENTARIO : LazyINVENTARIO
+
+export declare const INVENTARIO: (new (init: ModelInit<INVENTARIO>) => INVENTARIO) & {
+  copyOf(source: INVENTARIO, mutator: (draft: MutableModel<INVENTARIO>) => MutableModel<INVENTARIO> | void): INVENTARIO;
+}
+
+type EagerORDEN = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<ORDEN, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly opticaID: string;
+  readonly tipoOrden?: Tipoorden | keyof typeof Tipoorden | null;
+  readonly clientesID: string;
+  readonly usadoLentes?: string | null;
+  readonly fechaOrden?: string | null;
+  readonly horaOrden?: string | null;
+  readonly precioTotal?: string | null;
+  readonly referencia?: string | null;
+  readonly fechaEntrega?: string | null;
+  readonly seRealizoExamen?: string | null;
+  readonly graduacionDerechaVieja?: string | null;
+  readonly graduacionIzquierdaVieja?: string | null;
+  readonly graduacionDerechaNueva?: string | null;
+  readonly graduacionIzquierdaNueva?: string | null;
+  readonly fechaExamen?: string | null;
+  readonly INVENTARIOORDENITEMS?: (INVENTARIOORDENITEMS | null)[] | null;
+  readonly ordenStatus?: Ordenstatus | keyof typeof Ordenstatus | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyORDEN = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<ORDEN, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly opticaID: string;
+  readonly tipoOrden?: Tipoorden | keyof typeof Tipoorden | null;
+  readonly clientesID: string;
+  readonly usadoLentes?: string | null;
+  readonly fechaOrden?: string | null;
+  readonly horaOrden?: string | null;
+  readonly precioTotal?: string | null;
+  readonly referencia?: string | null;
+  readonly fechaEntrega?: string | null;
+  readonly seRealizoExamen?: string | null;
+  readonly graduacionDerechaVieja?: string | null;
+  readonly graduacionIzquierdaVieja?: string | null;
+  readonly graduacionDerechaNueva?: string | null;
+  readonly graduacionIzquierdaNueva?: string | null;
+  readonly fechaExamen?: string | null;
+  readonly INVENTARIOORDENITEMS: AsyncCollection<INVENTARIOORDENITEMS>;
+  readonly ordenStatus?: Ordenstatus | keyof typeof Ordenstatus | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type ORDEN = LazyLoading extends LazyLoadingDisabled ? EagerORDEN : LazyORDEN
+
+export declare const ORDEN: (new (init: ModelInit<ORDEN>) => ORDEN) & {
+  copyOf(source: ORDEN, mutator: (draft: MutableModel<ORDEN>) => MutableModel<ORDEN> | void): ORDEN;
+}
+
+type EagerCLIENTES = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<CLIENTES, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly nombres?: string | null;
+  readonly apellidoPaterno?: string | null;
+  readonly apellidoMaterno?: string | null;
   readonly fechaNacimiento?: string | null;
-  readonly edad?: number | null;
+  readonly edad?: string | null;
+  readonly whats?: string | null;
+  readonly sexo?: string | null;
+  readonly email?: string | null;
   readonly opticaID: string;
-  readonly Ordens: AsyncCollection<Orden>;
+  readonly ORDENS?: (ORDEN | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type Cliente = LazyLoading extends LazyLoadingDisabled ? EagerCliente : LazyCliente
-
-export declare const Cliente: (new (init: ModelInit<Cliente>) => Cliente) & {
-  copyOf(source: Cliente, mutator: (draft: MutableModel<Cliente>) => MutableModel<Cliente> | void): Cliente;
-}
-
-type EagerVendedores = {
+type LazyCLIENTES = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Vendedores, 'id'>;
+    identifier: ManagedIdentifier<CLIENTES, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
   readonly nombres?: string | null;
+  readonly apellidoPaterno?: string | null;
+  readonly apellidoMaterno?: string | null;
+  readonly fechaNacimiento?: string | null;
+  readonly edad?: string | null;
+  readonly whats?: string | null;
+  readonly sexo?: string | null;
+  readonly email?: string | null;
   readonly opticaID: string;
+  readonly ORDENS: AsyncCollection<ORDEN>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyVendedores = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Vendedores, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly nombres?: string | null;
-  readonly opticaID: string;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
+export declare type CLIENTES = LazyLoading extends LazyLoadingDisabled ? EagerCLIENTES : LazyCLIENTES
 
-export declare type Vendedores = LazyLoading extends LazyLoadingDisabled ? EagerVendedores : LazyVendedores
-
-export declare const Vendedores: (new (init: ModelInit<Vendedores>) => Vendedores) & {
-  copyOf(source: Vendedores, mutator: (draft: MutableModel<Vendedores>) => MutableModel<Vendedores> | void): Vendedores;
+export declare const CLIENTES: (new (init: ModelInit<CLIENTES>) => CLIENTES) & {
+  copyOf(source: CLIENTES, mutator: (draft: MutableModel<CLIENTES>) => MutableModel<CLIENTES> | void): CLIENTES;
 }
 
 type EagerOPTICA = {
@@ -215,10 +298,11 @@ type EagerOPTICA = {
   readonly id: string;
   readonly nombre: string;
   readonly createdBy: string;
-  readonly Clientes?: (Cliente | null)[] | null;
-  readonly Ordens?: (Orden | null)[] | null;
-  readonly Vendedores?: (Vendedores | null)[] | null;
+  readonly VENDEDORES?: (VENDEDORES | null)[] | null;
   readonly GERENTES?: (GERENTE | null)[] | null;
+  readonly ORDENS?: (ORDEN | null)[] | null;
+  readonly CLIENTES?: (CLIENTES | null)[] | null;
+  readonly INVENTARIOS?: (INVENTARIO | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -231,10 +315,11 @@ type LazyOPTICA = {
   readonly id: string;
   readonly nombre: string;
   readonly createdBy: string;
-  readonly Clientes: AsyncCollection<Cliente>;
-  readonly Ordens: AsyncCollection<Orden>;
-  readonly Vendedores: AsyncCollection<Vendedores>;
+  readonly VENDEDORES: AsyncCollection<VENDEDORES>;
   readonly GERENTES: AsyncCollection<GERENTE>;
+  readonly ORDENS: AsyncCollection<ORDEN>;
+  readonly CLIENTES: AsyncCollection<CLIENTES>;
+  readonly INVENTARIOS: AsyncCollection<INVENTARIO>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
