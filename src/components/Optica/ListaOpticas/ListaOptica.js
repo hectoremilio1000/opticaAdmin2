@@ -39,6 +39,7 @@ function ListaOptica() {
       );
       fecthOptica();
       setIsEditing(false);
+      console.log("se actualizo");
       message.success("El lente se ha actualizado");
     } catch (error) {
       message.error("Hubo un error contacta al administrador");
