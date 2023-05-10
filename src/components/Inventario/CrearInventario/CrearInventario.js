@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Input, Select, message } from "antd";
 // import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 // import type { FormInstance } from "antd/es/form";
 
 // amplify API
-import { API, graphqlOperation, Storage, DataStore } from "aws-amplify";
-import * as mutations from "../../../graphql/mutations";
-import { MenuContext } from "../../../contexts/MenuContext";
+import { Storage, DataStore } from "aws-amplify";
+// import * as mutations from "../../../graphql/mutations";
+// import { MenuContext } from "../../../contexts/MenuContext";
 import { v4 as uuidv4 } from "uuid";
 import config from "../../../aws-exports";
 import { INVENTARIO, OPTICA } from "../../../models";
@@ -21,7 +21,7 @@ const { Option } = Select;
 function CrearInventario() {
   // usesate url y key
 
-  const { cambiarComponent } = useContext(MenuContext);
+  //   const { cambiarComponent } = useContext(MenuContext);
   const [nombreProducto, setNombreProducto] = useState("");
   const [categoria, setCategoria] = useState("");
   const [proveedor, setProveedor] = useState("");
@@ -125,6 +125,7 @@ function CrearInventario() {
           >
             <Input
               value={nombreProducto}
+              placeholder="Ingresa el nombre del producto"
               onChange={(e) => setNombreProducto(e.target.value)}
             />
           </Form.Item>
@@ -165,6 +166,7 @@ function CrearInventario() {
             rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
+              placeholder="Ingrese el nombre del proveedor"
               value={proveedor}
               onChange={(e) => setProveedor(e.target.value)}
             />
@@ -176,6 +178,7 @@ function CrearInventario() {
             rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
+              placeholder="Ingresa el costo del producto"
               value={costo}
               onChange={(e) => {
                 if (e.target.value === "") {
@@ -192,6 +195,7 @@ function CrearInventario() {
             rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
+              placeholder="Ingresa el precio de venta"
               value={precioVenta}
               onChange={(e) => {
                 if (e.target.value === "") {
@@ -208,7 +212,11 @@ function CrearInventario() {
             name="color"
             // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
-            <Input value={color} onChange={(e) => setColor(e.target.value)} />
+            <Input
+              placeholder="Ingresa el color del producto"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
           </Form.Item>
           <Form.Item
             label="Tipo Estructura"
@@ -216,6 +224,7 @@ function CrearInventario() {
             // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
+              placeholder="Ingresa el tipo de estructura"
               value={tipoEstructura}
               onChange={(e) => setTipoEstructura(e.target.value)}
             />
@@ -243,6 +252,7 @@ function CrearInventario() {
             // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
+              placeholder="Ingresa el tipo de material"
               value={tipoMaterial}
               onChange={(e) => setTipoMaterial(e.target.value)}
             />
