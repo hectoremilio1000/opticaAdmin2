@@ -1,15 +1,19 @@
-import { React, useState, useEffect } from "react";
-import { Form, message, Input, Select, Layout, Button } from "antd";
+import { React, useState, useEffect, useContext } from "react";
+import { Form, message, Input, Select, Button } from "antd";
 import { API, graphqlOperation, DataStore } from "aws-amplify";
+import * as mutations from "../../../graphql/mutations";
 import { OPTICA } from "../../../models";
+import { MenuContext } from "../../../contexts/MenuContext";
 // uso el contexto del auth
 import { useAuthContext } from "../../../contexts/AuthContext";
 import { checkIfExists } from "../../../functions/user/checkIfExists";
+import { signUp } from "../../../functions/user/signUp";
+import GROUPS from "../../../constants/groups";
 
-const { Content } = Layout;
 const { Option } = Select;
 
 function CrearGerente() {
+  const { cambiarComponent } = useContext(MenuContext);
   const { userName: createdBy } = useAuthContext();
 
   const [nombres, setNombres] = useState("");
@@ -36,6 +40,7 @@ function CrearGerente() {
   }, []);
 
   const onFinish = async () => {
+    console.log(Math.random().toString(36).slice(2, 10));
     console.log(
       nombres,
       userName,
@@ -46,11 +51,44 @@ function CrearGerente() {
       phoneNumber
     );
     const exist = await checkIfExists(userName);
-    console.log(exist);
-    // if (exist) {
-    //   message.error("El usuario existe");
-    //   return;
-    // }
+    if (exist) {
+      message.error("El usuario existe");
+      return;
+    }
+    try {
+      const createdGerente = await API.graphql(
+        graphqlOperation(mutations.createGERENTE, {
+          input: {
+            nombres,
+            userName,
+            email,
+            phoneNumber,
+            opticaID,
+            confirmed,
+            blocked,
+            createdBy,
+          },
+        })
+      );
+      const profile = createdGerente?.data?.createGERENTE?.id;
+      const address = opticaID;
+      if (profile && address) {
+        signUp({
+          userName,
+          email,
+          nombres,
+          phoneNumber,
+          profile,
+          address,
+          groupName: GROUPS.GERENTE,
+        });
+      }
+      message.success("El Gerente De Optica se ha creado");
+      cambiarComponent({ key: "15" });
+    } catch (error) {
+      console.log(error);
+      message.error("Hubo un error contacta al administrador");
+    }
   };
 
   return (
@@ -114,7 +152,15 @@ function CrearGerente() {
         </Form.Item>
         <Form.Item
           label="Numero Telefono"
-          rules={[{ required: true, message: "Este campo es requerido" }]}
+          name="phoneNumber"
+          rules={[
+            {
+              pattern: new RegExp(
+                /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/0-9]*$/g
+              ),
+              message: "Please add country code and check the number carefully",
+            },
+          ]}
         >
           <Input
             placeholder="Ingresa el numero de telefono"
