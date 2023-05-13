@@ -70,7 +70,17 @@ function ListaClientes() {
   const onFinish = async () => {
     try {
       const original = await DataStore.query(CLIENTES, id);
-      console.log(original);
+      // console.log(original);
+      // console.log(
+      //   nombres,
+      //   edad,
+      //   sexo,
+      //   fechaNacimiento,
+      //   apellidoMaterno,
+      //   apellidoPaterno,
+      //   whats,
+      //   opticaID
+      // );
 
       await DataStore.save(
         CLIENTES.copyOf(original, (updated) => {
@@ -278,7 +288,7 @@ function ListaClientes() {
                 rules={[{ required: true, message: "Este campo es requerido" }]}
               >
                 <DatePicker
-                  defaultValue={dayjs(fechaNacimiento, "YYYY-MM-DD")}
+                  value={dayjs(fechaNacimiento, "YYYY-MM-DD")}
                   format="YYYY-MM-DD"
                   onChange={(date, dateString) =>
                     setFechaNacimiento(dateString)

@@ -10,6 +10,8 @@ import CrearVendedor from "../../components/Vendedores/CrearVendedor/CrearVended
 import ListaVendedor from "../../components/Vendedores/ListaVendedor/ListaVendedor";
 import CrearCliente from "../../components/Clientes/CrearCliente/CrearCliente";
 import ListaClientes from "../../components/Clientes/ListaClientes/ListaClientes";
+import CrearOrden from "../../components/Ordenes/CrearOrden/CrearOrden";
+import ListaOrdenes from "../../components/Ordenes/ListaOrdenes/ListaOrdenes";
 
 const { Content } = Layout;
 
@@ -55,6 +57,14 @@ function ContentLayoutSuperAdmin({ current }) {
       ) : current === "19" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
           <ListaClientes />
+        </div>
+      ) : current === "20" ? (
+        <div className="site-layout-background" style={{ minHeight: 100 }}>
+          <CrearOrden />
+        </div>
+      ) : current === "21" ? (
+        <div className="site-layout-background" style={{ minHeight: 100 }}>
+          <ListaOrdenes />
         </div>
       ) : (
         <div style={{}}>Aun no se ha creado las demas rutas</div>
