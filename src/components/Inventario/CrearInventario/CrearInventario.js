@@ -78,7 +78,7 @@ function CrearInventario() {
         })
       );
       console.log(result);
-      message.success("El lente se ha creado");
+      message.success("El producto se ha creado correctamente");
       cambiarComponent({ key: "11" });
     } catch (error) {
       console.log(error);

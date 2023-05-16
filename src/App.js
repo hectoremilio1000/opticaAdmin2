@@ -10,7 +10,7 @@ import { Spin } from "antd";
 // fin de antd
 
 // amplify
-import { Amplify, Auth, DataStore } from "aws-amplify";
+import { Amplify, Auth } from "aws-amplify";
 import awsExports from "./aws-exports";
 import AuthContextProvider from "./contexts/AuthContext";
 import AppRoutes from "./AppRoutes/AppRoutes";

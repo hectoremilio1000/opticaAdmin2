@@ -96,7 +96,7 @@ function ListaClientes() {
       );
       fetchClientes();
       setIsEditing(false);
-      message.success("El producto se ha actualizado");
+      message.success("El cliente se ha actualizado");
     } catch (error) {
       message.error("Hubo un error contacta al administrador");
     }
@@ -311,7 +311,7 @@ function ListaClientes() {
                 rules={[
                   {
                     pattern: new RegExp(
-                      /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
+                      /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/./0-9]*$/g
                     ),
                     message:
                       "Please add country code and check the number carefully",

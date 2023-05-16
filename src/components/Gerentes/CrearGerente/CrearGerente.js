@@ -83,7 +83,7 @@ function CrearGerente() {
           groupName: GROUPS.GERENTE,
         });
       }
-      message.success("El Gerente De Optica se ha creado");
+      message.success("El Gerente De Optica se ha creado correctamente");
       cambiarComponent({ key: "15" });
     } catch (error) {
       console.log(error);

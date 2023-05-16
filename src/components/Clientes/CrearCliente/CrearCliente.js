@@ -169,7 +169,7 @@ function CrearCliente() {
             rules={[
               {
                 pattern: new RegExp(
-                  /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
+                  /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/./0-9]*$/g
                 ),
                 message:
                   "Please add country code and check the number carefully",

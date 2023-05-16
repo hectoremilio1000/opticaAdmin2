@@ -1,14 +1,15 @@
+import "./Cart.css";
 import {
   Button,
   DatePicker,
   Form,
   Input,
-  InputNumber,
   Select,
   Space,
   Table,
   message,
 } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import { MenuContext } from "../../../contexts/MenuContext";
 import dayjs from "dayjs";
 import { React, useState, useEffect, useContext } from "react";
@@ -43,10 +44,8 @@ function CrearOrden() {
   const [carrito, setCarrito] = useState([]);
   const [productos, setProductos] = useState([]);
   const [listProductos, setListProductos] = useState([]);
-  const [cantidad, setCantidad] = useState(1);
-  const [precio, setPrecio] = useState(0);
-  const [productoID, setProductoID] = useState("");
-  const [nombreProducto, setNombreProducto] = useState("");
+  var cantidad = 1;
+  const [productoID, setProductoID] = useState(null);
   const [total, setTotal] = useState(0);
 
   const fetchClientes = async () => {
@@ -102,8 +101,8 @@ function CrearOrden() {
     }
   };
 
-  const addCarrito = () => {
-    console.log("addcart");
+  const addCarrito = (productoID) => {
+    const result = listProductos.find((elemento) => elemento.id === productoID);
     if (productoID !== "") {
       const ident = carrito.find((elemento) => {
         if (elemento.id === productoID) {
@@ -125,56 +124,55 @@ function CrearOrden() {
       } else {
         const carritoInterno = {
           id: productoID,
-          nombre: nombreProducto,
-          cantidad,
-          precio,
-          subTotal: precio * cantidad,
+          nombre: result.nombreProducto,
+          cantidad: cantidad,
+          precio: result.precioVenta,
+          subTotal: Number(result.precioVenta) * Number(cantidad),
         };
         setCarrito([...carrito, carritoInterno]);
         setTotal(total + carritoInterno.subTotal);
       }
+      setProductoID(null);
     }
   };
 
-  const changeCarrito = (e) => {
-    const result = listProductos.find((elemento) => elemento.id === e);
-    setCantidad(1);
-    setProductoID(result.id);
-    setPrecio(result.precioVenta);
-    setNombreProducto(result.nombreProducto);
-  };
-
   const onFinish = async () => {
-    const fecha = dayjs().format("YYYY-MM-DD");
+    if (clientesID !== "" && opticaID !== "") {
+      const fecha = dayjs().format("YYYY-MM-DD");
 
-    // Obtener la hora actual en el formato deseado: 09:57:05
-    const hora = dayjs().format("HH:mm:ss");
-    try {
-      await DataStore.save(
-        new ORDEN({
-          tipoOrden,
-          clientesID,
-          opticaID,
-          seRealizoExamen,
-          fechaEntrega,
-          usadoLentes: usoLentes,
-          referencia,
-          graduacionDerechaVieja,
-          graduacionIzquierdaVieja,
-          fechaExamen,
-          ordenStatus: "CREADA",
-          fechaOrden: fecha,
-          horaOrden: hora,
-        })
-      );
-      message.success("La orden se ha registrado correctamente");
-    } catch (error) {
-      console.log(error);
+      // Obtener la hora actual en el formato deseado: 09:57:05
+      const hora = dayjs().format("HH:mm:ss");
+      try {
+        await DataStore.save(
+          new ORDEN({
+            tipoOrden,
+            clientesID,
+            opticaID,
+            seRealizoExamen,
+            fechaEntrega,
+            usadoLentes: usoLentes,
+            referencia,
+            graduacionDerechaVieja,
+            graduacionIzquierdaVieja,
+            fechaExamen,
+            ordenStatus: "CREADA",
+            fechaOrden: fecha,
+            horaOrden: hora,
+            precioTotal: total.toString(),
+          })
+        );
+        cambiarComponent({ key: "21" });
+        message.success("La orden se ha registrado correctamente");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      message.warning("Te faltan llenar campos");
     }
   };
   const onOrden = async () => {
     if (carrito.length > 0) {
-      if (clientesID !== "") {
+      if (clientesID !== "" && opticaID !== "") {
         const fecha = dayjs().format("YYYY-MM-DD");
 
         // Obtener la hora actual en el formato deseado: 09:57:05
@@ -197,7 +195,6 @@ function CrearOrden() {
             precioTotal: total.toString(),
           })
         );
-        console.log(result);
         carrito.map(async (cart) => {
           await DataStore.save(
             new INVENTARIOORDENITEMS({
@@ -211,7 +208,11 @@ function CrearOrden() {
         setCarrito([]);
         cambiarComponent({ key: "21" });
         message.success("La orden se ha registrado correctamente");
+      } else {
+        message.warning("Te faltan llenar campos");
       }
+    } else {
+      message.info("Te faltan agregar productos");
     }
     try {
     } catch (error) {
@@ -219,27 +220,42 @@ function CrearOrden() {
     }
   };
 
+  const desCarrito = (record) => {
+    const nuevosObjetos = carrito.map((objeto) => {
+      if (objeto.id === record.id) {
+        if (objeto.cantidad > 1) {
+          const newCantidad = objeto.cantidad - cantidad;
+          const newSubtotal = newCantidad * objeto.precio;
+          setTotal(total - cantidad * objeto.precio);
+          return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+        }
+      }
+      return objeto;
+    });
+    setCarrito(nuevosObjetos);
+  };
+  const aumentCarrito = (record) => {
+    const nuevosObjetos = carrito.map((objeto) => {
+      if (objeto.id === record.id) {
+        const newCantidad = objeto.cantidad + cantidad;
+        const newSubtotal = newCantidad * objeto.precio;
+        setTotal(total + cantidad * objeto.precio);
+        return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+      }
+      return objeto;
+    });
+    setCarrito(nuevosObjetos);
+  };
+
   const deleteRowCart = (record) => {
     const nuevosObjetos = carrito.filter((objeto) => objeto.id !== record.id);
+    const precio = carrito.find((objeto) => objeto.id === record.id);
     setCarrito(nuevosObjetos);
+    setTotal(total - precio.precio);
   };
 
   // Table source
   const columns = [
-    {
-      title: "Acciones",
-      dataIndex: "acciones",
-      key: "acciones",
-      render: (_, record) => {
-        return (
-          <>
-            <Button onClick={() => deleteRowCart(record)} type="primary" danger>
-              -
-            </Button>
-          </>
-        );
-      },
-    },
     {
       title: "Producto",
       dataIndex: "nombre",
@@ -249,6 +265,41 @@ function CrearOrden() {
       title: "Cantidad",
       dataIndex: "cantidad",
       key: "cantidad",
+      render: (_, record) => {
+        return (
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <Button
+              onClick={() => desCarrito(record)}
+              type="primary"
+              style={{
+                borderRadius: "50%",
+                width: "25px",
+                height: "25px",
+                display: "inline-block",
+                padding: "0px",
+                background: "#ec1c10a8",
+              }}
+            >
+              -
+            </Button>
+            <p>{record.cantidad}</p>
+            <Button
+              onClick={() => aumentCarrito(record)}
+              type="primary"
+              style={{
+                borderRadius: "50%",
+                width: "25px",
+                height: "25px",
+                display: "inline-block",
+                padding: "0px",
+                background: "#06980d",
+              }}
+            >
+              +
+            </Button>
+          </div>
+        );
+      },
     },
     {
       title: "Precio Unitario",
@@ -266,20 +317,34 @@ function CrearOrden() {
         return <p>$/{record.subTotal}.00</p>;
       },
     },
+    {
+      title: "Acciones",
+      dataIndex: "acciones",
+      key: "acciones",
+      render: (_, record) => {
+        return (
+          <>
+            <Button onClick={() => deleteRowCart(record)} type="primary" danger>
+              <DeleteOutlined />
+            </Button>
+          </>
+        );
+      },
+    },
   ];
   return (
     <div
       style={{
-        maxWidth: "800px",
-        margin: "auto",
+        // maxWidth: "800px",
+        // margin: "auto",
         padding: "20px 30px",
         boxShadow: "0px 10px 10px 0px #ececec",
         background: "#fff",
       }}
     >
-      <h1>Crear Orden</h1>
+      <h1>Registrar Orden</h1>
 
-      <Form.Item label="Tipo de orden">
+      <Form.Item style={{ marginTop: "20px" }} label="Tipo de orden">
         <Select
           onSelect={(e) => {
             setTipoOrden(e);
@@ -361,6 +426,7 @@ function CrearOrden() {
                   onChange={(date, dateString) => setFechaExamen(dateString)}
                 />
               </Form.Item>
+
               <Form.Item label="Referencia">
                 <Input
                   onChange={(e) => setReferencia(e.target.value)}
@@ -404,6 +470,13 @@ function CrearOrden() {
                   onChange={(date, dateString) => setFechaEntrega(dateString)}
                 />
               </Form.Item>
+              <Form.Item label="Precio de Orden">
+                <Input
+                  value={total}
+                  onChange={(e) => setTotal(e.target.value)}
+                  placeholder="Ingrese el costo $.00 de la orden"
+                />
+              </Form.Item>
             </div>
 
             <div style={{ marginTop: 10 }}>
@@ -414,115 +487,113 @@ function CrearOrden() {
           </>
         </Form>
       ) : tipoOrden === "ORDEN" ? (
-        <>
-          <Form.Item>
-            <h1>Cliente</h1>
-            <p>Buscar Cliente</p>
+        <div style={{ display: "flex", gap: "20px" }}>
+          <div className="container-productos" style={{ width: "100%" }}>
             <Select
               showSearch
-              style={{ width: "100%" }}
-              onChange={(e) => setclientesID(e)}
-              placeholder="Search to Select"
+              value={productoID}
+              style={{ width: "100%", marginBottom: "20px" }}
+              onChange={(e) => addCarrito(e)}
+              placeholder="Agregar Producto"
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "")
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={clientes}
+              options={productos}
             />
-          </Form.Item>
-          <Form.Item
-            label="Optica"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
-          >
-            <Select
-              //   defaultValue={categoria}
-              onSelect={(e) => setOpticaID(e)}
-              placeholder="Select una Optica"
+            <Table
+              pagination={false}
+              scroll={{ x: 400 }}
+              rowKey={(record) => record.id}
+              columns={columns}
+              dataSource={carrito}
+            />
+            <div
+              style={{
+                marginTop: "30px",
+                width: "100%",
+                maxWidth: "300px",
+                padding: "15px",
+                border: "1px solid #ececec",
+                borderRadius: "10px",
+              }}
             >
-              {opticas.map((optica) => {
-                return (
-                  <Option key={optica.id} value={optica.id}>
-                    {optica.nombre}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          <p>Add carrito productos</p>
-          <Form
-            onFinish={onFinish}
-            layout="vertical"
+              <h3>Resumen de Pago</h3>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <p>SubTotal</p>
+                <h4>${(Math.round((total / 1.16) * 100) / 100).toFixed(2)}</h4>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <p>IVA(16%)</p>
+                <h4>
+                  ${(Math.round((total - total / 1.16) * 100) / 100).toFixed(2)}
+                </h4>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <p>Total</p>
+                <h4>${(Math.round(total * 100) / 100).toFixed(2)}</h4>
+              </div>
+            </div>
+          </div>
+          <div
+            className="container-info"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "15px",
-              marginBottom: "30px",
+              maxWidth: "250px",
+              border: "1px solid #ececec",
+              borderRadius: "10px",
+              padding: "15px",
             }}
           >
-            <Form.Item label="Producto">
+            <Form.Item>
+              <p>
+                <b>Informacion Basica</b>
+              </p>
               <Select
                 showSearch
                 style={{ width: "100%" }}
-                onChange={(e) => changeCarrito(e)}
-                placeholder="Search to Select"
+                onChange={(e) => setclientesID(e)}
+                placeholder="Buscar Clientes"
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   (option?.label ?? "")
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
-                options={productos}
+                options={clientes}
               />
             </Form.Item>
-            <Form.Item label="Cantidad">
-              <InputNumber
-                value={cantidad}
-                onChange={(e) => setCantidad(e)}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-            <Form.Item label="Precio">
-              <Input value={precio} disabled />
-            </Form.Item>
-            <Form.Item label="Add">
-              <Button onClick={addCarrito} title="Save" type="primary">
-                + Agregar
-              </Button>
-              <Button
-                onClick={() => {
-                  setCarrito([]);
-                  setTotal(0);
-                }}
-                title="Reset"
-                type="primary"
-                danger
-              >
-                - Resetear
-              </Button>
-            </Form.Item>
-          </Form>
-          <Table
-            scroll={{ x: 400 }}
-            rowKey={(record) => record.id}
-            columns={columns}
-            dataSource={carrito}
-          />
-          <div>
-            <h1>Total a pagar: ${total}.00</h1>
-          </div>
-          <div style={{ marginTop: 10 }}>
-            <Button
-              onClick={onOrden}
-              title="Save"
-              htmlType="submit"
-              type="primary"
+            <Form.Item
+              label="Optica"
+              rules={[{ required: true, message: "Este campo es requerido" }]}
             >
-              Crear Orden
-            </Button>
+              <Select
+                //   defaultValue={categoria}
+                onSelect={(e) => setOpticaID(e)}
+                placeholder="Select una Optica"
+              >
+                {opticas.map((optica) => {
+                  return (
+                    <Option key={optica.id} value={optica.id}>
+                      {optica.nombre}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+            <div style={{ marginTop: 10 }}>
+              <Button
+                onClick={onOrden}
+                title="Save"
+                htmlType="submit"
+                type="primary"
+              >
+                Crear Orden
+              </Button>
+            </div>
           </div>
-        </>
+        </div>
       ) : null}
     </div>
   );

@@ -17,7 +17,7 @@ const { Content } = Layout;
 
 function ContentLayoutSuperAdmin({ current }) {
   return (
-    <Content style={{ padding: "30px" }}>
+    <Content style={{ padding: "30px", background: "#fff" }}>
       {current === "10" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
           <CrearInventario />
