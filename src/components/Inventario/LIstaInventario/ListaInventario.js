@@ -13,9 +13,7 @@ import {
 } from "antd";
 // amplify API
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { API, DataStore, graphqlOperation } from "aws-amplify";
-import * as mutations from "../../../graphql/mutations";
-import * as queries from "../../../graphql/queries";
+import { DataStore } from "aws-amplify";
 // import { useNavigate } from "react-router-dom";
 import { INVENTARIO, OPTICA } from "../../../models";
 
@@ -29,7 +27,6 @@ function ListaInventario() {
   const [proveedor, setProveedor] = useState("");
   const [costo, setCosto] = useState(0);
   const [precioVenta, setPrecioVenta] = useState(0);
-  const [tiempoEntrega, setTiempoEntrega] = useState("");
   const [color, setColor] = useState("");
   const [tipoEstructura, settipoEstructura] = useState("");
   const [urlImagen, setUrlImagen] = useState("");
@@ -37,11 +34,10 @@ function ListaInventario() {
   const [inventario, setInventario] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [opticaID, setOpticaID] = useState("");
-  const [filtercategorias, setFiltercategorias] = useState([]);
+  // const [filtercategorias, setFiltercategorias] = useState([]);
   const [opticas, setOpticas] = useState([]);
 
   // const navigate = useNavigate();
-  const [lentes, setLentes] = useState([]);
   const searchcategorias = () => {
     const categorias = [...new Set(inventario.map((inv) => inv.categoria))];
     const items = [];
@@ -210,7 +206,7 @@ function ListaInventario() {
     try {
       await DataStore.delete(INVENTARIO, id);
       fetchInventario();
-      message.success("El lente se ha eliminado correctamente");
+      message.success("El producto se ha eliminado correctamente");
     } catch (error) {
       console.log(error);
       message.error("Hubo un error contacta al administrador");
@@ -238,7 +234,7 @@ function ListaInventario() {
       );
       fetchInventario();
       setIsEditing(false);
-      message.success("El producto se ha actualizado");
+      message.success("El producto se ha actualizado correctamente");
     } catch (error) {
       message.error("Hubo un error contacta al administrador");
     }

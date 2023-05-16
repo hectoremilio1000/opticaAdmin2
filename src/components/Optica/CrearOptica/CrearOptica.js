@@ -1,12 +1,13 @@
 import React, { useState, useContext } from "react";
 import { Button, Form, Input, message } from "antd";
 
-import { API, graphqlOperation, Storage, DataStore } from "aws-amplify";
-import * as mutations from "../../../graphql/mutations";
+import { DataStore } from "aws-amplify";
 
 import { useAuthContext } from "../../../contexts/AuthContext";
 import { OPTICA } from "../../../models";
+import { MenuContext } from "../../../contexts/MenuContext";
 function CrearOptica() {
+  const { cambiarComponent } = useContext(MenuContext);
   const authContext = useAuthContext();
   const [nombreOptica, setNombreOptica] = useState("");
 
@@ -20,7 +21,8 @@ function CrearOptica() {
         })
       );
       console.log(result);
-      message.success("La optica s eha creado correctamente");
+      message.success("La optica se ha creado correctamente");
+      cambiarComponent({ key: "13" });
       setNombreOptica("");
     } catch (error) {
       console.log(error);

@@ -70,7 +70,17 @@ function ListaClientes() {
   const onFinish = async () => {
     try {
       const original = await DataStore.query(CLIENTES, id);
-      console.log(original);
+      // console.log(original);
+      // console.log(
+      //   nombres,
+      //   edad,
+      //   sexo,
+      //   fechaNacimiento,
+      //   apellidoMaterno,
+      //   apellidoPaterno,
+      //   whats,
+      //   opticaID
+      // );
 
       await DataStore.save(
         CLIENTES.copyOf(original, (updated) => {
@@ -86,7 +96,7 @@ function ListaClientes() {
       );
       fetchClientes();
       setIsEditing(false);
-      message.success("El producto se ha actualizado");
+      message.success("El cliente se ha actualizado");
     } catch (error) {
       message.error("Hubo un error contacta al administrador");
     }
@@ -278,7 +288,7 @@ function ListaClientes() {
                 rules={[{ required: true, message: "Este campo es requerido" }]}
               >
                 <DatePicker
-                  defaultValue={dayjs(fechaNacimiento, "YYYY-MM-DD")}
+                  value={dayjs(fechaNacimiento, "YYYY-MM-DD")}
                   format="YYYY-MM-DD"
                   onChange={(date, dateString) =>
                     setFechaNacimiento(dateString)
@@ -301,7 +311,7 @@ function ListaClientes() {
                 rules={[
                   {
                     pattern: new RegExp(
-                      /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g
+                      /^[+]{1}[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s/./0-9]*$/g
                     ),
                     message:
                       "Please add country code and check the number carefully",

@@ -9,7 +9,6 @@ function ListaOptica() {
   const [isEditing, setIsEditing] = useState(false);
   const [id, setId] = useState("");
   const [nombreOptica, setNombreOptica] = useState("");
-  const [createBy, setCreateBy] = useState("");
 
   const [opticas, setOpticas] = useState([]);
   const fecthOptica = async () => {
@@ -25,7 +24,6 @@ function ListaOptica() {
   const edithandle = (record) => {
     setId(record?.id);
     setNombreOptica(record?.nombre);
-    setCreateBy(record?.createdBy);
     setIsEditing(true);
   };
   const onFinish = async () => {
@@ -40,7 +38,7 @@ function ListaOptica() {
       fecthOptica();
       setIsEditing(false);
       console.log("se actualizo");
-      message.success("El lente se ha actualizado");
+      message.success("La optica se ha actualizado correctamente");
     } catch (error) {
       message.error("Hubo un error contacta al administrador");
     }
@@ -55,7 +53,7 @@ function ListaOptica() {
     try {
       await DataStore.delete(OPTICA, id);
       fecthOptica();
-      message.success("El lente se ha eliminado correctamente");
+      message.success("La optica se ha eliminado correctamente");
     } catch (error) {
       console.log(error);
       message.error("Hubo un error contacta al administrador");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Form, Input, Select, message } from "antd";
 // import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 // import type { FormInstance } from "antd/es/form";
@@ -6,7 +6,7 @@ import { Button, Form, Input, Select, message } from "antd";
 // amplify API
 import { Storage, DataStore } from "aws-amplify";
 // import * as mutations from "../../../graphql/mutations";
-// import { MenuContext } from "../../../contexts/MenuContext";
+import { MenuContext } from "../../../contexts/MenuContext";
 import { v4 as uuidv4 } from "uuid";
 import config from "../../../aws-exports";
 import { INVENTARIO, OPTICA } from "../../../models";
@@ -21,7 +21,7 @@ const { Option } = Select;
 function CrearInventario() {
   // usesate url y key
 
-  //   const { cambiarComponent } = useContext(MenuContext);
+  const { cambiarComponent } = useContext(MenuContext);
   const [nombreProducto, setNombreProducto] = useState("");
   const [categoria, setCategoria] = useState("");
   const [proveedor, setProveedor] = useState("");
@@ -78,8 +78,8 @@ function CrearInventario() {
         })
       );
       console.log(result);
-      message.success("El lente se ha creado");
-      //   cambiarComponent({ key: "11" });
+      message.success("El producto se ha creado correctamente");
+      cambiarComponent({ key: "11" });
     } catch (error) {
       console.log(error);
       message.error("Hubo un error contacta al administrador");

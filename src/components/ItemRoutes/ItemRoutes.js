@@ -21,6 +21,10 @@ const ItemsRoutes = [
     getItem("Crear Producto", "10", <PlusCircleOutlined />),
     getItem("Lista Productos", "11", <EyeOutlined />),
   ]),
+  getItem("Ordenes", "sub11", <AppstoreOutlined />, [
+    getItem("nueva Orden", "20", <PlusCircleOutlined />),
+    getItem("Lista Ordenes", "21", <EyeOutlined />),
+  ]),
   getItem("Optica", "sub7", <AppstoreOutlined />, [
     getItem("Crear Optica", "12", <PlusCircleOutlined />),
     getItem("Lista Optica", "13", <UnorderedListOutlined />),
