@@ -132,6 +132,7 @@ function CrearGerente() {
         </Form.Item>
         <Form.Item
           label="Username"
+          name="username"
           rules={[{ required: true, message: "Este campo es requerido" }]}
         >
           <Input
@@ -142,6 +143,7 @@ function CrearGerente() {
         </Form.Item>
         <Form.Item
           label="Email"
+          name="email"
           rules={[{ required: true, message: "Este campo es requerido" }]}
         >
           <Input

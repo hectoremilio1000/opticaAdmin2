@@ -68,7 +68,7 @@ function CrearCliente() {
   return (
     <div>
       <h1>CREAR CLIENTE</h1>
-      <Form layout="vertical" name="crearCliente">
+      <Form layout="vertical" name="crearCliente" onFinish={onFinish}>
         <div
           style={{
             display: "grid",
@@ -90,7 +90,7 @@ function CrearCliente() {
           <Form.Item
             name="apellidoPaterno"
             label="Apellido Paterno"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
+            // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
               value={apellidoPaterno}
@@ -101,7 +101,7 @@ function CrearCliente() {
           <Form.Item
             name="apellidoMaterno"
             label="Apellido Materno"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
+            // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
               value={apellidoMaterno}
@@ -145,7 +145,7 @@ function CrearCliente() {
           <Form.Item
             label="Fecha de nacimiento"
             name="fechaNacimiento"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
+            // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <DatePicker
               onChange={(date, dateString) => setFechaNacimiento(dateString)}
@@ -154,7 +154,7 @@ function CrearCliente() {
           <Form.Item
             label="Edad"
             name="edad"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
+            // rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
               placeholder="Ingrese la edad del cliente"
@@ -173,7 +173,7 @@ function CrearCliente() {
                 ),
                 message:
                   "Please add country code and check the number carefully",
-                required: true,
+                // required: true,
               },
             ]}
           >
@@ -189,7 +189,7 @@ function CrearCliente() {
             rules={[
               {
                 email: true,
-                required: true,
+                // required: true,
                 type: "email",
                 message: "Enter a valid email",
               },
@@ -204,12 +204,7 @@ function CrearCliente() {
           </Form.Item>
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button
-            onClick={onFinish}
-            title="Save"
-            htmlType="submit"
-            type="primary"
-          >
+          <Button title="Save" htmlType="submit" type="primary">
             Guardar
           </Button>
         </div>

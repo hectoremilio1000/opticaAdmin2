@@ -4,5 +4,5 @@
     "DynamoDBEnableServerSideEncryption": false,
     "AuthModeLastUpdated": "2023-05-06T18:05:00.281Z",
     "S3DeploymentBucket": "amplify-opticaadmin-dev-191131-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/ab75cfa19658a6fa29cecdb38dd5be264aa576b2"
+    "S3DeploymentRootKey": "amplify-appsync-files/b474ef8450b80806b2e6e5b7171e69445936aadc"
 }

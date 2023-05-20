@@ -80,6 +80,7 @@ type ORDEN @model @auth(rules: [{allow: public}]) {
   fechaExamen: String
   INVENTARIOORDENITEMS: [INVENTARIOORDENITEMS] @hasMany(indexName: "byORDEN", fields: ["id"])
   ordenStatus: ORDENSTATUS
+  precioGraduacion: String
 }
 
 type CLIENTES @model @auth(rules: [{allow: public}]) {

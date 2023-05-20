@@ -66,13 +66,18 @@ const styles = StyleSheet.create({
 });
 
 export default function TicketPDF({
-  tipoOrden,
+  // tipoOrden,
   logoSrc,
   title,
   customer,
   products,
-  total,
+  precioGraduacion,
+  // total,
 }) {
+  var total = 0;
+  const sumarPrecioGraduacion = () => {
+    total = total + Number(precioGraduacion);
+  };
   return (
     <Document>
       <Page size="A7" style={styles.page}>
@@ -100,26 +105,58 @@ export default function TicketPDF({
               <Text>Subtotal</Text>
             </View>
           </View>
-          {products.map((product, index) => (
-            <View style={styles.tableRow} key={index}>
+          {Number(precioGraduacion) !== 0 && sumarPrecioGraduacion()}
+
+          {Number(precioGraduacion) !== 0 ? (
+            <View style={styles.tableRow} key={-1}>
               <View style={styles.tableCell}>
-                <Text>{product.nombreProducto}</Text>
+                <Text>Graduacion de lentes</Text>
               </View>
               <View style={styles.tableCell}>
-                <Text>{product.cantidad}</Text>
+                <Text>1</Text>
               </View>
               <View style={styles.tableCell}>
                 <Text>
-                  ${Math.round((product.precio * 100) / 100).toFixed(2)}
+                  $
+                  {Math.round((Number(precioGraduacion) * 100) / 100).toFixed(
+                    2
+                  )}
                 </Text>
               </View>
               <View style={styles.tableCell}>
                 <Text>
-                  ${Math.round((product.costo * 100) / 100).toFixed(2)}
+                  $
+                  {Math.round((Number(precioGraduacion) * 100) / 100).toFixed(
+                    2
+                  )}
                 </Text>
               </View>
             </View>
-          ))}
+          ) : null}
+          {products.map((product, index) => {
+            total = total + product.costo;
+            console.log();
+            return (
+              <View style={styles.tableRow} key={index}>
+                <View style={styles.tableCell}>
+                  <Text>{product.nombreProducto}</Text>
+                </View>
+                <View style={styles.tableCell}>
+                  <Text>{product.cantidad}</Text>
+                </View>
+                <View style={styles.tableCell}>
+                  <Text>
+                    ${Math.round((product.precio * 100) / 100).toFixed(2)}
+                  </Text>
+                </View>
+                <View style={styles.tableCell}>
+                  <Text>
+                    ${Math.round((product.costo * 100) / 100).toFixed(2)}
+                  </Text>
+                </View>
+              </View>
+            );
+          })}
         </View>
         <View style={styles.totalRow}>
           <View

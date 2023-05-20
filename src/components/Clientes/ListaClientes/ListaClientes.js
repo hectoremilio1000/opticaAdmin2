@@ -210,7 +210,7 @@ function ListaClientes() {
         />
         <Modal
           onCancel={() => setIsEditing(false)}
-          title="Edit Lente"
+          title="Editar Cliente"
           open={isEditing}
           onOk={() => onFinish()}
         >
@@ -288,7 +288,11 @@ function ListaClientes() {
                 rules={[{ required: true, message: "Este campo es requerido" }]}
               >
                 <DatePicker
-                  value={dayjs(fechaNacimiento, "YYYY-MM-DD")}
+                  value={
+                    fechaNacimiento !== ""
+                      ? dayjs(fechaNacimiento, "YYYY-MM-DD")
+                      : ""
+                  }
                   format="YYYY-MM-DD"
                   onChange={(date, dateString) =>
                     setFechaNacimiento(dateString)

@@ -1,52 +1,44 @@
 import "./Cart.css";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Select,
-  Space,
-  Table,
-  message,
-} from "antd";
+import { Button, DatePicker, Form, Input, Select, Table, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { MenuContext } from "../../../contexts/MenuContext";
 import dayjs from "dayjs";
 import { React, useState, useEffect, useContext } from "react";
-import { DataStore } from "aws-amplify";
+import { API, DataStore, graphqlOperation } from "aws-amplify";
+import { CLIENTES, INVENTARIO, OPTICA } from "../../../models";
 import {
-  CLIENTES,
-  INVENTARIO,
-  INVENTARIOORDENITEMS,
-  OPTICA,
-  ORDEN,
-} from "../../../models";
+  createINVENTARIOORDENITEMS,
+  createORDEN,
+} from "../../../graphql/mutations";
 const { Option } = Select;
 
 function CrearOrden() {
   const { cambiarComponent } = useContext(MenuContext);
   const [clientes, setClientes] = useState([]);
   const [clientesID, setclientesID] = useState(null);
-  const [tipoOrden, setTipoOrden] = useState(null);
-  const [usoLentes, setUsoLentes] = useState("");
+  // const [usoLentes, setUsoLentes] = useState("");
   // graducacion state
   const [gradCheck, setGradCheck] = useState("");
+  const [graduacion, setGraduacion] = useState("");
   const [opticaID, setOpticaID] = useState("");
   const [opticas, setOpticas] = useState([]);
   const [graduacionDerechaVieja, setGraduacionDerechaVieja] = useState("");
   const [graduacionIzquierdaVieja, setGraduacionIzquierdaVieja] = useState("");
+  const [graduacionDerechaNueva, setGraduacionDerechaNueva] = useState("");
+  const [graduacionIzquierdaNueva, setGraduacionIzquierdaNueva] = useState("");
   const [referencia, setReferencia] = useState("");
-  const [seRealizoExamen, setSeRealizoExamen] = useState("");
+  // const [seRealizoExamen, setSeRealizoExamen] = useState("");
   const [fechaExamen, setFechaExamen] = useState("");
   const [fechaEntrega, setFechaEntrega] = useState("");
 
   // ordenes state carts
   const [carrito, setCarrito] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [listProductos, setListProductos] = useState([]);
+  const [listaProductos, setListaProductos] = useState([]);
   var cantidad = 1;
   const [productoID, setProductoID] = useState(null);
   const [total, setTotal] = useState(0);
+  const [precioGraduacion, setPrecioGraduacion] = useState(0);
 
   const fetchClientes = async () => {
     try {
@@ -94,15 +86,18 @@ function CrearOrden() {
         options.push(option);
         return true;
       });
-      setListProductos(result);
       setProductos(options);
+      setListaProductos(result);
     } catch (error) {
       message.error("No se encontraron clientes");
     }
   };
 
   const addCarrito = (productoID) => {
-    const result = listProductos.find((elemento) => elemento.id === productoID);
+    const result = listaProductos.find(
+      (elemento) => elemento.id === productoID
+    );
+    console.log(result);
     if (productoID !== "") {
       const ident = carrito.find((elemento) => {
         if (elemento.id === productoID) {
@@ -136,40 +131,6 @@ function CrearOrden() {
     }
   };
 
-  const onFinish = async () => {
-    if (clientesID !== "" && opticaID !== "") {
-      const fecha = dayjs().format("YYYY-MM-DD");
-
-      // Obtener la hora actual en el formato deseado: 09:57:05
-      const hora = dayjs().format("HH:mm:ss");
-      try {
-        await DataStore.save(
-          new ORDEN({
-            tipoOrden,
-            clientesID,
-            opticaID,
-            seRealizoExamen,
-            fechaEntrega,
-            usadoLentes: usoLentes,
-            referencia,
-            graduacionDerechaVieja,
-            graduacionIzquierdaVieja,
-            fechaExamen,
-            ordenStatus: "CREADA",
-            fechaOrden: fecha,
-            horaOrden: hora,
-            precioTotal: total.toString(),
-          })
-        );
-        cambiarComponent({ key: "21" });
-        message.success("La orden se ha registrado correctamente");
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      message.warning("Te faltan llenar campos");
-    }
-  };
   const onOrden = async () => {
     if (carrito.length > 0) {
       if (clientesID !== "" && opticaID !== "") {
@@ -177,34 +138,44 @@ function CrearOrden() {
 
         // Obtener la hora actual en el formato deseado: 09:57:05
         const hora = dayjs().format("HH:mm:ss");
-        const result = await DataStore.save(
-          new ORDEN({
-            tipoOrden,
-            clientesID,
-            opticaID,
-            seRealizoExamen,
-            fechaEntrega,
-            usadoLentes: usoLentes,
-            referencia,
-            graduacionDerechaVieja,
-            graduacionIzquierdaVieja,
-            fechaExamen,
-            ordenStatus: "CREADA",
-            fechaOrden: fecha,
-            horaOrden: hora,
-            precioTotal: total.toString(),
-          })
+        const newOrden = {
+          tipoOrden: "COTIZACION",
+          clientesID,
+          opticaID,
+          seRealizoExamen: "SI",
+          fechaEntrega,
+          usadoLentes: "-",
+          referencia,
+          graduacionDerechaVieja,
+          graduacionIzquierdaVieja,
+          graduacionDerechaNueva,
+          graduacionIzquierdaNueva,
+          fechaExamen,
+          ordenStatus: "CREADA",
+          fechaOrden: fecha,
+          horaOrden: hora,
+          precioGraduacion: precioGraduacion.toString(),
+          precioTotal: (total + Number(precioGraduacion)).toString(),
+        };
+        const result = await API.graphql(
+          graphqlOperation(createORDEN, { input: newOrden })
         );
-        carrito.map(async (cart) => {
-          await DataStore.save(
-            new INVENTARIOORDENITEMS({
+        const orden = result.data.createORDEN;
+        await Promise.all(
+          carrito.map(async (cart) => {
+            let newOrdenItem = {
               cantidad: cart.cantidad,
-              ordenID: result.id,
+              ordenID: orden.id,
               inventarioID: cart.id,
               costo: cart.subTotal,
-            })
-          );
-        });
+            };
+            await API.graphql(
+              graphqlOperation(createINVENTARIOORDENITEMS, {
+                input: newOrdenItem,
+              })
+            );
+          })
+        );
         setCarrito([]);
         cambiarComponent({ key: "21" });
         message.success("La orden se ha registrado correctamente");
@@ -251,7 +222,7 @@ function CrearOrden() {
     const nuevosObjetos = carrito.filter((objeto) => objeto.id !== record.id);
     const precio = carrito.find((objeto) => objeto.id === record.id);
     setCarrito(nuevosObjetos);
-    setTotal(total - precio.precio);
+    setTotal(total - Number(precio.subTotal));
   };
 
   // Table source
@@ -335,65 +306,88 @@ function CrearOrden() {
   return (
     <div
       style={{
-        // maxWidth: "800px",
-        // margin: "auto",
         padding: "20px 30px",
-        boxShadow: "0px 10px 10px 0px #ececec",
         background: "#fff",
       }}
     >
       <h1>Registrar Orden</h1>
 
-      <Form.Item style={{ marginTop: "20px" }} label="Tipo de orden">
+      <Form.Item style={{ marginTop: "20px" }} label="Graduacion?">
         <Select
           onSelect={(e) => {
-            setTipoOrden(e);
+            setGraduacion(e);
           }}
           placeholder="Seleccione que tipo de orden desea registrar"
         >
-          <Option value="COTIZACION">COTIZACION</Option>
-          <Option value="ORDEN">ORDEN</Option>
+          <Option value="SI">SI</Option>
+          <Option value="NO">NO</Option>
         </Select>
       </Form.Item>
-      {tipoOrden === "COTIZACION" ? (
+      {graduacion === "SI" ? (
         <Form layout="vertical">
           <>
-            <Form.Item>
-              <h1>Cliente</h1>
-              <p>Buscar Cliente</p>
+            <h1>Graduacion de lentes</h1>
+            <Form.Item label="Tiene graducacion de lentes?">
               <Select
-                showSearch
-                style={{ width: "100%" }}
-                onChange={(e) => setclientesID(e)}
-                placeholder="Search to Select"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={clientes}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Optica"
-              rules={[{ required: true, message: "Este campo es requerido" }]}
-            >
-              <Select
-                //   defaultValue={categoria}
-                onSelect={(e) => setOpticaID(e)}
-                placeholder="Select una Optica"
+                onSelect={(e) => setGradCheck(e)}
+                allowClear
+                onClear={() => setGradCheck("")}
+                placeholder="Selecciona SI/NO"
               >
-                {opticas.map((optica) => {
-                  return (
-                    <Option key={optica.id} value={optica.id}>
-                      {optica.nombre}
-                    </Option>
-                  );
-                })}
+                <Option value="SI">SI</Option>
+                <Option value="NO">NO</Option>
               </Select>
             </Form.Item>
-            <h1>Graducacion de lentes</h1>
+            {gradCheck === "SI" ? (
+              <div
+                direction="horizontal"
+                style={{ width: "100%", display: "flex", gap: "8px" }}
+              >
+                <Form.Item
+                  label="Graducacion Derecha Vieja"
+                  style={{ width: "100%" }}
+                >
+                  <Input
+                    value={graduacionDerechaVieja}
+                    onChange={(e) => setGraduacionDerechaVieja(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Graducacion Izquierda Vieja"
+                  style={{ width: "100%" }}
+                >
+                  <Input
+                    value={graduacionIzquierdaVieja}
+                    onChange={(e) =>
+                      setGraduacionIzquierdaVieja(e.target.value)
+                    }
+                  />
+                </Form.Item>
+              </div>
+            ) : null}
+            <div
+              direction="horizontal"
+              style={{ width: "100%", display: "flex", gap: "8px" }}
+            >
+              <Form.Item
+                label="Graducacion Derecha Nueva"
+                style={{ width: "100%" }}
+              >
+                <Input
+                  value={graduacionDerechaNueva}
+                  onChange={(e) => setGraduacionDerechaNueva(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Graducacion Izquierda Nueva"
+                style={{ width: "100%" }}
+              >
+                <Input
+                  value={graduacionIzquierdaNueva}
+                  onChange={(e) => setGraduacionIzquierdaNueva(e.target.value)}
+                />
+              </Form.Item>
+            </div>
             <div
               style={{
                 display: "grid",
@@ -401,24 +395,6 @@ function CrearOrden() {
                 gap: "20px",
               }}
             >
-              <Form.Item label="Usa Lentes">
-                <Select
-                  onSelect={(e) => setUsoLentes(e)}
-                  placeholder="Selecciona SI/NO"
-                >
-                  <Option value="SI">SI</Option>
-                  <Option value="NO">NO</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item label="Se Realizo un examen?">
-                <Select
-                  onSelect={(e) => setSeRealizoExamen(e)}
-                  placeholder="Selecciona SI/NO"
-                >
-                  <Option value="SI">SI</Option>
-                  <Option value="NO">NO</Option>
-                </Select>
-              </Form.Item>
               <Form.Item label="Fecha de examen">
                 <DatePicker
                   style={{ width: "100%" }}
@@ -434,35 +410,7 @@ function CrearOrden() {
                   placeholder="Reeferencia"
                 />
               </Form.Item>
-              <Form.Item label="Tiene graducacion de lentes?">
-                <Select
-                  onSelect={(e) => setGradCheck(e)}
-                  placeholder="Selecciona SI/NO"
-                >
-                  <Option value="SI">SI</Option>
-                  <Option value="NO">NO</Option>
-                </Select>
-                {gradCheck === "SI" ? (
-                  <Space direction="horizontal">
-                    <Form.Item label="Graducacion Derecha">
-                      <Input
-                        value={graduacionDerechaVieja}
-                        onChange={(e) =>
-                          setGraduacionDerechaVieja(e.target.value)
-                        }
-                      />
-                    </Form.Item>
-                    <Form.Item label="Graducacion Izquierda">
-                      <Input
-                        value={graduacionIzquierdaVieja}
-                        onChange={(e) =>
-                          setGraduacionIzquierdaVieja(e.target.value)
-                        }
-                      />
-                    </Form.Item>
-                  </Space>
-                ) : null}
-              </Form.Item>
+
               <Form.Item label="Fecha de entrega">
                 <DatePicker
                   style={{ width: "100%" }}
@@ -472,129 +420,140 @@ function CrearOrden() {
               </Form.Item>
               <Form.Item label="Precio de Orden">
                 <Input
-                  value={total}
-                  onChange={(e) => setTotal(e.target.value)}
+                  value={precioGraduacion}
+                  onChange={(e) => setPrecioGraduacion(e.target.value)}
                   placeholder="Ingrese el costo $.00 de la orden"
                 />
               </Form.Item>
             </div>
-
-            <div style={{ marginTop: 10 }}>
-              <Button title="Generar Orden" onClick={onFinish} type="primary">
-                Crear Cotizacion
-              </Button>
-            </div>
           </>
         </Form>
-      ) : tipoOrden === "ORDEN" ? (
-        <div style={{ display: "flex", gap: "20px" }}>
-          <div className="container-productos" style={{ width: "100%" }}>
+      ) : null}
+      <div style={{ display: "flex", gap: "20px" }}>
+        <div className="container-productos" style={{ width: "100%" }}>
+          <Select
+            showSearch
+            value={productoID}
+            style={{ width: "100%", marginBottom: "20px" }}
+            onChange={(e) => addCarrito(e)}
+            placeholder="Agregar Producto"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={productos}
+          />
+          <Table
+            pagination={false}
+            scroll={{ x: 400 }}
+            rowKey={(record) => record.id}
+            columns={columns}
+            dataSource={carrito}
+          />
+          <div
+            style={{
+              marginTop: "30px",
+              width: "100%",
+              maxWidth: "300px",
+              padding: "15px",
+              border: "1px solid #ececec",
+              borderRadius: "10px",
+            }}
+          >
+            <h3>Resumen de Pago</h3>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p>SubTotal</p>
+              <h4>
+                $
+                {(
+                  Math.round(
+                    ((total + Number(precioGraduacion)) / 1.16) * 100
+                  ) / 100
+                ).toFixed(2)}
+              </h4>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p>IVA(16%)</p>
+              <h4>
+                $
+                {(
+                  Math.round(
+                    (total +
+                      precioGraduacion -
+                      (total + Number(precioGraduacion)) / 1.16) *
+                      100
+                  ) / 100
+                ).toFixed(2)}
+              </h4>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p>Total</p>
+              <h4>
+                $
+                {(
+                  Math.round((total + Number(precioGraduacion)) * 100) / 100
+                ).toFixed(2)}
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div
+          className="container-info"
+          style={{
+            maxWidth: "250px",
+            border: "1px solid #ececec",
+            borderRadius: "10px",
+            padding: "15px",
+          }}
+        >
+          <Form.Item>
+            <p>
+              <b>Informacion Basica</b>
+            </p>
             <Select
               showSearch
-              value={productoID}
-              style={{ width: "100%", marginBottom: "20px" }}
-              onChange={(e) => addCarrito(e)}
-              placeholder="Agregar Producto"
+              style={{ width: "100%" }}
+              onChange={(e) => setclientesID(e)}
+              placeholder="Buscar Clientes"
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "")
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={productos}
+              options={clientes}
             />
-            <Table
-              pagination={false}
-              scroll={{ x: 400 }}
-              rowKey={(record) => record.id}
-              columns={columns}
-              dataSource={carrito}
-            />
-            <div
-              style={{
-                marginTop: "30px",
-                width: "100%",
-                maxWidth: "300px",
-                padding: "15px",
-                border: "1px solid #ececec",
-                borderRadius: "10px",
-              }}
-            >
-              <h3>Resumen de Pago</h3>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p>SubTotal</p>
-                <h4>${(Math.round((total / 1.16) * 100) / 100).toFixed(2)}</h4>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p>IVA(16%)</p>
-                <h4>
-                  ${(Math.round((total - total / 1.16) * 100) / 100).toFixed(2)}
-                </h4>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p>Total</p>
-                <h4>${(Math.round(total * 100) / 100).toFixed(2)}</h4>
-              </div>
-            </div>
-          </div>
-          <div
-            className="container-info"
-            style={{
-              maxWidth: "250px",
-              border: "1px solid #ececec",
-              borderRadius: "10px",
-              padding: "15px",
-            }}
+          </Form.Item>
+          <Form.Item
+            label="Optica"
+            rules={[{ required: true, message: "Este campo es requerido" }]}
           >
-            <Form.Item>
-              <p>
-                <b>Informacion Basica</b>
-              </p>
-              <Select
-                showSearch
-                style={{ width: "100%" }}
-                onChange={(e) => setclientesID(e)}
-                placeholder="Buscar Clientes"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "")
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-                options={clientes}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Optica"
-              rules={[{ required: true, message: "Este campo es requerido" }]}
+            <Select
+              //   defaultValue={categoria}
+              onSelect={(e) => setOpticaID(e)}
+              placeholder="Select una Optica"
             >
-              <Select
-                //   defaultValue={categoria}
-                onSelect={(e) => setOpticaID(e)}
-                placeholder="Select una Optica"
-              >
-                {opticas.map((optica) => {
-                  return (
-                    <Option key={optica.id} value={optica.id}>
-                      {optica.nombre}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-            <div style={{ marginTop: 10 }}>
-              <Button
-                onClick={onOrden}
-                title="Save"
-                htmlType="submit"
-                type="primary"
-              >
-                Crear Orden
-              </Button>
-            </div>
+              {opticas.map((optica) => {
+                return (
+                  <Option key={optica.id} value={optica.id}>
+                    {optica.nombre}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+          <div style={{ marginTop: 10 }}>
+            <Button
+              onClick={onOrden}
+              title="Save"
+              htmlType="submit"
+              type="primary"
+            >
+              Crear Orden
+            </Button>
           </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }
