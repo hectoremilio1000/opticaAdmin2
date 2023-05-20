@@ -12,21 +12,26 @@ function CrearOptica() {
   const [nombreOptica, setNombreOptica] = useState("");
 
   const onFinish = async () => {
-    console.log(nombreOptica);
-    try {
-      const result = await DataStore.save(
-        new OPTICA({
-          nombre: nombreOptica,
-          createdBy: authContext?.authEmail,
-        })
+    if (nombreOptica !== "") {
+      try {
+        const result = await DataStore.save(
+          new OPTICA({
+            nombre: nombreOptica,
+            createdBy: authContext?.authEmail,
+          })
+        );
+        console.log(result);
+        message.success("La optica se ha creado correctamente");
+        cambiarComponent({ key: "13" });
+        setNombreOptica("");
+      } catch (error) {
+        console.log(error);
+        message.error("Hubo un error contacta al administrador");
+      }
+    } else {
+      message.warning(
+        "Te falta agregar campo del nombre para continuar con la creacion"
       );
-      console.log(result);
-      message.success("La optica se ha creado correctamente");
-      cambiarComponent({ key: "13" });
-      setNombreOptica("");
-    } catch (error) {
-      console.log(error);
-      message.error("Hubo un error contacta al administrador");
     }
   };
 

@@ -65,12 +65,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Cotizacion({ orden, title, logoSrc }) {
-  console.log(orden);
-  const total = Number(orden[0].precioTotal);
-  console.log(total);
+export default function Cotizacion({
+  // tipoOrden,
+  logoSrc,
+  title,
+  customer,
+  products,
+  precioGraduacion,
+  // total,
+}) {
+  var total = 0;
+  const sumarPrecioGraduacion = () => {
+    total = total + Number(precioGraduacion);
+  };
   return (
-    <Document title="hola">
+    <Document>
       <Page size="A7" style={styles.page}>
         <View style={styles.logo}>
           <Image src={logoSrc} alt="Logo" />
@@ -79,7 +88,7 @@ export default function Cotizacion({ orden, title, logoSrc }) {
           <Text>{title}</Text>
         </View>
         <View style={styles.customer}>
-          <Text>Cliente: {orden[0].nombreCliente}</Text>
+          <Text>Cliente: {customer}</Text>
         </View>
         <View style={styles.table}>
           <View style={styles.tableRow}>
@@ -96,20 +105,58 @@ export default function Cotizacion({ orden, title, logoSrc }) {
               <Text>Subtotal</Text>
             </View>
           </View>
-          <View style={styles.tableRow} key={1}>
-            <View style={styles.tableCell}>
-              <Text>Graducacion de lentes</Text>
+          {Number(precioGraduacion) !== 0 && sumarPrecioGraduacion()}
+
+          {Number(precioGraduacion) !== 0 ? (
+            <View style={styles.tableRow} key={-1}>
+              <View style={styles.tableCell}>
+                <Text>Graduacion de lentes</Text>
+              </View>
+              <View style={styles.tableCell}>
+                <Text>1</Text>
+              </View>
+              <View style={styles.tableCell}>
+                <Text>
+                  $
+                  {Math.round((Number(precioGraduacion) * 100) / 100).toFixed(
+                    2
+                  )}
+                </Text>
+              </View>
+              <View style={styles.tableCell}>
+                <Text>
+                  $
+                  {Math.round((Number(precioGraduacion) * 100) / 100).toFixed(
+                    2
+                  )}
+                </Text>
+              </View>
             </View>
-            <View style={styles.tableCell}>
-              <Text>1</Text>
-            </View>
-            <View style={styles.tableCell}>
-              <Text>${Math.round((total * 100) / 100).toFixed(2)}</Text>
-            </View>
-            <View style={styles.tableCell}>
-              <Text>${Math.round((total * 100) / 100).toFixed(2)}</Text>
-            </View>
-          </View>
+          ) : null}
+          {products.map((product, index) => {
+            total = total + product.costo;
+            console.log();
+            return (
+              <View style={styles.tableRow} key={index}>
+                <View style={styles.tableCell}>
+                  <Text>{product.nombreProducto}</Text>
+                </View>
+                <View style={styles.tableCell}>
+                  <Text>{product.cantidad}</Text>
+                </View>
+                <View style={styles.tableCell}>
+                  <Text>
+                    ${Math.round((product.precio * 100) / 100).toFixed(2)}
+                  </Text>
+                </View>
+                <View style={styles.tableCell}>
+                  <Text>
+                    ${Math.round((product.costo * 100) / 100).toFixed(2)}
+                  </Text>
+                </View>
+              </View>
+            );
+          })}
         </View>
         <View style={styles.totalRow}>
           <View

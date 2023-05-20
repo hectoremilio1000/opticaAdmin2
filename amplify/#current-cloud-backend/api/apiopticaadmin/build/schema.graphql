@@ -101,6 +101,7 @@ type ORDEN @aws_iam @aws_api_key {
   fechaExamen: String
   INVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection
   ordenStatus: ORDENSTATUS
+  precioGraduacion: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -712,6 +713,7 @@ input ModelORDENFilterInput {
   graduacionIzquierdaNueva: ModelStringInput
   fechaExamen: ModelStringInput
   ordenStatus: ModelORDENSTATUSInput
+  precioGraduacion: ModelStringInput
   and: [ModelORDENFilterInput]
   or: [ModelORDENFilterInput]
   not: ModelORDENFilterInput
@@ -734,6 +736,7 @@ input ModelORDENConditionInput {
   graduacionIzquierdaNueva: ModelStringInput
   fechaExamen: ModelStringInput
   ordenStatus: ModelORDENSTATUSInput
+  precioGraduacion: ModelStringInput
   and: [ModelORDENConditionInput]
   or: [ModelORDENConditionInput]
   not: ModelORDENConditionInput
@@ -757,6 +760,7 @@ input CreateORDENInput {
   graduacionIzquierdaNueva: String
   fechaExamen: String
   ordenStatus: ORDENSTATUS
+  precioGraduacion: String
   _version: Int
 }
 
@@ -778,6 +782,7 @@ input UpdateORDENInput {
   graduacionIzquierdaNueva: String
   fechaExamen: String
   ordenStatus: ORDENSTATUS
+  precioGraduacion: String
   _version: Int
 }
 
@@ -804,6 +809,7 @@ input ModelSubscriptionORDENFilterInput {
   graduacionIzquierdaNueva: ModelSubscriptionStringInput
   fechaExamen: ModelSubscriptionStringInput
   ordenStatus: ModelSubscriptionStringInput
+  precioGraduacion: ModelSubscriptionStringInput
   and: [ModelSubscriptionORDENFilterInput]
   or: [ModelSubscriptionORDENFilterInput]
 }

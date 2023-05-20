@@ -1,14 +1,19 @@
-import { DataStore } from "aws-amplify";
+import { API, DataStore, graphqlOperation } from "aws-amplify";
 import React, { useEffect } from "react";
-import { Table, Modal, Tag, Popconfirm, Button, message } from "antd";
-import { useState } from "react";
 import {
-  CLIENTES,
-  INVENTARIO,
-  INVENTARIOORDENITEMS,
-  OPTICA,
-  ORDEN,
-} from "../../../models";
+  Table,
+  Modal,
+  Tag,
+  Popconfirm,
+  Button,
+  message,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+} from "antd";
+import { useState } from "react";
+import { INVENTARIO, INVENTARIOORDENITEMS, ORDEN } from "../../../models";
 import TicketPDF from "./TicketPdf";
 import Cotizacion from "./Cotizacion";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
@@ -18,28 +23,78 @@ import logo from "../../../assets/logohilmora.png";
 import {
   DeleteOutlined,
   EyeOutlined,
+  SearchOutlined,
   CloudDownloadOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
+import {
+  getCLIENTES,
+  getINVENTARIO,
+  getOPTICA,
+  getORDEN,
+  iNVENTARIOORDENITEMSByOrdenID,
+  listORDENS,
+} from "../../../graphql/queries";
+import {
+  createINVENTARIOORDENITEMS,
+  updateORDEN,
+} from "../../../graphql/mutations";
+
+const { Option } = Select;
+
 function ListaOrdenes() {
-  const [ordenes, setOrdenes] = useState();
+  const [loading, setLoading] = useState(false);
+  const [ordenes, setOrdenes] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
+  // modal de ver report
+  const [verReport, setVerReport] = useState(false);
+  // modal de edit
+  const [detalleProductos, setDetalleProductos] = useState([]);
+  const [cargandoProductos, setCargandoProductos] = useState(true);
+  const [checkAdd, setCheckAdd] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  var cantidad = 1;
+  const [productoID, setProductoID] = useState(null);
+  const [carrito, setCarrito] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [precioMaquila, setprecioMaquila] = useState(0);
+  const [totalCarrito, setTotalCarrito] = useState(0);
+  const [isGraduation, setIsGraduation] = useState("");
+
   // datos de la orden seleeccionada
-  // const [first, setfirst] = useState(second);
   const [products, setProducts] = useState([]);
+  const [listaProductos, setListaProductos] = useState([]);
   const [cliente, setCliente] = useState("");
-  const [total, setTotal] = useState("");
+  // graduaciones
+  const [graduacionDerechaVieja, setGraduacionDerechaVieja] = useState("");
+  const [graduacionIzquierdaVieja, setGraduacionIzquierdaVieja] = useState("");
+  const [graduacionDerechaNueva, setGraduacionDerechaNueva] = useState("");
+  const [graduacionIzquierdaNueva, setGraduacionIzquierdaNueva] = useState("");
   const [tipoOrden, setTipoOrden] = useState("");
   const [ordenNow, setOrdenNow] = useState(null);
   const [ordenID, setOrdenID] = useState("");
 
+  // state for search
+  const [searchOrden, setSearchOrden] = useState(undefined);
+  const [searchStatus, setSearchStatus] = useState(undefined);
+  const [searchFecha, setSearchFecha] = useState("");
   const fetchOrdenes = async () => {
     try {
-      const ordenes = await DataStore.query(ORDEN);
+      const result = await API.graphql(graphqlOperation(listORDENS));
+      const ordenes = result.data.listORDENS.items;
       const ordenesConNombres = [];
       for (const orden of ordenes) {
         // Obtén el cliente correspondiente a través del ID
-        const cliente = await DataStore.query(CLIENTES, orden.clientesID);
-        const optica = await DataStore.query(OPTICA, orden.opticaID);
+        const resultCliente = await API.graphql(
+          graphqlOperation(getCLIENTES, { id: orden.clientesID })
+        );
+        const cliente = resultCliente.data.getCLIENTES;
+        const resultOptica = await API.graphql(
+          graphqlOperation(getOPTICA, { id: orden.opticaID })
+        );
+        const optica = resultOptica.data.getOPTICA;
+        // const optica = await DataStore.query(OPTICA, orden.opticaID);
         const ordenConNombre = {
           ...orden,
           nombreCliente:
@@ -55,6 +110,8 @@ function ListaOrdenes() {
         ordenesConNombres.push(ordenConNombre);
       }
       setOrdenes(ordenesConNombres);
+      setDataSource(ordenesConNombres);
+      setLoading(true);
     } catch (error) {
       console.log(error);
     }
@@ -62,45 +119,37 @@ function ListaOrdenes() {
   useEffect(() => {
     fetchOrdenes();
   }, []);
-
   const edithandle = async (record) => {
     setOrdenID(record.id);
+    setprecioMaquila(record.precioGraduacion);
     setTipoOrden(record.tipoOrden);
-    if (record.tipoOrden === "COTIZACION") {
+    setOrdenNow(record.id);
+    // setTotal(record.precioTotal);
+    setCliente(record.nombreCliente);
+    try {
+      const ordenes = await DataStore.query(INVENTARIOORDENITEMS, (d) =>
+        d.ordenID.eq(record.id)
+      );
       const ordenesConNombres = [];
-      const ordenConNombre = {
-        ...record,
-      };
-      ordenesConNombres.push(ordenConNombre);
-      setOrdenNow(ordenesConNombres);
-    } else {
-      setTotal(record.precioTotal);
-      setCliente(record.nombreCliente);
-      try {
-        const ordenes = await DataStore.query(INVENTARIOORDENITEMS, (d) =>
-          d.ordenID.eq(record.id)
+      for (const orden of ordenes) {
+        // Obtén el cliente correspondiente a través del ID
+        const inventario = await DataStore.query(
+          INVENTARIO,
+          orden.inventarioID
         );
-        const ordenesConNombres = [];
-        for (const orden of ordenes) {
-          // Obtén el cliente correspondiente a través del ID
-          const inventario = await DataStore.query(
-            INVENTARIO,
-            orden.inventarioID
-          );
-          const ordenConNombre = {
-            ...orden,
-            nombreProducto: inventario.nombreProducto,
-            precio: inventario.precioVenta,
-          };
-          // Agrega el objeto nuevo al array de órdenes con nombres de cliente
-          ordenesConNombres.push(ordenConNombre);
-        }
-        setProducts(ordenesConNombres);
-      } catch (error) {
-        console.log(error);
+        const ordenConNombre = {
+          ...orden,
+          nombreProducto: inventario.nombreProducto,
+          precio: inventario.precioVenta,
+        };
+        // Agrega el objeto nuevo al array de órdenes con nombres de cliente
+        ordenesConNombres.push(ordenConNombre);
       }
+      setProducts(ordenesConNombres);
+    } catch (error) {
+      console.log(error);
     }
-    setIsEditing(true);
+    setVerReport(true);
   };
 
   const changeDelete = (record) => {
@@ -123,6 +172,51 @@ function ListaOrdenes() {
       message.error("Hubo un error contacta al administrador");
     }
   };
+
+  const envioOrdenCot = (record) => {
+    setCliente(record.nombreCliente);
+    setGraduacionDerechaNueva(record?.graduacionDerechaNueva);
+    setGraduacionDerechaVieja(record?.graduacionDerechaVieja);
+    setGraduacionIzquierdaVieja(record?.graduacionIzquierdaVieja);
+    setGraduacionIzquierdaNueva(record?.graduacionDerechaVieja);
+    fetchProductos();
+    if (record?.graduacionDerechaNueva) {
+      setprecioMaquila(record?.precioGraduacion);
+      setIsGraduation("GRADUATION");
+    } else {
+      setIsGraduation("VENTA");
+    }
+    setIsEditing(true);
+
+    setOrdenID(record.id);
+    viewListaProductos(record?.id);
+  };
+  const viewListaProductos = async (idOrden) => {
+    const result = await API.graphql(
+      graphqlOperation(iNVENTARIOORDENITEMSByOrdenID, { ordenID: idOrden })
+    );
+    const detalle = result?.data?.iNVENTARIOORDENITEMSByOrdenID?.items;
+    const productosNewList = [];
+    var pretotal = 0;
+    for (const pro of detalle) {
+      const result = await API.graphql(
+        graphqlOperation(getINVENTARIO, { id: pro.inventarioID })
+      );
+      const producto = result?.data?.getINVENTARIO;
+      const objeto = {
+        id: producto.id,
+        nombre: producto.nombreProducto,
+        cantidad: pro.cantidad,
+        precio: producto.precioVenta,
+        subTotal: pro.costo,
+      };
+      pretotal = pretotal + Number(pro.costo);
+      productosNewList.push(objeto);
+    }
+    setTotal(pretotal);
+    setDetalleProductos([...detalleProductos, ...productosNewList]);
+    setCargandoProductos(false);
+  };
   const columns = [
     {
       title: "Tipo Orden",
@@ -136,7 +230,12 @@ function ListaOrdenes() {
         if (text === "ORDEN") {
           color = "green";
         }
-        return <Tag color={color}>{text}</Tag>;
+        return (
+          <>
+            {record.graduacionIzquierdaNueva ? <p>Graduacion</p> : <p>Venta</p>}
+            <Tag color={color}>{text}</Tag>
+          </>
+        );
       },
       // filters: searchcategorias(),
       // filterMode: "tree",
@@ -162,6 +261,35 @@ function ListaOrdenes() {
       title: "Optica",
       dataIndex: "nombreOptica",
       key: "nombreOptica",
+    },
+    {
+      title: "Precio total",
+      dataIndex: "precioTotal",
+      key: "precioTotal",
+      render: (_, record) => {
+        return (
+          <p>${(Math.round(record.precioTotal * 100) / 100).toFixed(2)}</p>
+        );
+      },
+    },
+    {
+      title: "Status Orden",
+      dataIndex: "ordenStatus",
+      key: "ordenStatus",
+      render: (_, record) => {
+        if (record.tipoOrden === "COTIZACION") {
+          return (
+            <>
+              <p>CREADA</p>
+              <Button onClick={() => envioOrdenCot(record)}>
+                Aceptar Orden
+              </Button>
+            </>
+          );
+        } else {
+          return <Tag color="geekblue">{record.ordenStatus}</Tag>;
+        }
+      },
     },
     {
       title: "Actions",
@@ -193,39 +321,423 @@ function ListaOrdenes() {
       },
     },
   ];
+  const fetchProductos = async () => {
+    try {
+      const options = [];
+      const result = await DataStore.query(INVENTARIO);
+      result.map((producto) => {
+        const option = {
+          value: producto.id,
+          label: producto.nombreProducto,
+        };
+        options.push(option);
+        return true;
+      });
+      setProductos(options);
+      setListaProductos(result);
+    } catch (error) {
+      message.error("No se encontraron clientes");
+    }
+  };
+  // Table source
+  const columnsCarrito = [
+    {
+      title: "Producto",
+      dataIndex: "nombre",
+      key: "nombre",
+    },
+    {
+      title: "Cantidad",
+      dataIndex: "cantidad",
+      key: "cantidad",
+      render: (_, record) => {
+        return (
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <Button
+              onClick={() => desCarrito(record)}
+              type="primary"
+              style={{
+                borderRadius: "50%",
+                width: "25px",
+                height: "25px",
+                display: "inline-block",
+                padding: "0px",
+                background: "#ec1c10a8",
+              }}
+            >
+              -
+            </Button>
+            <p>{record.cantidad}</p>
+            <Button
+              onClick={() => aumentCarrito(record)}
+              type="primary"
+              style={{
+                borderRadius: "50%",
+                width: "25px",
+                height: "25px",
+                display: "inline-block",
+                padding: "0px",
+                background: "#06980d",
+              }}
+            >
+              +
+            </Button>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Precio Unitario",
+      dataIndex: "precio",
+      key: "precio",
+      render: (_, record) => {
+        return <p>$/{record.precio}.00</p>;
+      },
+    },
+    {
+      title: "SubTotal",
+      dataIndex: "subTotal",
+      key: "subTotal",
+      render: (_, record) => {
+        return <p>$/{record.subTotal}.00</p>;
+      },
+    },
+    {
+      title: "Acciones",
+      dataIndex: "acciones",
+      key: "acciones",
+      render: (_, record) => {
+        return (
+          <>
+            <Button onClick={() => deleteRowCart(record)} type="primary" danger>
+              <DeleteOutlined />
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+  const columnsProductos = [
+    {
+      title: "Nombre",
+      dataIndex: "nombre",
+      key: "nombre",
+    },
+    {
+      title: "Cantidad",
+      dataIndex: "cantidad",
+      key: "cantidad",
+      render: (_, record) => {
+        return (
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <p>{record.cantidad}</p>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Precio Unitario",
+      dataIndex: "precio",
+      key: "precio",
+      render: (_, record) => {
+        return <p>$/{record.precio}.00</p>;
+      },
+    },
+    {
+      title: "SubTotal",
+      dataIndex: "subTotal",
+      key: "subTotal",
+      render: (_, record) => {
+        return <p>$/{record.subTotal}.00</p>;
+      },
+    },
+  ];
+
+  const addCarrito = (productoID) => {
+    const result = listaProductos.find(
+      (elemento) => elemento.id === productoID
+    );
+    if (productoID !== "") {
+      const ident = carrito.find((elemento) => {
+        if (elemento.id === productoID) {
+          return true;
+        }
+        return false;
+      });
+      if (ident) {
+        const nuevosObjetos = carrito.map((objeto) => {
+          if (objeto.id === productoID) {
+            const newCantidad = objeto.cantidad + cantidad;
+            const newSubtotal = newCantidad * objeto.precio;
+            setTotalCarrito(totalCarrito + cantidad * objeto.precio);
+            return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+          }
+          return objeto;
+        });
+        setCarrito(nuevosObjetos);
+      } else {
+        const carritoInterno = {
+          id: productoID,
+          nombre: result.nombreProducto,
+          cantidad: cantidad,
+          precio: result.precioVenta,
+          subTotal: Number(result.precioVenta) * Number(cantidad),
+        };
+        setCarrito([...carrito, carritoInterno]);
+        setTotalCarrito(totalCarrito + carritoInterno.subTotal);
+      }
+      setProductoID(null);
+    }
+  };
+
+  const onOrden = async () => {
+    const original = await API.graphql(
+      graphqlOperation(getORDEN, { id: ordenID })
+    );
+    const ordenUpdate = original?.data?.getORDEN?._version;
+    console.log(ordenUpdate);
+    if (isGraduation === "GRADUATION") {
+      const updateOrden = {
+        id: ordenID,
+        tipoOrden: "ORDEN",
+        ordenStatus: "ENVIADAMAQUILA",
+        precioTotal: (
+          Number(precioMaquila) +
+          Number(total) +
+          Number(totalCarrito)
+        ).toString(),
+        _version: ordenUpdate,
+      };
+      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
+      message.success("La cotizacion se envio a Maquila");
+    } else {
+      const updateOrden = {
+        id: ordenID,
+        tipoOrden: "ORDEN",
+        ordenStatus: "ENTREGADA",
+        precioTotal: (
+          Number(precioMaquila) +
+          Number(total) +
+          Number(totalCarrito)
+        ).toString(),
+        _version: ordenUpdate,
+      };
+      const resolver = await API.graphql(
+        graphqlOperation(updateORDEN, { input: updateOrden })
+      );
+      console.log(resolver);
+      message.success("La venta se ha confirmado correctamente");
+    }
+
+    if (carrito.length > 0) {
+      try {
+        await Promise.all(
+          carrito.map(async (cart) => {
+            const newDetail = {
+              cantidad: cart.cantidad,
+              ordenID: ordenID,
+              inventarioID: cart.id,
+              costo: cart.subTotal,
+            };
+            await API.graphql(
+              graphqlOperation(createINVENTARIOORDENITEMS, { input: newDetail })
+            );
+          })
+        );
+        message.success("La agrego nuevos productos a la orden");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchOrdenes();
+    setIsEditing(false);
+    setCarrito([]);
+    setDetalleProductos([]);
+    setTotal(0);
+    setprecioMaquila(0);
+    setTotalCarrito(0);
+  };
+
+  const desCarrito = (record) => {
+    const nuevosObjetos = carrito.map((objeto) => {
+      if (objeto.id === record.id) {
+        if (objeto.cantidad > 1) {
+          const newCantidad = objeto.cantidad - cantidad;
+          const newSubtotal = newCantidad * objeto.precio;
+          setTotalCarrito(totalCarrito - cantidad * objeto.precio);
+          return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+        }
+      }
+      return objeto;
+    });
+    setCarrito(nuevosObjetos);
+  };
+  const aumentCarrito = (record) => {
+    const nuevosObjetos = carrito.map((objeto) => {
+      if (objeto.id === record.id) {
+        const newCantidad = objeto.cantidad + cantidad;
+        const newSubtotal = newCantidad * objeto.precio;
+        setTotalCarrito(totalCarrito + cantidad * objeto.precio);
+        return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+      }
+      return objeto;
+    });
+    setCarrito(nuevosObjetos);
+  };
+
+  const deleteRowCart = (record) => {
+    const nuevosObjetos = carrito.filter((objeto) => objeto.id !== record.id);
+    const precio = carrito.find((objeto) => objeto.id === record.id);
+    setCarrito(nuevosObjetos);
+    setTotal(total - Number(precio.subTotal));
+  };
+
+  const searchFilters = () => {
+    if (
+      searchOrden !== undefined ||
+      searchStatus !== undefined ||
+      searchFecha !== ""
+    ) {
+      const filteredOrdenes = ordenes.filter((orden) => {
+        let matchOrden = true;
+        let matchStatus = true;
+        let matchFecha = true;
+
+        if (searchOrden && orden.tipoOrden !== searchOrden) {
+          matchOrden = false;
+        }
+        if (searchStatus && orden.ordenStatus !== searchStatus) {
+          matchStatus = false;
+        }
+        if (searchFecha && orden.fechaOrden !== searchFecha) {
+          matchFecha = false;
+        }
+
+        return matchOrden && matchStatus && matchFecha;
+      });
+      setDataSource(filteredOrdenes);
+    } else {
+      setDataSource(ordenes);
+    }
+  };
+  const resetFilters = () => {
+    setDataSource(ordenes);
+    setSearchFecha("");
+    setSearchOrden(undefined);
+    setSearchStatus(undefined);
+  };
+  // funcion de imprimir
+  const handlePrint = () => {
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(
+      "<html><head><title>Imprimir</title></head><body>"
+    );
+    printWindow.document.write('<div id="print-content">');
+    printWindow.document.write(document.getElementById("pdf-viewer").innerHTML);
+    printWindow.document.write("</div></body></html>");
+    printWindow.document.close();
+    printWindow.print();
+  };
   return (
     <div>
       <h1>Lista Ordenes</h1>
-      <Table
-        scroll={{ x: 400 }}
-        rowKey={(record) => record.id}
-        dataSource={ordenes}
-        columns={columns}
-        rowClassName="editable-row"
-      />
+      <div style={{ margin: "20px 0px" }}>
+        <p>Filtrado avanzado</p>
+      </div>
+      <Form
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "15px",
+        }}
+      >
+        <Form.Item>
+          <Select
+            value={searchOrden}
+            onSelect={(e) => setSearchOrden(e)}
+            onClear={(e) => setSearchOrden(e)}
+            allowClear
+            placeholder="Filtrar por orden"
+          >
+            <Option value="ORDEN">ORDEN</Option>
+            <Option value="COTIZACION">COTIZACION</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item>
+          <Select
+            value={searchStatus}
+            onSelect={(e) => setSearchStatus(e)}
+            onClear={(e) => setSearchStatus(e)}
+            allowClear
+            placeholder="Filtrar por Status"
+          >
+            <Option value="CREADA">CREADA</Option>
+            <Option value="ENVIADAMAQUILA">ENVIADAMAQUILA</Option>
+            <Option value="ENTREGADA">ENTREGADA</Option>
+            <Option value="CONPROBLEMAS">CONPROBLEMAS</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item>
+          <DatePicker
+            value={searchFecha !== "" ? dayjs(searchFecha, "YYYY-MM-DD") : ""}
+            onChange={(date, dateString) => setSearchFecha(dateString)}
+            style={{ width: "100%" }}
+            format="YYYY-MM-DD"
+            placeholder="Filtrar por fecha"
+          />
+        </Form.Item>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <Button onClick={searchFilters} title="Filtrar" type="primary">
+            Filtrar <SearchOutlined />
+          </Button>
+          <Button onClick={resetFilters} title="reset">
+            Resetear
+          </Button>
+        </div>
+      </Form>
+      {loading ? (
+        <Table
+          scroll={{ x: 400 }}
+          rowKey={(record) => record.id}
+          dataSource={dataSource}
+          columns={columns}
+          rowClassName="editable-row"
+        />
+      ) : (
+        <p>Cargando...</p>
+      )}
 
+      {/* modal de report view */}
       <Modal
-        onCancel={() => setIsEditing(false)}
+        onCancel={() => setVerReport(false)}
         title="Ver Report"
-        open={isEditing}
+        open={verReport}
         // onOk={() => onFinish()}
       >
         {tipoOrden === "COTIZACION" ? (
           <>
             <PDFViewer style={{ width: "100%", height: "50vh" }}>
               <Cotizacion
+                tipoOrden={tipoOrden}
                 logoSrc={logo}
-                title="Orden de Graduacion"
-                orden={ordenNow}
+                title="Ticket de Cotizacion"
+                customer={cliente}
+                products={products}
+                // total={total}
+                precioGraduacion={precioMaquila}
               />
             </PDFViewer>
             <PDFDownloadLink
               fileName={ordenID + "-" + ordenNow[0].nombreCliente}
               document={
                 <Cotizacion
+                  tipoOrden={tipoOrden}
                   logoSrc={logo}
-                  title="Orden de Graduacion"
-                  orden={ordenNow}
+                  title="Ticket de Cotizacion"
+                  customer={cliente}
+                  products={products}
+                  // total={total}
+                  precioGraduacion={precioMaquila}
                 />
               }
             >
@@ -233,17 +745,22 @@ function ListaOrdenes() {
                 <CloudDownloadOutlined /> Descargar
               </Button>
             </PDFDownloadLink>
+            {/* <Button onClick={handlePrint}>Imprimir</Button> */}
           </>
         ) : (
           <>
-            <PDFViewer style={{ width: "100%", height: "50vh" }}>
+            <PDFViewer
+              id="pdf-ticket"
+              style={{ width: "100%", height: "50vh" }}
+            >
               <TicketPDF
                 tipoOrden={tipoOrden}
                 logoSrc={logo}
                 title="Ticket de Compra"
                 customer={cliente}
                 products={products}
-                total={total}
+                // total={total}
+                precioGraduacion={precioMaquila}
               />
             </PDFViewer>
 
@@ -256,7 +773,8 @@ function ListaOrdenes() {
                   title="Ticket de Compra"
                   customer={cliente}
                   products={products}
-                  total={total}
+                  // total={total}
+                  precioGraduacion={precioMaquila}
                 />
               }
             >
@@ -264,8 +782,163 @@ function ListaOrdenes() {
                 <CloudDownloadOutlined /> Descargar
               </Button>
             </PDFDownloadLink>
+            <Button onClick={handlePrint}>Imprimir</Button>
           </>
         )}
+      </Modal>
+      {/* modal de enviar ordenes view */}
+      <Modal
+        onCancel={() => {
+          setIsEditing(false);
+          setDetalleProductos([]);
+          setTotal(0);
+          setprecioMaquila(0);
+          setTotalCarrito(0);
+          setCheckAdd(null);
+        }}
+        title="Enviar Orden"
+        open={isEditing}
+        onOk={onOrden}
+        okText="Aceptar Orden"
+      >
+        <Form>
+          <div>
+            <h3 style={{ width: "100%", textAlign: "center" }}>
+              Cliente: <br /> {cliente}
+            </h3>
+            {graduacionDerechaNueva ? (
+              <>
+                <h4>Graduaciones</h4>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    margin: "20px 0px",
+                  }}
+                >
+                  <p>Graduacion Vieja Izquierda: {graduacionIzquierdaVieja}</p>
+                  <p>Graduacion Vieja Derecha: {graduacionDerechaVieja}</p>
+                  <p>Graduacion Nueva Izquierda: {graduacionIzquierdaNueva}</p>
+                  <p>Graduacion Nueva Derecha: {graduacionDerechaNueva}</p>
+                </div>
+
+                <Form.Item label="Precio de maquila x cotizacion">
+                  <Input disabled value={precioMaquila} />
+                </Form.Item>
+              </>
+            ) : null}
+
+            {cargandoProductos ? (
+              <p>Cargando</p>
+            ) : detalleProductos.length > 0 ? (
+              <>
+                <Table
+                  pagination={false}
+                  scroll={{ x: 400 }}
+                  rowKey={(record) => record.id}
+                  columns={columnsProductos}
+                  dataSource={detalleProductos}
+                />
+                <h1>
+                  Total:{" "}
+                  {Number(precioMaquila) + Number(total) + Number(totalCarrito)}
+                </h1>
+              </>
+            ) : (
+              <p>Cargando</p>
+            )}
+            <Form.Item label="Deseas agregar antes de enviar orden?">
+              <Select
+                value={checkAdd}
+                onSelect={(e) => setCheckAdd(e)}
+                placeholder="Selecciona SI/NO"
+              >
+                <Option value="SI">SI</Option>
+                <Option value="NO">NO</Option>
+              </Select>
+            </Form.Item>
+            {checkAdd === "SI" ? (
+              <div style={{ display: "flex", gap: "20px" }}>
+                <div className="container-productos" style={{ width: "100%" }}>
+                  <Select
+                    showSearch
+                    value={productoID}
+                    style={{ width: "100%", marginBottom: "20px" }}
+                    onChange={(e) => addCarrito(e)}
+                    placeholder="Agregar Producto"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={productos}
+                  />
+                  <Table
+                    pagination={false}
+                    scroll={{ x: 400 }}
+                    rowKey={(record) => record.id}
+                    columns={columnsCarrito}
+                    dataSource={carrito}
+                  />
+                  <div
+                    style={{
+                      marginTop: "30px",
+                      width: "100%",
+                      maxWidth: "300px",
+                      padding: "15px",
+                      border: "1px solid #ececec",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    <h3>Resumen de Pago</h3>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <p>SubTotal</p>
+                      <h4>
+                        $
+                        {(
+                          Math.round((totalCarrito / 1.16) * 100) / 100
+                        ).toFixed(2)}
+                      </h4>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <p>IVA(16%)</p>
+                      <h4>
+                        $
+                        {(
+                          Math.round(
+                            (totalCarrito - totalCarrito / 1.16) * 100
+                          ) / 100
+                        ).toFixed(2)}
+                      </h4>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <p>Total</p>
+                      <h4>
+                        ${(Math.round(totalCarrito * 100) / 100).toFixed(2)}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </Form>
       </Modal>
     </div>
   );

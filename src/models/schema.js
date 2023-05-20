@@ -609,6 +609,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "precioGraduacion": {
+                    "name": "precioGraduacion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -984,5 +991,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "4fdec1d1c2d53b21bf5c4f45784ad344"
+    "version": "6fb68803ca5bb0f83127cdcbea108c96"
 };

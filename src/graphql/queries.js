@@ -557,6 +557,7 @@ export const getORDEN = /* GraphQL */ `
         startedAt
       }
       ordenStatus
+      precioGraduacion
       createdAt
       updatedAt
       _version
@@ -594,6 +595,7 @@ export const listORDENS = /* GraphQL */ `
           startedAt
         }
         ordenStatus
+        precioGraduacion
         createdAt
         updatedAt
         _version
@@ -640,6 +642,7 @@ export const syncORDENS = /* GraphQL */ `
           startedAt
         }
         ordenStatus
+        precioGraduacion
         createdAt
         updatedAt
         _version
@@ -688,6 +691,7 @@ export const oRDENSByOpticaID = /* GraphQL */ `
           startedAt
         }
         ordenStatus
+        precioGraduacion
         createdAt
         updatedAt
         _version
@@ -736,6 +740,7 @@ export const oRDENSByClientesID = /* GraphQL */ `
           startedAt
         }
         ordenStatus
+        precioGraduacion
         createdAt
         updatedAt
         _version
@@ -779,6 +784,7 @@ export const getCLIENTES = /* GraphQL */ `
           graduacionIzquierdaNueva
           fechaExamen
           ordenStatus
+          precioGraduacion
           createdAt
           updatedAt
           _version
@@ -972,6 +978,7 @@ export const getOPTICA = /* GraphQL */ `
           graduacionIzquierdaNueva
           fechaExamen
           ordenStatus
+          precioGraduacion
           createdAt
           updatedAt
           _version

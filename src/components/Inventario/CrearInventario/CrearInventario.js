@@ -111,7 +111,7 @@ function CrearInventario() {
   return (
     <div>
       <h1>CREAR PRODUCTO</h1>
-      <Form layout="vertical" name="crearLente">
+      <Form layout="vertical" name="crearLente" onFinish={onFinish}>
         <div
           style={{
             display: "grid",
@@ -121,6 +121,7 @@ function CrearInventario() {
         >
           <Form.Item
             label="Nombre Producto"
+            name="nombreProducto"
             rules={[{ required: true, message: "Este campo es requerido" }]}
           >
             <Input
@@ -259,12 +260,7 @@ function CrearInventario() {
           </Form.Item>
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button
-            onClick={onFinish}
-            title="Save"
-            htmlType="submit"
-            type="primary"
-          >
+          <Button title="Save" htmlType="submit" type="primary">
             Guardar
           </Button>
         </div>

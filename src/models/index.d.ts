@@ -207,6 +207,7 @@ type EagerORDEN = {
   readonly fechaExamen?: string | null;
   readonly INVENTARIOORDENITEMS?: (INVENTARIOORDENITEMS | null)[] | null;
   readonly ordenStatus?: Ordenstatus | keyof typeof Ordenstatus | null;
+  readonly precioGraduacion?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -234,6 +235,7 @@ type LazyORDEN = {
   readonly fechaExamen?: string | null;
   readonly INVENTARIOORDENITEMS: AsyncCollection<INVENTARIOORDENITEMS>;
   readonly ordenStatus?: Ordenstatus | keyof typeof Ordenstatus | null;
+  readonly precioGraduacion?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
