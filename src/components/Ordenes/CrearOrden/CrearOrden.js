@@ -156,6 +156,7 @@ function CrearOrden() {
           horaOrden: hora,
           precioGraduacion: precioGraduacion.toString(),
           precioTotal: (total + Number(precioGraduacion)).toString(),
+          anticipo: "0",
         };
         const result = await API.graphql(
           graphqlOperation(createORDEN, { input: newOrden })
@@ -391,7 +392,7 @@ function CrearOrden() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
+                gridTemplateColumns: "repeat(3, 1fr)",
                 gap: "20px",
               }}
             >
@@ -418,7 +419,7 @@ function CrearOrden() {
                   onChange={(date, dateString) => setFechaEntrega(dateString)}
                 />
               </Form.Item>
-              <Form.Item label="Precio de Orden">
+              <Form.Item label="Precio de graduacion">
                 <Input
                   value={precioGraduacion}
                   onChange={(e) => setPrecioGraduacion(e.target.value)}

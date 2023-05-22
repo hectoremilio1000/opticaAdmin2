@@ -62,6 +62,8 @@ function ListaOrdenes() {
   const [totalCarrito, setTotalCarrito] = useState(0);
   const [isGraduation, setIsGraduation] = useState("");
 
+  const [precioAnticipo, setPrecioAnticipo] = useState(0);
+
   // datos de la orden seleeccionada
   const [products, setProducts] = useState([]);
   const [listaProductos, setListaProductos] = useState([]);
@@ -83,8 +85,12 @@ function ListaOrdenes() {
     try {
       const result = await API.graphql(graphqlOperation(listORDENS));
       const ordenes = result.data.listORDENS.items;
+      const ordenesSorted = ordenes.sort((a, b) => {
+        // Ordenar por fecha de creación descendente (más reciente primero)
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
       const ordenesConNombres = [];
-      for (const orden of ordenes) {
+      for (const orden of ordenesSorted) {
         // Obtén el cliente correspondiente a través del ID
         const resultCliente = await API.graphql(
           graphqlOperation(getCLIENTES, { id: orden.clientesID })
@@ -178,7 +184,7 @@ function ListaOrdenes() {
     setGraduacionDerechaNueva(record?.graduacionDerechaNueva);
     setGraduacionDerechaVieja(record?.graduacionDerechaVieja);
     setGraduacionIzquierdaVieja(record?.graduacionIzquierdaVieja);
-    setGraduacionIzquierdaNueva(record?.graduacionDerechaVieja);
+    setGraduacionIzquierdaNueva(record?.graduacionIzquierdaNueva);
     fetchProductos();
     if (record?.graduacionDerechaNueva) {
       setprecioMaquila(record?.precioGraduacion);
@@ -273,6 +279,39 @@ function ListaOrdenes() {
       },
     },
     {
+      title: "Anticipo",
+      dataIndex: "anticipo",
+      key: "anticipo",
+      render: (_, record) => {
+        if (Number(record.anticipo) !== 0) {
+          const split = record.anticipo.split("-");
+          const total = split[0];
+          const anticipo = split[1];
+          return <p style={{ color: "green" }}>${anticipo}</p>;
+          // return <p>${(Math.round(record.anticipo * 100) / 100).toFixed(2)}</p>;
+        } else {
+          return <p>No aplica</p>;
+        }
+      },
+    },
+    {
+      title: "Deuda por anticipo",
+      dataIndex: "deudaanticipo",
+      key: "deudaanticipo",
+      render: (_, record) => {
+        if (Number(record.anticipo) !== 0) {
+          const split = record.anticipo.split("-");
+          const total = split[0];
+          const anticipo = split[1];
+          const deuda = Number(total) - Number(anticipo);
+          return <p style={{ color: "red" }}>${deuda}</p>;
+          // return <p>${(Math.round(record.anticipo * 100) / 100).toFixed(2)}</p>;
+        } else {
+          return <p>No aplica</p>;
+        }
+      },
+    },
+    {
       title: "Status Orden",
       dataIndex: "ordenStatus",
       key: "ordenStatus",
@@ -304,18 +343,22 @@ function ListaOrdenes() {
                 edithandle(record);
               }}
             />
-            <Popconfirm
-              title="Eliminar Lente"
-              description="¿Esta seguro de eliminar el lente?"
-              onConfirm={() => deletehandle(record)}
-              okText="Si"
-              cancelText="No"
-            >
-              <DeleteOutlined
-                onClick={() => changeDelete(record)}
-                style={{ color: "red", marginLeft: "15px" }}
-              />{" "}
-            </Popconfirm>
+            {record.tipoOrden === "COTIZACION" ? (
+              <>
+                <Popconfirm
+                  title="Eliminar Cotizacion"
+                  description="¿Esta seguro de eliminar la coizacion?"
+                  onConfirm={() => deletehandle(record)}
+                  okText="Si"
+                  cancelText="No"
+                >
+                  <DeleteOutlined
+                    onClick={() => changeDelete(record)}
+                    style={{ color: "red", marginLeft: "15px" }}
+                  />{" "}
+                </Popconfirm>
+              </>
+            ) : null}
           </>
         );
       },
@@ -497,19 +540,34 @@ function ListaOrdenes() {
     const ordenUpdate = original?.data?.getORDEN?._version;
     console.log(ordenUpdate);
     if (isGraduation === "GRADUATION") {
-      const updateOrden = {
-        id: ordenID,
-        tipoOrden: "ORDEN",
-        ordenStatus: "ENVIADAMAQUILA",
-        precioTotal: (
-          Number(precioMaquila) +
-          Number(total) +
-          Number(totalCarrito)
-        ).toString(),
-        _version: ordenUpdate,
-      };
-      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
-      message.success("La cotizacion se envio a Maquila");
+      if (Number(precioAnticipo) !== 0) {
+        const updateOrden = {
+          id: ordenID,
+          tipoOrden: "ORDEN",
+          ordenStatus: "ENVIADAMAQUILA",
+          precioTotal: (
+            Number(precioMaquila) +
+            Number(total) +
+            Number(totalCarrito)
+          ).toString(),
+          anticipo: `${Number(precioMaquila) + Number(total)}-${Number(
+            precioAnticipo
+          )}`,
+          _version: ordenUpdate,
+        };
+        await API.graphql(
+          graphqlOperation(updateORDEN, { input: updateOrden })
+        );
+        message.success("La cotizacion se envio a Maquila");
+        fetchOrdenes();
+        setIsEditing(false);
+        setDetalleProductos([]);
+        setTotal(0);
+        setprecioMaquila(0);
+        setTotalCarrito(0);
+      } else {
+        message.warning("El anticipo no debe ser 0");
+      }
     } else {
       const updateOrden = {
         id: ordenID,
@@ -527,6 +585,12 @@ function ListaOrdenes() {
       );
       console.log(resolver);
       message.success("La venta se ha confirmado correctamente");
+      fetchOrdenes();
+      setIsEditing(false);
+      setDetalleProductos([]);
+      setTotal(0);
+      setprecioMaquila(0);
+      setTotalCarrito(0);
     }
 
     if (carrito.length > 0) {
@@ -544,18 +608,12 @@ function ListaOrdenes() {
             );
           })
         );
+        setCarrito([]);
         message.success("La agrego nuevos productos a la orden");
       } catch (error) {
         console.log(error);
       }
     }
-    fetchOrdenes();
-    setIsEditing(false);
-    setCarrito([]);
-    setDetalleProductos([]);
-    setTotal(0);
-    setprecioMaquila(0);
-    setTotalCarrito(0);
   };
 
   const desCarrito = (record) => {
@@ -589,7 +647,7 @@ function ListaOrdenes() {
     const nuevosObjetos = carrito.filter((objeto) => objeto.id !== record.id);
     const precio = carrito.find((objeto) => objeto.id === record.id);
     setCarrito(nuevosObjetos);
-    setTotal(total - Number(precio.subTotal));
+    setTotalCarrito(totalCarrito - Number(precio.subTotal));
   };
 
   const searchFilters = () => {
@@ -839,14 +897,28 @@ function ListaOrdenes() {
                   columns={columnsProductos}
                   dataSource={detalleProductos}
                 />
-                <h1>
-                  Total:{" "}
-                  {Number(precioMaquila) + Number(total) + Number(totalCarrito)}
-                </h1>
               </>
             ) : (
               <p>Cargando</p>
             )}
+            <div>
+              <h1 style={{ color: "#5b5b5b", fontSize: "18px" }}>
+                Total venta anterior : ${Number(total) + Number(precioMaquila)}
+              </h1>
+            </div>
+            <Form.Item label="Anticipo">
+              <Input
+                value={precioAnticipo}
+                onChange={(e) => setPrecioAnticipo(e.target.value)}
+                placeholder="Ingrese el anticipo del cliente $.00 de la orden"
+              />
+            </Form.Item>
+            <div>
+              <h1 style={{ color: "red", fontSize: "18px" }}>
+                Deuda de Anticipo : $
+                {Number(total) + Number(precioMaquila) - Number(precioAnticipo)}
+              </h1>
+            </div>
             <Form.Item label="Deseas agregar antes de enviar orden?">
               <Select
                 value={checkAdd}
@@ -891,7 +963,7 @@ function ListaOrdenes() {
                       borderRadius: "10px",
                     }}
                   >
-                    <h3>Resumen de Pago</h3>
+                    <h3>Resumen de Venta Agregada</h3>
                     <div
                       style={{
                         display: "flex",
@@ -937,6 +1009,15 @@ function ListaOrdenes() {
                 </div>
               </div>
             ) : null}
+            <div>
+              <h1 style={{ color: "green", fontSize: "18px" }}>
+                Cobrar Ahora : ${Number(totalCarrito) + Number(precioAnticipo)}
+              </h1>
+              <h1 style={{ color: "#5b5b5b", fontSize: "18px" }}>
+                Total Venta Neta : $
+                {Number(total) + Number(precioMaquila) + Number(totalCarrito)}
+              </h1>
+            </div>
           </div>
         </Form>
       </Modal>

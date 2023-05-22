@@ -616,6 +616,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "anticipo": {
+                    "name": "anticipo",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -991,5 +998,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "6fb68803ca5bb0f83127cdcbea108c96"
+    "version": "a1668eb0665f60a0523b99aee041b5aa"
 };

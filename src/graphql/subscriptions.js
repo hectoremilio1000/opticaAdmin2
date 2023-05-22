@@ -332,6 +332,7 @@ export const onCreateORDEN = /* GraphQL */ `
       }
       ordenStatus
       precioGraduacion
+      anticipo
       createdAt
       updatedAt
       _version
@@ -377,6 +378,7 @@ export const onUpdateORDEN = /* GraphQL */ `
       }
       ordenStatus
       precioGraduacion
+      anticipo
       createdAt
       updatedAt
       _version
@@ -422,6 +424,7 @@ export const onDeleteORDEN = /* GraphQL */ `
       }
       ordenStatus
       precioGraduacion
+      anticipo
       createdAt
       updatedAt
       _version
@@ -463,6 +466,7 @@ export const onCreateCLIENTES = /* GraphQL */ `
           fechaExamen
           ordenStatus
           precioGraduacion
+          anticipo
           createdAt
           updatedAt
           _version
@@ -513,6 +517,7 @@ export const onUpdateCLIENTES = /* GraphQL */ `
           fechaExamen
           ordenStatus
           precioGraduacion
+          anticipo
           createdAt
           updatedAt
           _version
@@ -563,6 +568,7 @@ export const onDeleteCLIENTES = /* GraphQL */ `
           fechaExamen
           ordenStatus
           precioGraduacion
+          anticipo
           createdAt
           updatedAt
           _version
@@ -644,6 +650,7 @@ export const onCreateOPTICA = /* GraphQL */ `
           fechaExamen
           ordenStatus
           precioGraduacion
+          anticipo
           createdAt
           updatedAt
           _version
@@ -768,6 +775,7 @@ export const onUpdateOPTICA = /* GraphQL */ `
           fechaExamen
           ordenStatus
           precioGraduacion
+          anticipo
           createdAt
           updatedAt
           _version
@@ -892,6 +900,7 @@ export const onDeleteOPTICA = /* GraphQL */ `
           fechaExamen
           ordenStatus
           precioGraduacion
+          anticipo
           createdAt
           updatedAt
           _version
