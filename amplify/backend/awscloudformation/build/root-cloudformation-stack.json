@@ -167,7 +167,7 @@
             "Ref": "UnauthRoleName"
           },
           "S3DeploymentBucket": "amplify-opticaadmin-dev-191131-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/b474ef8450b80806b2e6e5b7171e69445936aadc",
+          "S3DeploymentRootKey": "amplify-appsync-files/3c3eafdcb2f02e835adf05766759f7f207e2b8ca",
           "env": "dev"
         }
       }

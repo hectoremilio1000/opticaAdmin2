@@ -102,6 +102,7 @@ type ORDEN @aws_iam @aws_api_key {
   INVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection
   ordenStatus: ORDENSTATUS
   precioGraduacion: String
+  anticipo: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -714,6 +715,7 @@ input ModelORDENFilterInput {
   fechaExamen: ModelStringInput
   ordenStatus: ModelORDENSTATUSInput
   precioGraduacion: ModelStringInput
+  anticipo: ModelStringInput
   and: [ModelORDENFilterInput]
   or: [ModelORDENFilterInput]
   not: ModelORDENFilterInput
@@ -737,6 +739,7 @@ input ModelORDENConditionInput {
   fechaExamen: ModelStringInput
   ordenStatus: ModelORDENSTATUSInput
   precioGraduacion: ModelStringInput
+  anticipo: ModelStringInput
   and: [ModelORDENConditionInput]
   or: [ModelORDENConditionInput]
   not: ModelORDENConditionInput
@@ -761,6 +764,7 @@ input CreateORDENInput {
   fechaExamen: String
   ordenStatus: ORDENSTATUS
   precioGraduacion: String
+  anticipo: String
   _version: Int
 }
 
@@ -783,6 +787,7 @@ input UpdateORDENInput {
   fechaExamen: String
   ordenStatus: ORDENSTATUS
   precioGraduacion: String
+  anticipo: String
   _version: Int
 }
 
@@ -810,6 +815,7 @@ input ModelSubscriptionORDENFilterInput {
   fechaExamen: ModelSubscriptionStringInput
   ordenStatus: ModelSubscriptionStringInput
   precioGraduacion: ModelSubscriptionStringInput
+  anticipo: ModelSubscriptionStringInput
   and: [ModelSubscriptionORDENFilterInput]
   or: [ModelSubscriptionORDENFilterInput]
 }

@@ -81,6 +81,7 @@ type ORDEN @model @auth(rules: [{allow: public}]) {
   INVENTARIOORDENITEMS: [INVENTARIOORDENITEMS] @hasMany(indexName: "byORDEN", fields: ["id"])
   ordenStatus: ORDENSTATUS
   precioGraduacion: String
+  anticipo: String
 }
 
 type CLIENTES @model @auth(rules: [{allow: public}]) {
