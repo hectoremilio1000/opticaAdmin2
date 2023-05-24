@@ -19,9 +19,12 @@ export const signUp = async ({
       profile,
       address,
     },
+    clientMetadata: {
+      groupName,
+    },
   })
     .then((data) => {
-      console.log(data);
+      console.log("Se ha creado correctamente al usuario");
     })
     .catch((error) => {
       console.log("Error al registrar el usuario:", error);
