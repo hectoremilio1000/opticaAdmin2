@@ -1,14 +1,14 @@
 import { React, useState, useEffect, useContext } from "react";
 import { Form, message, Input, Select, Button } from "antd";
-import { API, graphqlOperation, DataStore } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from "../../../graphql/mutations";
-import { OPTICA } from "../../../models";
 import { MenuContext } from "../../../contexts/MenuContext";
 // uso el contexto del auth
 import { useAuthContext } from "../../../contexts/AuthContext";
 import { checkIfExists } from "../../../functions/user/checkIfExists";
 import { signUp } from "../../../functions/user/signUp";
 import GROUPS from "../../../constants/groups";
+import { listOPTICAS } from "../../../graphql/queries";
 
 const { Option } = Select;
 
@@ -29,8 +29,8 @@ function CrearGerente() {
 
   const searchOpticas = async () => {
     try {
-      const result = await DataStore.query(OPTICA);
-      setOpticas(result);
+      const result = await API.graphql(graphqlOperation(listOPTICAS));
+      setOpticas(result.data.listOPTICAS.items);
     } catch (error) {
       console.log(error);
     }

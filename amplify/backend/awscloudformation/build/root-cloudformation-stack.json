@@ -152,6 +152,49 @@
         }
       }
     },
+    "AuthTriggerCustomLambdaStack": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json",
+        "Parameters": {
+          "env": "dev",
+          "userpoolId": {
+            "Fn::GetAtt": [
+              "authopticaadmind48f139d",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "userpoolArn": {
+            "Fn::GetAtt": [
+              "authopticaadmind48f139d",
+              "Outputs.UserPoolArn"
+            ]
+          },
+          "functionopticaadmind48f139dPostConfirmationLambdaExecutionRole": {
+            "Fn::GetAtt": [
+              "functionopticaadmind48f139dPostConfirmation",
+              "Outputs.LambdaExecutionRoleArn"
+            ]
+          },
+          "functionopticaadmind48f139dPostConfirmationArn": {
+            "Fn::GetAtt": [
+              "functionopticaadmind48f139dPostConfirmation",
+              "Outputs.Arn"
+            ]
+          },
+          "functionopticaadmind48f139dPostConfirmationName": {
+            "Fn::GetAtt": [
+              "functionopticaadmind48f139dPostConfirmation",
+              "Outputs.Name"
+            ]
+          }
+        }
+      },
+      "DependsOn": [
+        "authopticaadmind48f139d",
+        "functionopticaadmind48f139dPostConfirmation"
+      ]
+    },
     "apiapiopticaadmin": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
@@ -177,8 +220,6 @@
       "Properties": {
         "TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/opticaadmind48f139d-cloudformation-template.json",
         "Parameters": {
-          "identityPoolName": "opticaadmind48f139d_identitypool_d48f139d",
-          "allowUnauthenticatedIdentities": true,
           "resourceNameTruncated": "opticad48f139d",
           "userPoolName": "opticaadmind48f139d_userpool_d48f139d",
           "autoVerifiedAttributes": "email",
@@ -186,8 +227,8 @@
           "mfaTypes": "SMS Text Message",
           "smsAuthenticationMessage": "Your authentication code is {####}",
           "smsVerificationMessage": "Your verification code is {####}",
-          "emailVerificationSubject": "Your verification code",
-          "emailVerificationMessage": "Your verification code is {####}",
+          "emailVerificationSubject": "Código de verificación",
+          "emailVerificationMessage": "Tu código de verificación es: {####}",
           "defaultPasswordPolicy": false,
           "passwordPolicyMinLength": 8,
           "passwordPolicyCharacters": "",
@@ -201,9 +242,9 @@
           "userpoolClientSetAttributes": false,
           "sharedId": "d48f139d",
           "resourceName": "opticaadmind48f139d",
-          "authSelections": "identityPoolAndUserPool",
-          "useDefault": "default",
-          "userPoolGroupList": "",
+          "authSelections": "userPoolOnly",
+          "useDefault": "manual",
+          "userPoolGroupList": "superadmin,gerente,vendedor,cliente",
           "serviceName": "Cognito",
           "usernameCaseSensitive": false,
           "useEnabledMfas": true,
@@ -220,7 +261,56 @@
             ]
           },
           "breakCircularDependency": true,
-          "dependsOn": "",
+          "dependsOn": "[object Object]",
+          "userPoolGroups": true,
+          "adminQueries": false,
+          "triggers": "{\"PostConfirmation\":[\"add-to-group\"]}",
+          "hostedUI": false,
+          "authProviders": "",
+          "parentStack": {
+            "Ref": "AWS::StackId"
+          },
+          "authTriggerConnections": "{\"triggerType\":\"PostConfirmation\",\"lambdaFunctionName\":\"opticaadmind48f139dPostConfirmation\"}",
+          "permissions": "{\"policyName\":\"AddToGroupCognito\",\"trigger\":\"PostConfirmation\",\"effect\":\"Allow\",\"actions\":[\"cognito-idp:AdminAddUserToGroup\",\"cognito-idp:GetGroup\",\"cognito-idp:CreateGroup\"],\"resource\":{\"paramType\":\"!GetAtt\",\"keys\":[\"UserPool\",\"Arn\"]}}",
+          "env": "dev"
+        }
+      }
+    },
+    "authuserPoolGroups": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
+        "Parameters": {
+          "AuthRoleArn": {
+            "Fn::GetAtt": [
+              "AuthRole",
+              "Arn"
+            ]
+          },
+          "UnauthRoleArn": {
+            "Fn::GetAtt": [
+              "UnauthRole",
+              "Arn"
+            ]
+          },
+          "authopticaadmind48f139dUserPoolId": {
+            "Fn::GetAtt": [
+              "authopticaadmind48f139d",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "authopticaadmind48f139dAppClientIDWeb": {
+            "Fn::GetAtt": [
+              "authopticaadmind48f139d",
+              "Outputs.AppClientIDWeb"
+            ]
+          },
+          "authopticaadmind48f139dAppClientID": {
+            "Fn::GetAtt": [
+              "authopticaadmind48f139d",
+              "Outputs.AppClientID"
+            ]
+          },
           "env": "dev"
         }
       }
@@ -258,209 +348,18 @@
         }
       }
     },
-    "UpdateRolesWithIDPFunction": {
-      "DependsOn": [
-        "AuthRole",
-        "UnauthRole",
-        "authopticaadmind48f139d"
-      ],
-      "Type": "AWS::Lambda::Function",
+    "functionopticaadmind48f139dPostConfirmation": {
+      "Type": "AWS::CloudFormation::Stack",
       "Properties": {
-        "Code": {
-          "ZipFile": {
-            "Fn::Join": [
-              "\n",
-              [
-                "const response = require('cfn-response');",
-                "const { IAMClient, GetRoleCommand, UpdateAssumeRolePolicyCommand } = require('@aws-sdk/client-iam');",
-                "exports.handler = function(event, context) {",
-                "    // Don't return promise, response.send() marks context as done internally",
-                "    const ignoredPromise = handleEvent(event, context)",
-                "};",
-                "async function handleEvent(event, context) {",
-                "    try {",
-                "        let authRoleName = event.ResourceProperties.authRoleName;",
-                "        let unauthRoleName = event.ResourceProperties.unauthRoleName;",
-                "        let idpId = event.ResourceProperties.idpId;",
-                "        let authParamsJson = {",
-                "            'Version': '2012-10-17',",
-                "            'Statement': [{",
-                "                'Effect': 'Allow',",
-                "                'Principal': {'Federated': 'cognito-identity.amazonaws.com'},",
-                "                'Action': 'sts:AssumeRoleWithWebIdentity',",
-                "                'Condition': {",
-                "                    'StringEquals': {'cognito-identity.amazonaws.com:aud': idpId},",
-                "                    'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': 'authenticated'}",
-                "                }",
-                "            }]",
-                "        };",
-                "        let unauthParamsJson = {",
-                "            'Version': '2012-10-17',",
-                "            'Statement': [{",
-                "                'Effect': 'Allow',",
-                "                'Principal': {'Federated': 'cognito-identity.amazonaws.com'},",
-                "                'Action': 'sts:AssumeRoleWithWebIdentity',",
-                "                'Condition': {",
-                "                    'StringEquals': {'cognito-identity.amazonaws.com:aud': idpId},",
-                "                    'ForAnyValue:StringLike': {'cognito-identity.amazonaws.com:amr': 'unauthenticated'}",
-                "                }",
-                "            }]",
-                "        };",
-                "        if (event.RequestType === 'Delete') {",
-                "            try {",
-                "                delete authParamsJson.Statement[0].Condition;",
-                "                delete unauthParamsJson.Statement[0].Condition;",
-                "                let authParams = {PolicyDocument: JSON.stringify(authParamsJson), RoleName: authRoleName};",
-                "                let unauthParams = {PolicyDocument: JSON.stringify(unauthParamsJson), RoleName: unauthRoleName};",
-                "                const iam = new IAMClient({region: event.ResourceProperties.region});",
-                "                let res = await Promise.all([",
-                "                    iam.send(new GetRoleCommand({RoleName: authParams.RoleName})),",
-                "                    iam.send(new GetRoleCommand({RoleName: unauthParams.RoleName}))",
-                "                ]);",
-                "                console.log('in res', res);",
-                "                res = await Promise.all([",
-                "                    iam.send(new UpdateAssumeRolePolicyCommand(authParams)),",
-                "                    iam.send(new UpdateAssumeRolePolicyCommand(unauthParams))",
-                "                ]);",
-                "                console.log('delete response data' + JSON.stringify(res));",
-                "                response.send(event, context, response.SUCCESS, {});",
-                "            } catch (err) {",
-                "                console.log(err.stack);",
-                "                response.send(event, context, response.SUCCESS, {Error: err});",
-                "            }",
-                "        } else if (event.RequestType === 'Update' || event.RequestType === 'Create') {",
-                "            const iam = new IAMClient({region: event.ResourceProperties.region});",
-                "            let authParams = {PolicyDocument: JSON.stringify(authParamsJson), RoleName: authRoleName};",
-                "            let unauthParams = {PolicyDocument: JSON.stringify(unauthParamsJson), RoleName: unauthRoleName};",
-                "            const res = await Promise.all([",
-                "                iam.send(new UpdateAssumeRolePolicyCommand(authParams)),",
-                "                iam.send(new UpdateAssumeRolePolicyCommand(unauthParams))",
-                "            ]);",
-                "            console.log('createORupdate' + res);",
-                "            console.log('response data' + JSON.stringify(res));",
-                "            response.send(event, context, response.SUCCESS, {});",
-                "        }",
-                "    } catch (err) {",
-                "        console.log(err.stack);",
-                "        response.send(event, context, response.FAILED, {Error: err});",
-                "    }",
-                "};"
-              ]
-            ]
-          }
-        },
-        "Handler": "index.handler",
-        "Runtime": "nodejs18.x",
-        "Timeout": 300,
-        "Role": {
-          "Fn::GetAtt": [
-            "UpdateRolesWithIDPFunctionRole",
-            "Arn"
-          ]
+        "TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/function/opticaadmind48f139dPostConfirmation-cloudformation-template.json",
+        "Parameters": {
+          "modules": "add-to-group",
+          "resourceName": "opticaadmind48f139dPostConfirmation",
+          "GROUP": "admin",
+          "deploymentBucketName": "amplify-opticaadmin-dev-191131-deployment",
+          "s3Key": "amplify-builds/opticaadmind48f139dPostConfirmation-6d466847423156633177-build.zip",
+          "env": "dev"
         }
-      }
-    },
-    "UpdateRolesWithIDPFunctionOutputs": {
-      "Type": "Custom::LambdaCallout",
-      "Properties": {
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "UpdateRolesWithIDPFunction",
-            "Arn"
-          ]
-        },
-        "region": {
-          "Ref": "AWS::Region"
-        },
-        "idpId": {
-          "Fn::GetAtt": [
-            "authopticaadmind48f139d",
-            "Outputs.IdentityPoolId"
-          ]
-        },
-        "authRoleName": {
-          "Ref": "AuthRole"
-        },
-        "unauthRoleName": {
-          "Ref": "UnauthRole"
-        }
-      }
-    },
-    "UpdateRolesWithIDPFunctionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "RoleName": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AuthRole"
-              },
-              "-idp"
-            ]
-          ]
-        },
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyName": "UpdateRolesWithIDPFunctionPolicy",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream",
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": "arn:aws:logs:*:*:*"
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "iam:UpdateAssumeRolePolicy",
-                    "iam:GetRole"
-                  ],
-                  "Resource": {
-                    "Fn::GetAtt": [
-                      "AuthRole",
-                      "Arn"
-                    ]
-                  }
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "iam:UpdateAssumeRolePolicy",
-                    "iam:GetRole"
-                  ],
-                  "Resource": {
-                    "Fn::GetAtt": [
-                      "UnauthRole",
-                      "Arn"
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
       }
     }
   }

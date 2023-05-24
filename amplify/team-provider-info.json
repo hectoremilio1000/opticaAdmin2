@@ -9,17 +9,26 @@
       "UnauthRoleName": "amplify-opticaadmin-dev-191131-unauthRole",
       "StackName": "amplify-opticaadmin-dev-191131",
       "StackId": "arn:aws:cloudformation:us-east-1:012201143908:stack/amplify-opticaadmin-dev-191131/7c597140-e5f8-11ed-936d-0e048620bb05",
-      "AmplifyAppId": "d3a9wgqztafcak"
+      "AmplifyAppId": "d3a9wgqztafcak",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
-        "opticaadmind48f139d": {}
+        "opticaadmind48f139d": {},
+        "userPoolGroups": {}
       },
       "api": {
         "apiopticaadmin": {}
       },
       "storage": {
         "LentesImages": {}
+      },
+      "function": {
+        "opticaadmind48f139dPostConfirmation": {
+          "GROUP": "admin",
+          "deploymentBucketName": "amplify-opticaadmin-dev-191131-deployment",
+          "s3Key": "amplify-builds/opticaadmind48f139dPostConfirmation-6d466847423156633177-build.zip"
+        }
       }
     }
   }

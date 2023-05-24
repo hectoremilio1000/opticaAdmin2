@@ -5,11 +5,13 @@
     "env": {
       "Type": "String"
     },
-    "identityPoolName": {
-      "Type": "String"
+    "functionopticaadmind48f139dPostConfirmationArn": {
+      "Type": "String",
+      "Default": "functionopticaadmind48f139dPostConfirmationArn"
     },
-    "allowUnauthenticatedIdentities": {
-      "Type": "String"
+    "functionopticaadmind48f139dPostConfirmationName": {
+      "Type": "String",
+      "Default": "functionopticaadmind48f139dPostConfirmationName"
     },
     "resourceNameTruncated": {
       "Type": "String"
@@ -105,6 +107,30 @@
       "Type": "String"
     },
     "dependsOn": {
+      "Type": "CommaDelimitedList"
+    },
+    "userPoolGroups": {
+      "Type": "String"
+    },
+    "adminQueries": {
+      "Type": "String"
+    },
+    "triggers": {
+      "Type": "String"
+    },
+    "hostedUI": {
+      "Type": "String"
+    },
+    "authProviders": {
+      "Type": "CommaDelimitedList"
+    },
+    "parentStack": {
+      "Type": "String"
+    },
+    "authTriggerConnections": {
+      "Type": "CommaDelimitedList"
+    },
+    "permissions": {
       "Type": "CommaDelimitedList"
     }
   },
@@ -399,108 +425,9 @@
       ],
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"
-    },
-    "IdentityPool": {
-      "Type": "AWS::Cognito::IdentityPool",
-      "Properties": {
-        "AllowUnauthenticatedIdentities": {
-          "Ref": "allowUnauthenticatedIdentities"
-        },
-        "CognitoIdentityProviders": [
-          {
-            "ClientId": {
-              "Ref": "UserPoolClient"
-            },
-            "ProviderName": {
-              "Fn::Sub": [
-                "cognito-idp.${region}.amazonaws.com/${client}",
-                {
-                  "region": {
-                    "Ref": "AWS::Region"
-                  },
-                  "client": {
-                    "Ref": "UserPool"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "ClientId": {
-              "Ref": "UserPoolClientWeb"
-            },
-            "ProviderName": {
-              "Fn::Sub": [
-                "cognito-idp.${region}.amazonaws.com/${client}",
-                {
-                  "region": {
-                    "Ref": "AWS::Region"
-                  },
-                  "client": {
-                    "Ref": "UserPool"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "IdentityPoolName": {
-          "Fn::If": [
-            "ShouldNotCreateEnvResources",
-            "opticaadmind48f139d_identitypool_d48f139d",
-            {
-              "Fn::Join": [
-                "",
-                [
-                  "opticaadmind48f139d_identitypool_d48f139d__",
-                  {
-                    "Ref": "env"
-                  }
-                ]
-              ]
-            }
-          ]
-        }
-      },
-      "DependsOn": [
-        "UserPoolClientInputs"
-      ]
-    },
-    "IdentityPoolRoleMap": {
-      "Type": "AWS::Cognito::IdentityPoolRoleAttachment",
-      "Properties": {
-        "IdentityPoolId": {
-          "Ref": "IdentityPool"
-        },
-        "Roles": {
-          "unauthenticated": {
-            "Ref": "unauthRoleArn"
-          },
-          "authenticated": {
-            "Ref": "authRoleArn"
-          }
-        }
-      },
-      "DependsOn": [
-        "IdentityPool"
-      ]
     }
   },
   "Outputs": {
-    "IdentityPoolId": {
-      "Description": "Id for the identity pool",
-      "Value": {
-        "Ref": "IdentityPool"
-      }
-    },
-    "IdentityPoolName": {
-      "Value": {
-        "Fn::GetAtt": [
-          "IdentityPool",
-          "Name"
-        ]
-      }
-    },
     "UserPoolId": {
       "Description": "Id for the user pool",
       "Value": {

@@ -4,6 +4,7 @@ import {
   Form,
   // message,
   Input,
+  Button,
   Select,
   Tag,
   Table,
@@ -13,10 +14,11 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { API, graphqlOperation, DataStore } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 // import * as mutations from "../../../graphql/mutations";
 import * as queries from "../../../graphql/queries";
-import { OPTICA } from "../../../models";
+import Confirm from "../../RoleBased/Confirm";
+import GROUPS from "../../../constants/groups";
 // import { MenuContext } from "../../../contexts/MenuContext";
 // uso el contexto del auth
 // import { useAuthContext } from "../../../contexts/AuthContext";
@@ -34,6 +36,8 @@ function ListaGerente() {
   const [opticaID, setOpticaID] = useState("");
   const [nombres, setNombres] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [selectedRecord, setSelectedRecord] = useState("");
   // const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -48,9 +52,22 @@ function ListaGerente() {
     fetchGerentes();
     fetchOpticas();
   }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = (record) => {
+    setSelectedRecord(record);
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    fetchGerentes();
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const fetchOpticas = async () => {
-    const result = await DataStore.query(OPTICA);
-    setOpticas(result);
+    const result = await API.graphql(graphqlOperation(queries.listOPTICAS));
+    setOpticas(result.data.listOPTICAS.items);
   };
   const fetchOpticaID = (id_optica) => {
     const result = opticas.find((element) => element.id === id_optica);
@@ -67,8 +84,12 @@ function ListaGerente() {
       key: "opticaID",
       dataIndex: "opticaID",
       render: (text, record) => {
-        const optica = fetchOpticaID(record?.opticaID);
-        return <Tag color="green">{optica.nombre}</Tag>;
+        if (opticas.length > 0) {
+          const optica = fetchOpticaID(record?.opticaID);
+          return <Tag color="green">{optica.nombre}</Tag>;
+        } else {
+          return <p>Cargando</p>;
+        }
       },
       // filters: searchcategorias(),
       // filterMode: "tree",
@@ -114,6 +135,11 @@ function ListaGerente() {
       render: (_, record) => {
         return (
           <>
+            {!record.confirmed && (
+              <Button onClick={() => showModal(record)} type="primary">
+                Confirm
+              </Button>
+            )}
             <EditOutlined
               type="link"
               onClick={() => {
@@ -227,6 +253,13 @@ function ListaGerente() {
             </div>
           </Form>
         </Modal>
+        <Confirm
+          selectedRecord={selectedRecord}
+          isModalOpen={isModalOpen}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          group={GROUPS.GERENTE}
+        />
         {/* ) : null} */}
       </div>
     </Content>

@@ -1,8 +1,6 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "opticaadmind48f139d_identitypool_d48f139d",
-    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "opticad48f139d",
     "userPoolName": "opticaadmind48f139d_userpool_d48f139d",
     "autoVerifiedAttributes": [
@@ -14,8 +12,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Código de verificación",
+    "emailVerificationMessage": "Tu código de verificación es: {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -35,9 +33,14 @@
     "userpoolClientSetAttributes": false,
     "sharedId": "d48f139d",
     "resourceName": "opticaadmind48f139d",
-    "authSelections": "identityPoolAndUserPool",
-    "useDefault": "default",
-    "userPoolGroupList": [],
+    "authSelections": "userPoolOnly",
+    "useDefault": "manual",
+    "userPoolGroupList": [
+      "superadmin",
+      "gerente",
+      "vendedor",
+      "cliente"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
@@ -54,6 +57,32 @@
       ]
     },
     "breakCircularDependency": true,
-    "dependsOn": []
+    "dependsOn": [
+      {
+        "category": "function",
+        "resourceName": "opticaadmind48f139dPostConfirmation",
+        "triggerProvider": "Cognito",
+        "attributes": [
+          "Arn",
+          "Name"
+        ]
+      }
+    ],
+    "userPoolGroups": true,
+    "adminQueries": false,
+    "triggers": {
+      "PostConfirmation": [
+        "add-to-group"
+      ]
+    },
+    "hostedUI": false,
+    "authProviders": [],
+    "parentStack": {
+      "Ref": "AWS::StackId"
+    },
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"opticaadmind48f139dPostConfirmation\"\n  }\n]",
+    "permissions": [
+      "{\n  \"policyName\": \"AddToGroupCognito\",\n  \"trigger\": \"PostConfirmation\",\n  \"effect\": \"Allow\",\n  \"actions\": [\n    \"cognito-idp:AdminAddUserToGroup\",\n    \"cognito-idp:GetGroup\",\n    \"cognito-idp:CreateGroup\"\n  ],\n  \"resource\": {\n    \"paramType\": \"!GetAtt\",\n    \"keys\": [\n      \"UserPool\",\n      \"Arn\"\n    ]\n  }\n}"
+    ]
   }
 }
