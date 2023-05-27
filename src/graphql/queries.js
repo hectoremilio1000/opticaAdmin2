@@ -397,6 +397,7 @@ export const getINVENTARIO = /* GraphQL */ `
         startedAt
       }
       opticaID
+      stock
       createdAt
       updatedAt
       _version
@@ -428,6 +429,7 @@ export const listINVENTARIOS = /* GraphQL */ `
           startedAt
         }
         opticaID
+        stock
         createdAt
         updatedAt
         _version
@@ -468,6 +470,7 @@ export const syncINVENTARIOS = /* GraphQL */ `
           startedAt
         }
         opticaID
+        stock
         createdAt
         updatedAt
         _version
@@ -510,6 +513,7 @@ export const iNVENTARIOSByOpticaID = /* GraphQL */ `
           startedAt
         }
         opticaID
+        stock
         createdAt
         updatedAt
         _version
@@ -1029,6 +1033,7 @@ export const getOPTICA = /* GraphQL */ `
           tipoMaterial
           categoria
           opticaID
+          stock
           createdAt
           updatedAt
           _version

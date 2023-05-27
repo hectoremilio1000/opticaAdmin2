@@ -23,7 +23,7 @@
     }
   },
   "auth": {
-    "opticaadmind48f139d": {
+    "opticaadminf85f3cb4f85f3cb4": {
       "customAuth": false,
       "dependsOn": [
         {
@@ -32,7 +32,7 @@
             "Name"
           ],
           "category": "function",
-          "resourceName": "opticaadmind48f139dPostConfirmation",
+          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation",
           "triggerProvider": "Cognito"
         }
       ],
@@ -63,10 +63,11 @@
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
-            "AppClientID"
+            "AppClientID",
+            "IdentityPoolId"
           ],
           "category": "auth",
-          "resourceName": "opticaadmind48f139d"
+          "resourceName": "opticaadminf85f3cb4f85f3cb4"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -74,40 +75,40 @@
     }
   },
   "function": {
-    "opticaadmind48f139dPostConfirmation": {
+    "opticaadminf85f3cb4f85f3cb4PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_opticaadmind48f139dPostConfirmation_GROUP": {
+    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_GROUP": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "opticaadmind48f139dPostConfirmation"
+          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
         }
       ]
     },
-    "AMPLIFY_function_opticaadmind48f139dPostConfirmation_deploymentBucketName": {
+    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "opticaadmind48f139dPostConfirmation"
+          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
         }
       ]
     },
-    "AMPLIFY_function_opticaadmind48f139dPostConfirmation_s3Key": {
+    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "opticaadmind48f139dPostConfirmation"
+          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
         }
       ]
     }
   },
   "storage": {
-    "LentesImages": {
+    "OpticaImages": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

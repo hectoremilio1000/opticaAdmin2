@@ -80,7 +80,7 @@ export default function TicketPDF({
   };
   return (
     <Document>
-      <Page size="A7" style={styles.page}>
+      <Page size={[209.76, 300]} style={styles.page}>
         <View style={styles.logo}>
           <Image src={logoSrc} alt="Logo" />
         </View>

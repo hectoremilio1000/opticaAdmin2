@@ -20,6 +20,7 @@ import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 
 import logo from "../../../assets/logohilmora.png";
 
+import { useGerenteContext } from "../../../contexts/GerenteContext";
 import {
   DeleteOutlined,
   EyeOutlined,
@@ -34,6 +35,7 @@ import {
   getORDEN,
   iNVENTARIOORDENITEMSByOrdenID,
   listORDENS,
+  oRDENSByOpticaID,
 } from "../../../graphql/queries";
 import {
   createINVENTARIOORDENITEMS,
@@ -51,7 +53,7 @@ function ListaOrdenes() {
   // modal de edit
   const [detalleProductos, setDetalleProductos] = useState([]);
   const [cargandoProductos, setCargandoProductos] = useState(true);
-  const [checkAdd, setCheckAdd] = useState("");
+  const [checkAdd, setCheckAdd] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   var cantidad = 1;
   const [productoID, setProductoID] = useState(null);
@@ -81,10 +83,22 @@ function ListaOrdenes() {
   const [searchOrden, setSearchOrden] = useState(undefined);
   const [searchStatus, setSearchStatus] = useState(undefined);
   const [searchFecha, setSearchFecha] = useState("");
+
+  // optica id
+  const { labId } = useGerenteContext();
+
   const fetchOrdenes = async () => {
     try {
-      const result = await API.graphql(graphqlOperation(listORDENS));
-      const ordenes = result.data.listORDENS.items;
+      let ordenes;
+      if (labId === "") {
+        const result = await API.graphql(graphqlOperation(listORDENS));
+        ordenes = result.data.listORDENS.items;
+      } else {
+        const result = await API.graphql(
+          graphqlOperation(oRDENSByOpticaID, { opticaID: labId })
+        );
+        ordenes = result.data.oRDENSByOpticaID.items;
+      }
       const ordenesSorted = ordenes.sort((a, b) => {
         // Ordenar por fecha de creación descendente (más reciente primero)
         return new Date(b.createdAt) - new Date(a.createdAt);
@@ -124,6 +138,7 @@ function ListaOrdenes() {
   };
   useEffect(() => {
     fetchOrdenes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const edithandle = async (record) => {
     setOrdenID(record.id);
@@ -197,6 +212,72 @@ function ListaOrdenes() {
     setOrdenID(record.id);
     viewListaProductos(record?.id);
   };
+  const entregarOrden = async (record) => {
+    const split = record.anticipo.split("-");
+    const total = split[0];
+    const deuda = `${total} - ${total}`;
+    const updateOrden = {
+      id: record?.id,
+      tipoOrden: "ORDEN",
+      ordenStatus: "ENTREGADA",
+      _version: record?._version,
+      anticipo: deuda,
+    };
+    try {
+      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
+      fetchOrdenes();
+      message.success("La orden se ha entregado correctamente");
+    } catch (error) {
+      message.error("Hubo un error contacta con el administrador");
+      console.log(error);
+    }
+  };
+  const finalizarOrden = async (record) => {
+    const updateOrden = {
+      id: record?.id,
+      ordenStatus: "FINALIZADA",
+      _version: record?._version,
+    };
+    try {
+      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
+      fetchOrdenes();
+      message.success("La orden se ha finalizado correctamente");
+    } catch (error) {
+      message.error("Hubo un error contacta con el administrador");
+      console.log(error);
+    }
+  };
+  const problemasOrden = async (record) => {
+    const updateOrden = {
+      id: record?.id,
+      ordenStatus: "CONPROBLEMAS",
+      _version: record?._version,
+    };
+    try {
+      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
+      fetchOrdenes();
+      message.success("Se registro un problema en la orden");
+    } catch (error) {
+      message.error("Hubo un error contacta con el administrador");
+      console.log(error);
+    }
+  };
+  const maquilaOrden = async (record) => {
+    const updateOrden = {
+      id: record?.id,
+      ordenStatus: "ENVIADAMAQUILA",
+      _version: record?._version,
+    };
+    try {
+      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
+      fetchOrdenes();
+      message.success("La Orden se envió a maquila");
+    } catch (error) {
+      message.error("Hubo un error contacta con el administrador");
+      console.log(error);
+    }
+  };
+
   const viewListaProductos = async (idOrden) => {
     const result = await API.graphql(
       graphqlOperation(iNVENTARIOORDENITEMSByOrdenID, { ordenID: idOrden })
@@ -285,12 +366,11 @@ function ListaOrdenes() {
       render: (_, record) => {
         if (Number(record.anticipo) !== 0) {
           const split = record.anticipo.split("-");
-          const total = split[0];
           const anticipo = split[1];
           return <p style={{ color: "green" }}>${anticipo}</p>;
           // return <p>${(Math.round(record.anticipo * 100) / 100).toFixed(2)}</p>;
         } else {
-          return <p>No aplica</p>;
+          return <p>-</p>;
         }
       },
     },
@@ -304,10 +384,14 @@ function ListaOrdenes() {
           const total = split[0];
           const anticipo = split[1];
           const deuda = Number(total) - Number(anticipo);
-          return <p style={{ color: "red" }}>${deuda}</p>;
+          if (deuda === 0) {
+            return <Tag color="green">Pagado</Tag>;
+          } else {
+            return <p style={{ color: "red" }}>${deuda}</p>;
+          }
           // return <p>${(Math.round(record.anticipo * 100) / 100).toFixed(2)}</p>;
         } else {
-          return <p>No aplica</p>;
+          return <p>-</p>;
         }
       },
     },
@@ -316,17 +400,95 @@ function ListaOrdenes() {
       dataIndex: "ordenStatus",
       key: "ordenStatus",
       render: (_, record) => {
-        if (record.tipoOrden === "COTIZACION") {
-          return (
-            <>
-              <p>CREADA</p>
-              <Button onClick={() => envioOrdenCot(record)}>
-                Aceptar Orden
-              </Button>
-            </>
-          );
-        } else {
-          return <Tag color="geekblue">{record.ordenStatus}</Tag>;
+        switch (record?.tipoOrden) {
+          case "COTIZACION":
+            return (
+              <>
+                <p>CREADA</p>
+                <Button onClick={() => envioOrdenCot(record)}>
+                  Aceptar Orden
+                </Button>
+              </>
+            );
+          case "ORDEN":
+            switch (record?.ordenStatus) {
+              case "ENVIADAMAQUILA":
+                return (
+                  <>
+                    <Tag color="geekblue">{record.ordenStatus}</Tag>
+                    <Popconfirm
+                      title="Entregar al Cliente"
+                      description="¿Esta seguro de entregar la orden?"
+                      onConfirm={() => entregarOrden(record)}
+                      okText="Si"
+                      cancelText="No"
+                    >
+                      <Button onClick={() => setOrdenID(record?.id)}>
+                        Entregar Orden
+                      </Button>
+                    </Popconfirm>
+                  </>
+                );
+              case "ENTREGADA":
+                return (
+                  <>
+                    <Tag color="warning">{record.ordenStatus}</Tag>
+                    <Popconfirm
+                      title="Finalizar Orden"
+                      description="¿Esta seguro de finalizar la orden?"
+                      onConfirm={() => finalizarOrden(record)}
+                      okText="Si"
+                      cancelText="No"
+                    >
+                      <Button success onClick={() => setOrdenID(record?.id)}>
+                        Finalizar Orden
+                      </Button>
+                    </Popconfirm>
+                    <Popconfirm
+                      title="Registrar Problema"
+                      description="¿Esta seguro de registrar problema?"
+                      onConfirm={() => problemasOrden(record)}
+                      okText="Si"
+                      cancelText="No"
+                    >
+                      <Button danger onClick={() => setOrdenID(record?.id)}>
+                        Problemas
+                      </Button>
+                    </Popconfirm>
+                  </>
+                );
+              case "CONPROBLEMAS":
+                return (
+                  <>
+                    <Tag color="red">{record.ordenStatus}</Tag>
+                    <Popconfirm
+                      title="Enviar a Maquila"
+                      description="¿Esta seguro de enviar a maquilar Orden?"
+                      onConfirm={() => maquilaOrden(record)}
+                      okText="Si"
+                      cancelText="No"
+                    >
+                      <Button success onClick={() => setOrdenID(record?.id)}>
+                        Enviar a Maquila
+                      </Button>
+                    </Popconfirm>
+                  </>
+                );
+              case "FINALIZADA":
+                return (
+                  <>
+                    <Tag color="green">{record.ordenStatus}</Tag>
+                  </>
+                );
+              default:
+                <p>se produjo un error</p>;
+                break;
+            }
+            break;
+
+          default:
+            <p>se produjo un error</p>;
+            break;
         }
       },
     },
@@ -572,7 +734,7 @@ function ListaOrdenes() {
       const updateOrden = {
         id: ordenID,
         tipoOrden: "ORDEN",
-        ordenStatus: "ENTREGADA",
+        ordenStatus: "FINALIZADA",
         precioTotal: (
           Number(precioMaquila) +
           Number(total) +
@@ -733,6 +895,7 @@ function ListaOrdenes() {
             <Option value="ENVIADAMAQUILA">ENVIADAMAQUILA</Option>
             <Option value="ENTREGADA">ENTREGADA</Option>
             <Option value="CONPROBLEMAS">CONPROBLEMAS</Option>
+            <Option value="FINALIZADA">FINALIZADA</Option>
           </Select>
         </Form.Item>
         <Form.Item>
@@ -906,23 +1069,35 @@ function ListaOrdenes() {
                 Total venta anterior : ${Number(total) + Number(precioMaquila)}
               </h1>
             </div>
-            <Form.Item label="Anticipo">
-              <Input
-                value={precioAnticipo}
-                onChange={(e) => setPrecioAnticipo(e.target.value)}
-                placeholder="Ingrese el anticipo del cliente $.00 de la orden"
-              />
-            </Form.Item>
-            <div>
-              <h1 style={{ color: "red", fontSize: "18px" }}>
-                Deuda de Anticipo : $
-                {Number(total) + Number(precioMaquila) - Number(precioAnticipo)}
-              </h1>
-            </div>
-            <Form.Item label="Deseas agregar antes de enviar orden?">
+            {graduacionDerechaNueva ? (
+              <>
+                <Form.Item label="Anticipo">
+                  <Input
+                    value={precioAnticipo}
+                    onChange={(e) => setPrecioAnticipo(e.target.value)}
+                    placeholder="Ingrese el anticipo del cliente $.00 de la orden"
+                  />
+                </Form.Item>
+                <div>
+                  <h1 style={{ color: "red", fontSize: "18px" }}>
+                    Deuda de Anticipo : $
+                    {Number(total) +
+                      Number(precioMaquila) -
+                      Number(precioAnticipo)}
+                  </h1>
+                </div>
+              </>
+            ) : null}
+            <Form.Item label="Deseas agregar más productos?">
               <Select
                 value={checkAdd}
-                onSelect={(e) => setCheckAdd(e)}
+                onSelect={(e) => {
+                  if (e === "NO") {
+                    setTotalCarrito(0);
+                    setCarrito([]);
+                  }
+                  setCheckAdd(e);
+                }}
                 placeholder="Selecciona SI/NO"
               >
                 <Option value="SI">SI</Option>
@@ -1011,7 +1186,20 @@ function ListaOrdenes() {
             ) : null}
             <div>
               <h1 style={{ color: "green", fontSize: "18px" }}>
-                Cobrar Ahora : ${Number(totalCarrito) + Number(precioAnticipo)}
+                {isGraduation === "VENTA" ? (
+                  <>
+                    Cobrar Ahora : $
+                    {Number(totalCarrito) +
+                      Number(total) +
+                      Number(precioMaquila) -
+                      Number(precioAnticipo)}
+                  </>
+                ) : (
+                  <>
+                    Cobrar Ahora : $
+                    {Number(totalCarrito) + Number(precioAnticipo)}
+                  </>
+                )}
               </h1>
               <h1 style={{ color: "#5b5b5b", fontSize: "18px" }}>
                 Total Venta Neta : $

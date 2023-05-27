@@ -5,14 +5,13 @@ import {
   MenuFoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import type { MenuProps } from "antd";
 
 import { useAuthContext } from "../../contexts/AuthContext";
 const { Header } = Layout;
 
 function HeaderLayoutSuperAdmin({ collapsed, toggle, signOut }) {
   const authContext = useAuthContext();
-  const items: MenuProps["items"] = [
+  const items = [
     {
       label: authContext?.authEmail,
       key: "SubMenu",
@@ -50,7 +49,12 @@ function HeaderLayoutSuperAdmin({ collapsed, toggle, signOut }) {
         onClick: toggle,
       })}
       <Menu
-        style={{ width: "max-content", background: "transparent" }}
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+          background: "transparent",
+        }}
         // selectedKeys={[current]}
         mode="horizontal"
         items={items}

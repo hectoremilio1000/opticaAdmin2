@@ -1,6 +1,5 @@
-import { DataStore } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import React, { useEffect, useState } from "react";
-import { CLIENTES, OPTICA } from "../../../models";
 import {
   Layout,
   Modal,
@@ -16,15 +15,27 @@ import {
 
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import {
+  cLIENTESByOpticaID,
+  listCLIENTES,
+  listOPTICAS,
+} from "../../../graphql/queries";
+import { deleteCLIENTES, updateCLIENTES } from "../../../graphql/mutations";
+import { useGerenteContext } from "../../../contexts/GerenteContext";
+import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
+import { useAuthContext } from "../../../contexts/AuthContext";
+import GROUPS from "../../../constants/groups";
 
 const { Content } = Layout;
 const { Option } = Select;
 
 function ListaClientes() {
+  const { groupName } = useAuthContext();
   // state for modal
   const [isEditing, setIsEditing] = useState(false);
   // state for modal
   const [id, setId] = useState("");
+  const [version, setVersion] = useState("");
   const [clientes, setClientes] = useState([]);
   const [opticas, setOpticas] = useState([]);
   const [nombres, setNombres] = useState("");
@@ -35,11 +46,15 @@ function ListaClientes() {
   const [whats, setWhats] = useState("");
   const [sexo, setSexo] = useState("");
   const [email, setEmail] = useState("");
-  const [opticaID, setOpticaID] = useState("");
+  const [opticaID, setOpticaID] = useState(null);
+
+  // optica id
+  const { labId } = useGerenteContext();
 
   const edithandle = (record) => {
     setId(record?.id);
     setNombres(record?.nombres);
+    setVersion(record?._version);
     setApellidoPaterno(record?.apellidoPaterno);
     setApellidoMaterno(record?.apellidoMaterno);
     setFechaNacimiento(record?.fechaNacimiento);
@@ -53,12 +68,17 @@ function ListaClientes() {
 
   const changeDelete = (record) => {
     setId(record?.id);
+    setVersion(record?._version);
   };
   const deletehandle = async () => {
     console.log(id);
 
     try {
-      await DataStore.delete(CLIENTES, id);
+      const prod = {
+        id: id,
+        _version: version,
+      };
+      await API.graphql(graphqlOperation(deleteCLIENTES, { input: prod }));
       fetchClientes();
       message.success("El cliente se ha eliminado correctamente");
     } catch (error) {
@@ -69,31 +89,19 @@ function ListaClientes() {
 
   const onFinish = async () => {
     try {
-      const original = await DataStore.query(CLIENTES, id);
-      // console.log(original);
-      // console.log(
-      //   nombres,
-      //   edad,
-      //   sexo,
-      //   fechaNacimiento,
-      //   apellidoMaterno,
-      //   apellidoPaterno,
-      //   whats,
-      //   opticaID
-      // );
-
-      await DataStore.save(
-        CLIENTES.copyOf(original, (updated) => {
-          updated.nombres = nombres;
-          updated.edad = edad;
-          updated.sexo = sexo;
-          updated.fechaNacimiento = fechaNacimiento;
-          updated.opticaID = opticaID;
-          updated.whats = whats;
-          updated.apellidoPaterno = apellidoPaterno;
-          updated.apellidoMaterno = apellidoMaterno;
-        })
-      );
+      const prod = {
+        id: id,
+        _version: version,
+        nombres,
+        edad,
+        sexo,
+        fechaNacimiento,
+        opticaID,
+        whats,
+        apellidoPaterno,
+        apellidoMaterno,
+      };
+      await API.graphql(graphqlOperation(updateCLIENTES, { input: prod }));
       fetchClientes();
       setIsEditing(false);
       message.success("El cliente se ha actualizado");
@@ -179,22 +187,46 @@ function ListaClientes() {
     },
   ];
   const searchOpticas = async () => {
-    try {
-      const result = await DataStore.query(OPTICA);
-      setOpticas(result);
-    } catch (error) {
-      console.log(error);
+    if (groupName !== GROUPS.SUPER_ADMIN) {
+      setOpticaID(labId);
+    } else {
+      try {
+        const result = await API.graphql(graphqlOperation(listOPTICAS));
+        const nodelete = result?.data?.listOPTICAS?.items;
+        const deletew =
+          nodelete.length > 0
+            ? nodelete.filter((elemento) => elemento._deleted !== true)
+            : null;
+        setOpticas(deletew);
+      } catch (error) {
+        console.log(error);
+      }
     }
+    // const result = await DataStore.query(OPTICA);
   };
 
   const fetchClientes = async () => {
-    const result = await DataStore.query(CLIENTES);
-    setClientes(result);
+    let clientes;
+    if (labId === "") {
+      const result = await API.graphql(graphqlOperation(listCLIENTES));
+      clientes = result.data.listCLIENTES.items;
+    } else {
+      const result = await API.graphql(
+        graphqlOperation(cLIENTESByOpticaID, { opticaID: labId })
+      );
+      clientes = result.data.cLIENTESByOpticaID.items;
+    }
+    const deletew =
+      clientes.length > 0
+        ? clientes.filter((elemento) => elemento._deleted !== true)
+        : null;
+    setClientes(deletew);
   };
 
   useEffect(() => {
     fetchClientes();
     searchOpticas();
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -265,24 +297,14 @@ function ListaClientes() {
                   <Option value="MASCULINO">MASCULINO</Option>
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="Optica"
-                rules={[{ required: true, message: "Este campo es requerido" }]}
-              >
-                <Select
-                  defaultValue={opticaID}
-                  onSelect={(e) => setOpticaID(e)}
-                  placeholder="Select una Optica"
-                >
-                  {opticas.map((optica) => {
-                    return (
-                      <Option key={optica.id} value={optica.id}>
-                        {optica.nombre}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
+              {opticas.length > 0 && (
+                <LaboratorioSelector
+                  opticaID={opticaID}
+                  groupName={groupName}
+                  setOpticaID={setOpticaID}
+                  opticas={opticas}
+                />
+              )}
               <Form.Item
                 label="Fecha de nacimiento"
                 rules={[{ required: true, message: "Este campo es requerido" }]}

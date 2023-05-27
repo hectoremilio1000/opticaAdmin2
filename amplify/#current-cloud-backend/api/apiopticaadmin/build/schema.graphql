@@ -1,9 +1,9 @@
-
 enum ORDENSTATUS {
   CREADA
   ENVIADAMAQUILA
   ENTREGADA
   CONPROBLEMAS
+  FINALIZADA
 }
 
 type INVENTARIOORDENITEMS @aws_iam @aws_api_key {
@@ -75,6 +75,7 @@ type INVENTARIO @aws_iam @aws_api_key {
   categoria: ENUMCATEGORIA!
   INVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection
   opticaID: ID!
+  stock: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -310,6 +311,7 @@ input ModelINVENTARIOORDENITEMSFilterInput {
   and: [ModelINVENTARIOORDENITEMSFilterInput]
   or: [ModelINVENTARIOORDENITEMSFilterInput]
   not: ModelINVENTARIOORDENITEMSFilterInput
+  _deleted: ModelBooleanInput
 }
 
 type Query {
@@ -352,6 +354,7 @@ input ModelINVENTARIOORDENITEMSConditionInput {
   and: [ModelINVENTARIOORDENITEMSConditionInput]
   or: [ModelINVENTARIOORDENITEMSConditionInput]
   not: ModelINVENTARIOORDENITEMSConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateINVENTARIOORDENITEMSInput {
@@ -409,6 +412,7 @@ input ModelSubscriptionINVENTARIOORDENITEMSFilterInput {
   ordenID: ModelSubscriptionIDInput
   and: [ModelSubscriptionINVENTARIOORDENITEMSFilterInput]
   or: [ModelSubscriptionINVENTARIOORDENITEMSFilterInput]
+  _deleted: ModelBooleanInput
 }
 
 type Subscription {
@@ -454,6 +458,7 @@ input ModelGERENTEFilterInput {
   and: [ModelGERENTEFilterInput]
   or: [ModelGERENTEFilterInput]
   not: ModelGERENTEFilterInput
+  _deleted: ModelBooleanInput
 }
 
 input ModelGERENTEConditionInput {
@@ -468,6 +473,7 @@ input ModelGERENTEConditionInput {
   and: [ModelGERENTEConditionInput]
   or: [ModelGERENTEConditionInput]
   not: ModelGERENTEConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateGERENTEInput {
@@ -513,6 +519,7 @@ input ModelSubscriptionGERENTEFilterInput {
   opticaID: ModelSubscriptionIDInput
   and: [ModelSubscriptionGERENTEFilterInput]
   or: [ModelSubscriptionGERENTEFilterInput]
+  _deleted: ModelBooleanInput
 }
 
 type ModelVENDEDORESConnection @aws_api_key @aws_iam {
@@ -532,6 +539,7 @@ input ModelVENDEDORESFilterInput {
   and: [ModelVENDEDORESFilterInput]
   or: [ModelVENDEDORESFilterInput]
   not: ModelVENDEDORESFilterInput
+  _deleted: ModelBooleanInput
 }
 
 input ModelVENDEDORESConditionInput {
@@ -544,6 +552,7 @@ input ModelVENDEDORESConditionInput {
   and: [ModelVENDEDORESConditionInput]
   or: [ModelVENDEDORESConditionInput]
   not: ModelVENDEDORESConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateVENDEDORESInput {
@@ -583,6 +592,7 @@ input ModelSubscriptionVENDEDORESFilterInput {
   opticaID: ModelSubscriptionIDInput
   and: [ModelSubscriptionVENDEDORESFilterInput]
   or: [ModelSubscriptionVENDEDORESFilterInput]
+  _deleted: ModelBooleanInput
 }
 
 type ModelINVENTARIOConnection @aws_api_key @aws_iam {
@@ -608,9 +618,11 @@ input ModelINVENTARIOFilterInput {
   tipoMaterial: ModelStringInput
   categoria: ModelENUMCATEGORIAInput
   opticaID: ModelIDInput
+  stock: ModelStringInput
   and: [ModelINVENTARIOFilterInput]
   or: [ModelINVENTARIOFilterInput]
   not: ModelINVENTARIOFilterInput
+  _deleted: ModelBooleanInput
 }
 
 input ModelINVENTARIOConditionInput {
@@ -624,9 +636,11 @@ input ModelINVENTARIOConditionInput {
   tipoMaterial: ModelStringInput
   categoria: ModelENUMCATEGORIAInput
   opticaID: ModelIDInput
+  stock: ModelStringInput
   and: [ModelINVENTARIOConditionInput]
   or: [ModelINVENTARIOConditionInput]
   not: ModelINVENTARIOConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateINVENTARIOInput {
@@ -641,6 +655,7 @@ input CreateINVENTARIOInput {
   tipoMaterial: String
   categoria: ENUMCATEGORIA!
   opticaID: ID!
+  stock: String
   _version: Int
 }
 
@@ -656,6 +671,7 @@ input UpdateINVENTARIOInput {
   tipoMaterial: String
   categoria: ENUMCATEGORIA
   opticaID: ID
+  stock: String
   _version: Int
 }
 
@@ -676,8 +692,10 @@ input ModelSubscriptionINVENTARIOFilterInput {
   tipoMaterial: ModelSubscriptionStringInput
   categoria: ModelSubscriptionStringInput
   opticaID: ModelSubscriptionIDInput
+  stock: ModelSubscriptionStringInput
   and: [ModelSubscriptionINVENTARIOFilterInput]
   or: [ModelSubscriptionINVENTARIOFilterInput]
+  _deleted: ModelBooleanInput
 }
 
 type ModelORDENConnection @aws_api_key @aws_iam {
@@ -719,6 +737,7 @@ input ModelORDENFilterInput {
   and: [ModelORDENFilterInput]
   or: [ModelORDENFilterInput]
   not: ModelORDENFilterInput
+  _deleted: ModelBooleanInput
 }
 
 input ModelORDENConditionInput {
@@ -743,6 +762,7 @@ input ModelORDENConditionInput {
   and: [ModelORDENConditionInput]
   or: [ModelORDENConditionInput]
   not: ModelORDENConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateORDENInput {
@@ -818,6 +838,7 @@ input ModelSubscriptionORDENFilterInput {
   anticipo: ModelSubscriptionStringInput
   and: [ModelSubscriptionORDENFilterInput]
   or: [ModelSubscriptionORDENFilterInput]
+  _deleted: ModelBooleanInput
 }
 
 type ModelCLIENTESConnection @aws_api_key @aws_iam {
@@ -840,6 +861,7 @@ input ModelCLIENTESFilterInput {
   and: [ModelCLIENTESFilterInput]
   or: [ModelCLIENTESFilterInput]
   not: ModelCLIENTESFilterInput
+  _deleted: ModelBooleanInput
 }
 
 input ModelCLIENTESConditionInput {
@@ -855,6 +877,7 @@ input ModelCLIENTESConditionInput {
   and: [ModelCLIENTESConditionInput]
   or: [ModelCLIENTESConditionInput]
   not: ModelCLIENTESConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateCLIENTESInput {
@@ -903,6 +926,7 @@ input ModelSubscriptionCLIENTESFilterInput {
   opticaID: ModelSubscriptionIDInput
   and: [ModelSubscriptionCLIENTESFilterInput]
   or: [ModelSubscriptionCLIENTESFilterInput]
+  _deleted: ModelBooleanInput
 }
 
 type ModelOPTICAConnection @aws_api_key @aws_iam {
@@ -918,6 +942,7 @@ input ModelOPTICAFilterInput {
   and: [ModelOPTICAFilterInput]
   or: [ModelOPTICAFilterInput]
   not: ModelOPTICAFilterInput
+  _deleted: ModelBooleanInput
 }
 
 input ModelOPTICAConditionInput {
@@ -926,6 +951,7 @@ input ModelOPTICAConditionInput {
   and: [ModelOPTICAConditionInput]
   or: [ModelOPTICAConditionInput]
   not: ModelOPTICAConditionInput
+  _deleted: ModelBooleanInput
 }
 
 input CreateOPTICAInput {
@@ -953,5 +979,5 @@ input ModelSubscriptionOPTICAFilterInput {
   createdBy: ModelSubscriptionStringInput
   and: [ModelSubscriptionOPTICAFilterInput]
   or: [ModelSubscriptionOPTICAFilterInput]
+  _deleted: ModelBooleanInput
 }
-

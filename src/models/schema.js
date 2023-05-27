@@ -416,6 +416,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "stock": {
+                    "name": "stock",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -977,7 +984,8 @@ export const schema = {
                 "CREADA",
                 "ENVIADAMAQUILA",
                 "ENTREGADA",
-                "CONPROBLEMAS"
+                "CONPROBLEMAS",
+                "FINALIZADA"
             ]
         },
         "Tipoorden": {
@@ -998,5 +1006,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "a1668eb0665f60a0523b99aee041b5aa"
+    "version": "cdef99b61b3b9e48faaeaf12e086d896"
 };

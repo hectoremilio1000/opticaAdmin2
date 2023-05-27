@@ -37,26 +37,26 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "AppSync",
-      "lastPushTimeStamp": "2023-05-23T17:29:25.887Z",
+      "lastPushTimeStamp": "2023-05-27T15:22:21.439Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apiapiopticaadmin"
       },
-      "lastPushDirHash": "kItUaEdDdN9eoeVy4XYz6DMXPhc="
+      "lastPushDirHash": "OSbYZM2XbivJgZqjUi91dNOZNIU="
     }
   },
   "auth": {
-    "opticaadmind48f139d": {
+    "opticaadminf85f3cb4f85f3cb4": {
       "customAuth": false,
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "opticaadmind48f139dPostConfirmation",
-          "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
             "Name"
-          ]
+          ],
+          "category": "function",
+          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation",
+          "triggerProvider": "Cognito"
         }
       ],
       "frontendAuthConfig": {
@@ -80,86 +80,85 @@
       "providerPlugin": "awscloudformation",
       "service": "Cognito",
       "output": {
-        "UserPoolId": "us-east-1_oVmmmN7EU",
-        "AppClientIDWeb": "60mi81t1582kq61pkdm94dr5p5",
-        "AppClientID": "71vu4l9c3h54ip5ptu5n7p706s",
-        "IdentityPoolId": "us-east-1:4c6e3a17-60ff-426d-9c97-f10a871ad262",
-        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:012201143908:userpool/us-east-1_oVmmmN7EU",
-        "IdentityPoolName": "opticaadmind48f139d_identitypool_d48f139d__dev",
-        "UserPoolName": "opticaadmind48f139d_userpool_d48f139d"
+        "UserPoolId": "us-east-1_2JF3cmcK8",
+        "AppClientIDWeb": "68qnc4tgfgk7nsdm5glfu581gu",
+        "AppClientID": "6cfinph7cnlijeongvuglibtb6",
+        "IdentityPoolId": "us-east-1:ddf48ce5-2fef-4df7-924e-9dca85dd73f4",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:012201143908:userpool/us-east-1_2JF3cmcK8",
+        "IdentityPoolName": "opticaadminf85f3cb4f85f3cb4_identitypool_a0364733__dev",
+        "UserPoolName": "opticaadminf85f3cb4_userpool_f85f3cb4"
       },
-      "lastPushTimeStamp": "2023-05-23T17:29:27.762Z",
+      "lastPushTimeStamp": "2023-05-27T15:22:21.376Z",
       "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/opticaadmind48f139d-cloudformation-template.json",
-        "logicalId": "authopticaadmind48f139d"
-      },
-      "lastPushDirHash": "+7ozaDjNz0cprKXxoHE5suXOUaA="
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/opticaadminf85f3cb4f85f3cb4-cloudformation-template.json",
+        "logicalId": "authopticaadminf85f3cb4f85f3cb4"
+      }
     },
     "userPoolGroups": {
-      "service": "Cognito-UserPool-Groups",
-      "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "opticaadmind48f139d",
+          "resourceName": "opticaadminf85f3cb4f85f3cb4",
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
-            "AppClientID"
+            "AppClientID",
+            "IdentityPoolId"
           ]
         }
       ],
-      "lastPushTimeStamp": "2023-05-23T17:29:27.762Z",
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups",
+      "output": {
+        "clienteGroupRole": "arn:aws:iam::012201143908:role/us-east-1_2JF3cmcK8-clienteGroupRole",
+        "gerenteGroupRole": "arn:aws:iam::012201143908:role/us-east-1_2JF3cmcK8-gerenteGroupRole",
+        "vendedorGroupRole": "arn:aws:iam::012201143908:role/us-east-1_2JF3cmcK8-vendedorGroupRole",
+        "superadminGroupRole": "arn:aws:iam::012201143908:role/us-east-1_2JF3cmcK8-superadminGroupRole"
+      },
+      "lastPushTimeStamp": "2023-05-27T15:22:21.378Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
         "logicalId": "authuserPoolGroups"
-      },
-      "output": {},
-      "lastPushDirHash": "58JSDOv1Mc6yPNjeZjS8TsqLSwg="
-    }
-  },
-  "storage": {
-    "LentesImages": {
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "S3",
-      "output": {
-        "BucketName": "opticaadmin33f5e50dcee54fa892cd82591e9f9345191131-dev",
-        "Region": "us-east-1"
-      },
-      "lastPushTimeStamp": "2023-05-23T17:29:25.935Z",
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
-        "logicalId": "storageLentesImages"
       }
     }
   },
   "function": {
-    "opticaadmind48f139dPostConfirmation": {
+    "opticaadminf85f3cb4f85f3cb4PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
-      "lastBuildTimeStamp": "2023-05-23T17:26:02.675Z",
-      "lastBuildType": "PROD",
-      "lastPackageTimeStamp": "2023-05-23T17:26:05.366Z",
-      "distZipFilename": "opticaadmind48f139dPostConfirmation-6d466847423156633177-build.zip",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::012201143908:role/opticaadminf85f3cb4f85f3cb4PostConfirmation-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:012201143908:function:opticaadminf85f3cb4f85f3cb4PostConfirmation-dev",
+        "Name": "opticaadminf85f3cb4f85f3cb4PostConfirmation-dev",
+        "LambdaExecutionRole": "opticaadminf85f3cb4f85f3cb4PostConfirmation-dev"
+      },
+      "lastPushTimeStamp": "2023-05-27T15:22:21.379Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/function/opticaadminf85f3cb4f85f3cb4PostConfirmation-cloudformation-template.json",
+        "logicalId": "functionopticaadminf85f3cb4f85f3cb4PostConfirmation"
+      },
       "s3Bucket": {
         "deploymentBucketName": "amplify-opticaadmin-dev-191131-deployment",
-        "s3Key": "amplify-builds/opticaadmind48f139dPostConfirmation-6d466847423156633177-build.zip"
-      },
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/function/opticaadmind48f139dPostConfirmation-cloudformation-template.json",
-        "logicalId": "functionopticaadmind48f139dPostConfirmation"
-      },
-      "lastPushTimeStamp": "2023-05-23T17:29:27.762Z",
+        "s3Key": "amplify-builds/opticaadminf85f3cb4f85f3cb4PostConfirmation-347a5a354d3051672f31-build.zip"
+      }
+    }
+  },
+  "storage": {
+    "OpticaImages": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3",
       "output": {
-        "LambdaExecutionRoleArn": "arn:aws:iam::012201143908:role/opticaadmind48f139dPostConfirmation-dev",
-        "Region": "us-east-1",
-        "Arn": "arn:aws:lambda:us-east-1:012201143908:function:opticaadmind48f139dPostConfirmation-dev",
-        "Name": "opticaadmind48f139dPostConfirmation-dev",
-        "LambdaExecutionRole": "opticaadmind48f139dPostConfirmation-dev"
+        "BucketName": "opticaadmin10f274a12df043dc8b7840b00d0bf3a3191131-dev",
+        "Region": "us-east-1"
       },
-      "lastPushDirHash": "3MdDbEI/sa8MK35s+LK7qrCWxi8="
+      "lastPushTimeStamp": "2023-05-27T15:22:21.381Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storageOpticaImages"
+      }
     }
   }
 }

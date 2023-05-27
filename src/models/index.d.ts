@@ -6,7 +6,8 @@ export enum Ordenstatus {
   CREADA = "CREADA",
   ENVIADAMAQUILA = "ENVIADAMAQUILA",
   ENTREGADA = "ENTREGADA",
-  CONPROBLEMAS = "CONPROBLEMAS"
+  CONPROBLEMAS = "CONPROBLEMAS",
+  FINALIZADA = "FINALIZADA"
 }
 
 export enum Tipoorden {
@@ -153,6 +154,7 @@ type EagerINVENTARIO = {
   readonly categoria: Enumcategoria | keyof typeof Enumcategoria;
   readonly INVENTARIOORDENITEMS?: (INVENTARIOORDENITEMS | null)[] | null;
   readonly opticaID: string;
+  readonly stock?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -174,6 +176,7 @@ type LazyINVENTARIO = {
   readonly categoria: Enumcategoria | keyof typeof Enumcategoria;
   readonly INVENTARIOORDENITEMS: AsyncCollection<INVENTARIOORDENITEMS>;
   readonly opticaID: string;
+  readonly stock?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
