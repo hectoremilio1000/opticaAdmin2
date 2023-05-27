@@ -362,6 +362,30 @@
           "s3PermissionsAuthenticatedUploads": "s3:PutObject",
           "s3PermissionsGuestPublic": "s3:GetObject",
           "s3PermissionsGuestUploads": "DISALLOW",
+          "authopticaadminf85f3cb4f85f3cb4UserPoolId": {
+            "Fn::GetAtt": [
+              "authopticaadminf85f3cb4f85f3cb4",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "authuserPoolGroupssuperadminGroupRole": {
+            "Fn::GetAtt": [
+              "authuserPoolGroups",
+              "Outputs.superadminGroupRole"
+            ]
+          },
+          "authuserPoolGroupsgerenteGroupRole": {
+            "Fn::GetAtt": [
+              "authuserPoolGroups",
+              "Outputs.gerenteGroupRole"
+            ]
+          },
+          "authuserPoolGroupsvendedorGroupRole": {
+            "Fn::GetAtt": [
+              "authuserPoolGroups",
+              "Outputs.vendedorGroupRole"
+            ]
+          },
           "env": "dev"
         }
       }

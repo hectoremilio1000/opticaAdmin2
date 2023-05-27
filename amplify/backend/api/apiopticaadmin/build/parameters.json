@@ -2,7 +2,12 @@
     "AppSyncApiName": "apiopticaadmin",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
     "DynamoDBEnableServerSideEncryption": false,
-    "AuthModeLastUpdated": "2023-05-06T18:05:00.281Z",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
     "S3DeploymentBucket": "amplify-opticaadmin-dev-191131-deployment",
     "S3DeploymentRootKey": "amplify-appsync-files/52eec1da0915d097d74dc8cf650c9145631d038e"
 }
