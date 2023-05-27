@@ -67,12 +67,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "opticaadmind48f139dPostConfirmation",
+            "opticaadminf85f3cb4f85f3cb4PostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "opticaadmind48f139dPostConfirmation",
+                  "opticaadminf85f3cb4f85f3cb4PostConfirmation",
                   "-",
                   {
                     "Ref": "env"
@@ -122,12 +122,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "opticaadmind48f139dPostConfirmation",
+            "opticaadminf85f3cb4f85f3cb4PostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "opticaadmind48f139dPostConfirmation",
+                  "opticaadminf85f3cb4f85f3cb4PostConfirmation",
                   "-",
                   {
                     "Ref": "env"

@@ -8,10 +8,12 @@ export const signUp = async ({
   profile,
   address,
   groupName,
+  password,
 }) => {
   await Auth.signUp({
     username: userName,
-    password: Math.random().toString(36).slice(2, 10),
+    // password: Math.random().toString(36).slice(2, 10),
+    password: password,
     attributes: {
       email,
       name: nombres,

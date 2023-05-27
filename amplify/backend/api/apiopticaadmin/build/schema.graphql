@@ -4,6 +4,7 @@ enum ORDENSTATUS {
   ENVIADAMAQUILA
   ENTREGADA
   CONPROBLEMAS
+  FINALIZADA
 }
 
 type INVENTARIOORDENITEMS @aws_iam @aws_api_key {
@@ -75,6 +76,7 @@ type INVENTARIO @aws_iam @aws_api_key {
   categoria: ENUMCATEGORIA!
   INVENTARIOORDENITEMS(filter: ModelINVENTARIOORDENITEMSFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelINVENTARIOORDENITEMSConnection
   opticaID: ID!
+  stock: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -608,6 +610,7 @@ input ModelINVENTARIOFilterInput {
   tipoMaterial: ModelStringInput
   categoria: ModelENUMCATEGORIAInput
   opticaID: ModelIDInput
+  stock: ModelStringInput
   and: [ModelINVENTARIOFilterInput]
   or: [ModelINVENTARIOFilterInput]
   not: ModelINVENTARIOFilterInput
@@ -624,6 +627,7 @@ input ModelINVENTARIOConditionInput {
   tipoMaterial: ModelStringInput
   categoria: ModelENUMCATEGORIAInput
   opticaID: ModelIDInput
+  stock: ModelStringInput
   and: [ModelINVENTARIOConditionInput]
   or: [ModelINVENTARIOConditionInput]
   not: ModelINVENTARIOConditionInput
@@ -641,6 +645,7 @@ input CreateINVENTARIOInput {
   tipoMaterial: String
   categoria: ENUMCATEGORIA!
   opticaID: ID!
+  stock: String
   _version: Int
 }
 
@@ -656,6 +661,7 @@ input UpdateINVENTARIOInput {
   tipoMaterial: String
   categoria: ENUMCATEGORIA
   opticaID: ID
+  stock: String
   _version: Int
 }
 
@@ -676,6 +682,7 @@ input ModelSubscriptionINVENTARIOFilterInput {
   tipoMaterial: ModelSubscriptionStringInput
   categoria: ModelSubscriptionStringInput
   opticaID: ModelSubscriptionIDInput
+  stock: ModelSubscriptionStringInput
   and: [ModelSubscriptionINVENTARIOFilterInput]
   or: [ModelSubscriptionINVENTARIOFilterInput]
 }

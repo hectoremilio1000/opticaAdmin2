@@ -13,22 +13,23 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-191131-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "opticaadmind48f139d": {},
-        "userPoolGroups": {}
-      },
       "api": {
         "apiopticaadmin": {}
       },
-      "storage": {
-        "LentesImages": {}
+      "auth": {
+        "opticaadminf85f3cb4f85f3cb4": {},
+        "userPoolGroups": {}
       },
       "function": {
-        "opticaadmind48f139dPostConfirmation": {
-          "GROUP": "admin",
+        "opticaadminf85f3cb4f85f3cb4PostConfirmation": {
+          "GROUP": "",
           "deploymentBucketName": "amplify-opticaadmin-dev-191131-deployment",
-          "s3Key": "amplify-builds/opticaadmind48f139dPostConfirmation-6d466847423156633177-build.zip"
+          "s3Key": "amplify-builds/opticaadminf85f3cb4f85f3cb4PostConfirmation-347a5a354d3051672f31-build.zip"
         }
+      },
+      "storage": {
+        "opticaImages": {},
+        "OpticaImages": {}
       }
     }
   }

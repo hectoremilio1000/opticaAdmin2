@@ -1,9 +1,10 @@
-import { DataStore } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { React, useState, useEffect, useContext } from "react";
-import { CLIENTES, OPTICA } from "../../../models";
 import { Input, Form, Button, Select, DatePicker, message } from "antd";
 
 import { MenuContext } from "../../../contexts/MenuContext";
+import { createCLIENTES } from "../../../graphql/mutations";
+import { listOPTICAS } from "../../../graphql/queries";
 
 const { Option } = Select;
 
@@ -22,8 +23,9 @@ function CrearCliente() {
   const [opticaID, setOpticaID] = useState("");
 
   const fetchOpticas = async () => {
-    const result = await DataStore.query(OPTICA);
-    setOpticas(result);
+    const result = await API.graphql(graphqlOperation(listOPTICAS));
+    const listOpticas = result?.data?.listOPTICAS?.items;
+    setOpticas(listOpticas);
   };
   useEffect(() => {
     fetchOpticas();
@@ -42,18 +44,19 @@ function CrearCliente() {
       opticaID,
     });
     try {
-      await DataStore.save(
-        new CLIENTES({
-          nombres,
-          apellidoPaterno,
-          apellidoMaterno,
-          sexo,
-          email,
-          fechaNacimiento,
-          whats,
-          edad,
-          opticaID,
-        })
+      const newClientes = {
+        nombres,
+        apellidoPaterno,
+        apellidoMaterno,
+        sexo,
+        email,
+        fechaNacimiento,
+        whats,
+        edad,
+        opticaID,
+      };
+      await API.graphql(
+        graphqlOperation(createCLIENTES, { input: newClientes })
       );
       message.success("Se creo correctamente el cliente");
       cambiarComponent({ key: "19" });

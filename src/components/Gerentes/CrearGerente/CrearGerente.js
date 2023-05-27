@@ -21,6 +21,7 @@ function CrearGerente() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [opticaID, setOpticaID] = useState("");
+  const [password, setPassword] = useState("");
   const confirmed = false;
   const blocked = false;
 
@@ -66,6 +67,7 @@ function CrearGerente() {
             opticaID,
             confirmed,
             blocked,
+            // password,
             createdBy,
           },
         })
@@ -80,6 +82,7 @@ function CrearGerente() {
           phoneNumber,
           profile,
           address,
+          password,
           groupName: GROUPS.GERENTE,
         });
       }
@@ -139,6 +142,17 @@ function CrearGerente() {
             placeholder="Ingresa un username para el usuario"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: "Este campo es requerido" }]}
+        >
+          <Input
+            placeholder="Ingresa un username para el usuario"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Item>
         <Form.Item

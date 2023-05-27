@@ -4,13 +4,18 @@ import { Button, Form, Input, Select, message } from "antd";
 // import type { FormInstance } from "antd/es/form";
 
 // amplify API
-import { Storage, DataStore } from "aws-amplify";
+import { Storage, API, graphqlOperation } from "aws-amplify";
 // import * as mutations from "../../../graphql/mutations";
 import { MenuContext } from "../../../contexts/MenuContext";
 import { v4 as uuidv4 } from "uuid";
 import config from "../../../aws-exports";
-import { INVENTARIO, OPTICA } from "../../../models";
 
+import { useAuthContext } from "../../../contexts/AuthContext";
+import { useGerenteContext } from "../../../contexts/GerenteContext";
+import GROUPS from "../../../constants/groups";
+import { listOPTICAS } from "../../../graphql/queries";
+import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
+import { createINVENTARIO } from "../../../graphql/mutations";
 const {
   aws_user_files_s3_bucket_region: region,
   aws_user_files_s3_bucket: bucket,
@@ -20,6 +25,7 @@ const { Option } = Select;
 
 function CrearInventario() {
   // usesate url y key
+  const { groupName } = useAuthContext();
 
   const { cambiarComponent } = useContext(MenuContext);
   const [nombreProducto, setNombreProducto] = useState("");
@@ -34,48 +40,41 @@ function CrearInventario() {
   const [opticaID, setOpticaID] = useState("");
   const [opticas, setOpticas] = useState([]);
 
-  // const onChange = (value: number | string) => {
-  //   console.log("changed", value);
-  // };
-  const searchOpticas = async () => {
-    try {
-      const result = await DataStore.query(OPTICA);
-      setOpticas(result);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // optica id
+  const { labId } = useGerenteContext();
+
   useEffect(() => {
+    const searchOpticas = async () => {
+      if (groupName !== GROUPS.SUPER_ADMIN) {
+        setOpticaID(labId);
+      } else {
+        try {
+          const result = await API.graphql(graphqlOperation(listOPTICAS));
+          setOpticas(result.data.listOPTICAS.items);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
     searchOpticas();
-  }, []);
+  }, [groupName, labId]);
 
   const onFinish = async () => {
-    console.log(
-      opticaID,
-      categoria,
-      nombreProducto,
-      proveedor,
-      costo,
-      precioVenta,
-      color,
-      tipoEstructura,
-      urlImagen,
-      tipoMaterial
-    );
     try {
-      const result = await DataStore.save(
-        new INVENTARIO({
-          opticaID,
-          categoria,
-          nombreProducto,
-          proveedor,
-          costo,
-          precioVenta,
-          color,
-          tipoEstructura,
-          urlImagen,
-          tipoMaterial,
-        })
+      const newProducto = {
+        opticaID,
+        categoria,
+        nombreProducto,
+        proveedor,
+        costo,
+        precioVenta,
+        color,
+        tipoEstructura,
+        urlImagen,
+        tipoMaterial,
+      };
+      const result = await API.graphql(
+        graphqlOperation(createINVENTARIO, { input: newProducto })
       );
       console.log(result);
       message.success("El producto se ha creado correctamente");
@@ -87,18 +86,26 @@ function CrearInventario() {
   };
   const handleImage = async (e) => {
     e.preventDefault();
+    console.log(e);
     const file = e.target.files[0];
+    if (!file) {
+      console.log(undefined);
+      // Manejar el caso en que no se haya seleccionado ningún archivo
+      return;
+    }
     const extension = file.name.split(".")[1];
     const name = file.name.split(".")[0];
     const keys = `images/${uuidv4()}${name}.${extension}`;
     const urls = `https://${bucket}.s3.${region}.amazonaws.com/public/${keys}`;
+    console.log(keys, file, file.type);
     console.log(urls);
 
     try {
-      await Storage.put(keys, file, {
+      const image1 = await Storage.put(keys, file, {
         level: "public",
         contentType: file.type,
       });
+      console.log(image1);
       // const image1 = await Storage.get(keys, { level: "public" });
       setUrlImagen(urls);
       console.log("archivo guardado");
@@ -144,24 +151,13 @@ function CrearInventario() {
               <Option value="BOY">BOY</Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            label="Optica"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
-          >
-            <Select
-              //   defaultValue={categoria}
-              onSelect={(e) => setOpticaID(e)}
-              placeholder="Select una Optica"
-            >
-              {opticas.map((optica) => {
-                return (
-                  <Option key={optica.id} value={optica.id}>
-                    {optica.nombre}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
+          {opticas.length > 0 && (
+            <LaboratorioSelector
+              groupName={groupName}
+              setOpticaID={setOpticaID}
+              opticas={opticas}
+            />
+          )}
           <Form.Item
             label="Proveedor"
             rules={[{ required: true, message: "Este campo es requerido" }]}
@@ -220,7 +216,7 @@ function CrearInventario() {
             />
           </Form.Item>
           <Form.Item
-            label="Tipo Estructura"
+            label="Cod Armazon"
             name="tipoEstructura"
             // rules={[{ required: true, message: "Este campo es requerido" }]}
           >

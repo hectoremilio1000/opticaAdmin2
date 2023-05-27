@@ -2,20 +2,33 @@ import "./Cart.css";
 import { Button, DatePicker, Form, Input, Select, Table, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { MenuContext } from "../../../contexts/MenuContext";
+import { useAuthContext } from "../../../contexts/AuthContext";
 import dayjs from "dayjs";
 import { React, useState, useEffect, useContext } from "react";
-import { API, DataStore, graphqlOperation } from "aws-amplify";
-import { CLIENTES, INVENTARIO, OPTICA } from "../../../models";
+import { API, graphqlOperation } from "aws-amplify";
 import {
   createINVENTARIOORDENITEMS,
   createORDEN,
 } from "../../../graphql/mutations";
+import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
+import { useGerenteContext } from "../../../contexts/GerenteContext";
+import GROUPS from "../../../constants/groups";
+import {
+  cLIENTESByOpticaID,
+  getOPTICA,
+  iNVENTARIOSByOpticaID,
+  listCLIENTES,
+  listINVENTARIOS,
+  listOPTICAS,
+} from "../../../graphql/queries";
+
 const { Option } = Select;
 
 function CrearOrden() {
+  const { groupName } = useAuthContext();
   const { cambiarComponent } = useContext(MenuContext);
   const [clientes, setClientes] = useState([]);
-  const [clientesID, setclientesID] = useState(null);
+  const [clientesID, setclientesID] = useState("");
   // const [usoLentes, setUsoLentes] = useState("");
   // graducacion state
   const [gradCheck, setGradCheck] = useState("");
@@ -40,11 +53,114 @@ function CrearOrden() {
   const [total, setTotal] = useState(0);
   const [precioGraduacion, setPrecioGraduacion] = useState(0);
 
-  const fetchClientes = async () => {
-    try {
-      const result = await DataStore.query(CLIENTES);
+  // optica id
+  const { labId } = useGerenteContext();
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const options = [];
+        let productosList;
+        if (labId === "") {
+          const result = await API.graphql(graphqlOperation(listINVENTARIOS));
+          const nodelete = result?.data?.listINVENTARIOS?.items;
+          const deletew = nodelete.filter(
+            (elemento) => elemento._deleted !== true
+          );
+          const tempProducts = [];
+          // productosList = deletew;
+          for (const producto of deletew) {
+            const resultOptica = await API.graphql(
+              graphqlOperation(getOPTICA, { id: producto.opticaID })
+            );
+            const optica = resultOptica.data.getOPTICA;
+            const productOptica = { ...producto, nombreOptica: optica.nombre };
+            tempProducts.push(productOptica);
+          }
+          productosList = tempProducts;
+        } else {
+          const result = await API.graphql(
+            graphqlOperation(iNVENTARIOSByOpticaID, { opticaID: labId })
+          );
+          const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
+          const deletew = nodelete.filter(
+            (elemento) => elemento._deleted !== true
+          );
+          productosList = deletew;
+        }
+
+        productosList.map((producto) => {
+          const nombreOptica =
+            producto?.nombreOptica !== undefined ? producto?.nombreOptica : "";
+          const option = {
+            value: producto.id,
+            label:
+              producto.nombreProducto +
+              ", " +
+              producto.tipoMaterial +
+              ", " +
+              producto.tipoEstructura +
+              ", " +
+              nombreOptica,
+          };
+          options.push(option);
+          return true;
+        });
+        setProductos(options);
+        setListaProductos(productosList);
+      } catch (error) {
+        message.error("No se encontraron clientes");
+      }
+    };
+    fetchProductos();
+  }, [labId]);
+  useEffect(() => {
+    const fetchOpticas = async () => {
+      if (groupName !== GROUPS.SUPER_ADMIN) {
+        setOpticaID(labId);
+      } else {
+        try {
+          const result = await API.graphql(graphqlOperation(listOPTICAS));
+          setOpticas(result.data.listOPTICAS.items);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    fetchOpticas();
+  }, [groupName, labId]);
+  useEffect(() => {
+    const fetchClientes = async () => {
+      let clientes;
+      if (labId === "") {
+        try {
+          const result = await API.graphql(graphqlOperation(listCLIENTES));
+          const nodelete = result?.data?.listCLIENTES?.items;
+          const deletew =
+            nodelete.length > 0
+              ? nodelete.filter((elemento) => elemento._deleted !== true)
+              : null;
+          clientes = deletew;
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          const result = await API.graphql(
+            graphqlOperation(cLIENTESByOpticaID, { opticaID: labId })
+          );
+          const nodelete = result?.data?.cLIENTESByOpticaID?.items;
+          const deletew =
+            nodelete.length > 0
+              ? nodelete.filter((elemento) => elemento._deleted !== true)
+              : null;
+          clientes = deletew;
+        } catch (error) {
+          console.log(error);
+        }
+      }
       const options = [];
-      result.forEach((cliente) => {
+      clientes.forEach((cliente) => {
         const option = {
           value: cliente.id,
           label:
@@ -57,47 +173,14 @@ function CrearOrden() {
         options.push(option);
       });
       setClientes(options);
-    } catch (error) {
-      message.error("No se encontraron clientes");
-    }
-  };
-  useEffect(() => {
-    fetchProductos();
-    fetchOpticas();
+    };
     fetchClientes();
-  }, []);
-  const fetchOpticas = async () => {
-    try {
-      const result = await DataStore.query(OPTICA);
-      setOpticas(result);
-    } catch (error) {
-      message.error("No hay opticas creadas");
-    }
-  };
-  const fetchProductos = async () => {
-    try {
-      const options = [];
-      const result = await DataStore.query(INVENTARIO);
-      result.map((producto) => {
-        const option = {
-          value: producto.id,
-          label: producto.nombreProducto,
-        };
-        options.push(option);
-        return true;
-      });
-      setProductos(options);
-      setListaProductos(result);
-    } catch (error) {
-      message.error("No se encontraron clientes");
-    }
-  };
+  }, [labId]);
 
   const addCarrito = (productoID) => {
     const result = listaProductos.find(
       (elemento) => elemento.id === productoID
     );
-    console.log(result);
     if (productoID !== "") {
       const ident = carrito.find((elemento) => {
         if (elemento.id === productoID) {
@@ -480,8 +563,8 @@ function CrearOrden() {
                 {(
                   Math.round(
                     (total +
-                      precioGraduacion -
-                      (total + Number(precioGraduacion)) / 1.16) *
+                      Number(precioGraduacion) -
+                      (Number(total) + Number(precioGraduacion)) / 1.16) *
                       100
                   ) / 100
                 ).toFixed(2)}
@@ -525,24 +608,13 @@ function CrearOrden() {
               options={clientes}
             />
           </Form.Item>
-          <Form.Item
-            label="Optica"
-            rules={[{ required: true, message: "Este campo es requerido" }]}
-          >
-            <Select
-              //   defaultValue={categoria}
-              onSelect={(e) => setOpticaID(e)}
-              placeholder="Select una Optica"
-            >
-              {opticas.map((optica) => {
-                return (
-                  <Option key={optica.id} value={optica.id}>
-                    {optica.nombre}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
+          {opticas.length > 0 && (
+            <LaboratorioSelector
+              groupName={groupName}
+              setOpticaID={setOpticaID}
+              opticas={opticas}
+            />
+          )}
           <div style={{ marginTop: 10 }}>
             <Button
               onClick={onOrden}

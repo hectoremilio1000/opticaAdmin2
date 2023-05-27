@@ -3,6 +3,7 @@ enum ORDENSTATUS {
   ENVIADAMAQUILA
   ENTREGADA
   CONPROBLEMAS
+  FINALIZADA
 }
 
 type INVENTARIOORDENITEMS @model @auth(rules: [{allow: public}]) {
@@ -59,6 +60,7 @@ type INVENTARIO @model @auth(rules: [{allow: public}]) {
   categoria: ENUMCATEGORIA!
   INVENTARIOORDENITEMS: [INVENTARIOORDENITEMS] @hasMany(indexName: "byINVENTARIO", fields: ["id"])
   opticaID: ID! @index(name: "byOPTICA")
+  stock: String
 }
 
 type ORDEN @model @auth(rules: [{allow: public}]) {

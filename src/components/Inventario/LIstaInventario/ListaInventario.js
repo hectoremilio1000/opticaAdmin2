@@ -13,16 +13,27 @@ import {
 } from "antd";
 // amplify API
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { DataStore } from "aws-amplify";
+import { API, DataStore, graphqlOperation } from "aws-amplify";
 // import { useNavigate } from "react-router-dom";
 import { INVENTARIO, OPTICA } from "../../../models";
+import {
+  iNVENTARIOSByOpticaID,
+  listINVENTARIOS,
+} from "../../../graphql/queries";
+
+import { useGerenteContext } from "../../../contexts/GerenteContext";
+import { deleteINVENTARIO } from "../../../graphql/mutations";
+import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
+import { useAuthContext } from "../../../contexts/AuthContext";
 
 const { Content } = Layout;
 const { Option } = Select;
 function ListaInventario() {
+  const { groupName } = useAuthContext();
   // use state de form modal
   const [categoria, setCategoria] = useState("");
   const [id, setId] = useState("");
+  const [version, setVersion] = useState("");
   const [nombreProducto, setNombreProducto] = useState("");
   const [proveedor, setProveedor] = useState("");
   const [costo, setCosto] = useState(0);
@@ -36,6 +47,9 @@ function ListaInventario() {
   const [opticaID, setOpticaID] = useState("");
   // const [filtercategorias, setFiltercategorias] = useState([]);
   const [opticas, setOpticas] = useState([]);
+
+  // optica id select session for context
+  const { labId } = useGerenteContext();
 
   // const navigate = useNavigate();
   const searchcategorias = () => {
@@ -52,6 +66,11 @@ function ListaInventario() {
       title: "Nombre",
       dataIndex: "nombreProducto",
       key: "nombreProducto",
+    },
+    {
+      title: "Tipo Material",
+      dataIndex: "tipoMaterial",
+      key: "tipoMaterial",
     },
     {
       title: "Categoria",
@@ -96,7 +115,7 @@ function ListaInventario() {
       key: "color",
     },
     {
-      title: "Tipo Estructura",
+      title: "Cód Armazón",
       dataIndex: "tipoEstructura",
       key: "tipoEstructura",
     },
@@ -124,11 +143,6 @@ function ListaInventario() {
           />
         );
       },
-    },
-    {
-      title: "Tipo Material",
-      dataIndex: "tipoMaterial",
-      key: "tipoMaterial",
     },
     {
       title: "Actions",
@@ -189,22 +203,56 @@ function ListaInventario() {
 
   const changeDelete = (record) => {
     setId(record?.id);
+    setVersion(record?._version);
   };
 
   const fetchInventario = async () => {
-    const result = await DataStore.query(INVENTARIO);
-    setInventario(result);
+    let productosList;
+    if (labId === "") {
+      try {
+        const result = await API.graphql(graphqlOperation(listINVENTARIOS));
+        const nodelete = result?.data?.listINVENTARIOS?.items;
+        const deletew = nodelete.filter(
+          (elemento) => elemento._deleted !== true
+        );
+        productosList = deletew;
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const result = await API.graphql(
+          graphqlOperation(iNVENTARIOSByOpticaID, { opticaID: labId })
+        );
+        const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
+        const deletew = nodelete.filter(
+          (elemento) => elemento._deleted !== true
+        );
+        productosList = deletew;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    const ordenProducts = productosList.sort((a, b) => {
+      // Ordenar por fecha de creación descendente (más reciente primero)
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    setInventario(ordenProducts);
   };
 
   useEffect(() => {
     fetchInventario();
-  }, []);
+    // eslint-disable-next-line
+  }, [labId]);
 
   const deletehandle = async () => {
     console.log(id);
-
+    const prod = {
+      id: id,
+      _version: version,
+    };
     try {
-      await DataStore.delete(INVENTARIO, id);
+      await API.graphql(graphqlOperation(deleteINVENTARIO, { input: prod }));
       fetchInventario();
       message.success("El producto se ha eliminado correctamente");
     } catch (error) {
@@ -293,24 +341,14 @@ function ListaInventario() {
                   <Option value="BOY">BOY</Option>
                 </Select>
               </Form.Item>
-              <Form.Item
-                label="Optica"
-                rules={[{ required: true, message: "Este campo es requerido" }]}
-              >
-                <Select
-                  defaultValue={opticaID}
-                  onSelect={(e) => setOpticaID(e)}
-                  placeholder="Select una Optica"
-                >
-                  {opticas.map((optica) => {
-                    return (
-                      <Option key={optica.id} value={optica.id}>
-                        {optica.nombre}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
+              {opticas.length > 0 && (
+                <LaboratorioSelector
+                  opticaID={opticaID}
+                  groupName={groupName}
+                  setOpticaID={setOpticaID}
+                  opticas={opticas}
+                />
+              )}
               <Form.Item
                 label="Proveedor"
                 rules={[{ required: true, message: "Este campo es requerido" }]}

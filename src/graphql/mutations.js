@@ -223,6 +223,7 @@ export const createINVENTARIO = /* GraphQL */ `
         startedAt
       }
       opticaID
+      stock
       createdAt
       updatedAt
       _version
@@ -264,6 +265,7 @@ export const updateINVENTARIO = /* GraphQL */ `
         startedAt
       }
       opticaID
+      stock
       createdAt
       updatedAt
       _version
@@ -305,6 +307,7 @@ export const deleteINVENTARIO = /* GraphQL */ `
         startedAt
       }
       opticaID
+      stock
       createdAt
       updatedAt
       _version
@@ -733,6 +736,7 @@ export const createOPTICA = /* GraphQL */ `
           tipoMaterial
           categoria
           opticaID
+          stock
           createdAt
           updatedAt
           _version
@@ -861,6 +865,7 @@ export const updateOPTICA = /* GraphQL */ `
           tipoMaterial
           categoria
           opticaID
+          stock
           createdAt
           updatedAt
           _version
@@ -989,6 +994,7 @@ export const deleteOPTICA = /* GraphQL */ `
           tipoMaterial
           categoria
           opticaID
+          stock
           createdAt
           updatedAt
           _version
