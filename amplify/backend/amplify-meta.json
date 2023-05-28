@@ -37,7 +37,7 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "AppSync",
-      "lastPushTimeStamp": "2023-05-28T00:04:29.446Z",
+      "lastPushTimeStamp": "2023-05-28T00:54:15.210Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-develop-202936-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apiapiopticaadmin"
@@ -87,7 +87,7 @@
         "IdentityPoolName": "opticaadminf85f3cb4f85f3cb4_identitypool_a0364733__develop",
         "UserPoolName": "opticaadminf85f3cb4_userpool_f85f3cb4"
       },
-      "lastPushTimeStamp": "2023-05-28T00:04:29.447Z",
+      "lastPushTimeStamp": "2023-05-28T00:54:15.212Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-develop-202936-deployment/amplify-cfn-templates/auth/opticaadminf85f3cb4f85f3cb4-cloudformation-template.json",
         "logicalId": "authopticaadminf85f3cb4f85f3cb4"
@@ -114,7 +114,7 @@
         "vendedorGroupRole": "arn:aws:iam::012201143908:role/us-east-1_oeCcDwCVK-vendedorGroupRole",
         "superadminGroupRole": "arn:aws:iam::012201143908:role/us-east-1_oeCcDwCVK-superadminGroupRole"
       },
-      "lastPushTimeStamp": "2023-05-28T00:04:31.878Z",
+      "lastPushTimeStamp": "2023-05-28T00:54:17.648Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-develop-202936-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
         "logicalId": "authuserPoolGroups"
@@ -133,7 +133,7 @@
         "Name": "opticaadminf85f3cb4f85f3cb4PostConfirmation-develop",
         "LambdaExecutionRole": "opticaadminf85f3cb4f85f3cb4PostConfirmation-develop"
       },
-      "lastPushTimeStamp": "2023-05-28T00:04:29.450Z",
+      "lastPushTimeStamp": "2023-05-28T00:54:15.216Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-develop-202936-deployment/amplify-cfn-templates/function/opticaadminf85f3cb4f85f3cb4PostConfirmation-cloudformation-template.json",
         "logicalId": "functionopticaadminf85f3cb4f85f3cb4PostConfirmation"
@@ -182,7 +182,7 @@
         "BucketName": "opticaadmin10f274a12df043dc8b7840b00d0bf3a3202936-develop",
         "Region": "us-east-1"
       },
-      "lastPushTimeStamp": "2023-05-28T00:04:31.973Z",
+      "lastPushTimeStamp": "2023-05-28T00:54:17.744Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-develop-202936-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
         "logicalId": "storageOpticaImages"
