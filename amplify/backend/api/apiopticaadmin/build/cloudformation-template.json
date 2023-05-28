@@ -4,16 +4,6 @@
             "Type": "String",
             "Default": "NONE"
         },
-        "AppSyncApiName": {
-            "Type": "String",
-            "Default": "AppSyncSimpleTransform"
-        },
-        "authRoleName": {
-            "Type": "String"
-        },
-        "unauthRoleName": {
-            "Type": "String"
-        },
         "DynamoDBModelTableReadIOPS": {
             "Type": "Number",
             "Default": 5,
@@ -50,6 +40,16 @@
                 "false"
             ],
             "Description": "Enable server side encryption powered by KMS."
+        },
+        "AppSyncApiName": {
+            "Type": "String",
+            "Default": "AppSyncSimpleTransform"
+        },
+        "authRoleName": {
+            "Type": "String"
+        },
+        "unauthRoleName": {
+            "Type": "String"
         },
         "S3DeploymentBucket": {
             "Type": "String",
@@ -123,7 +123,7 @@
                     ]
                 },
                 "Description": "api key description",
-                "Expires": 1687827256
+                "Expires": 1687851272
             }
         },
         "GraphQLAPINONEDS95A13CF0": {
@@ -461,12 +461,6 @@
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
                     },
-                    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
-                        "Fn::GetAtt": [
-                            "GraphQLAPINONEDS95A13CF0",
-                            "Name"
-                        ]
-                    },
                     "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
                         "Fn::GetAtt": [
                             "INVENTARIOORDENITEMS",
@@ -578,12 +572,6 @@
                     },
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
-                    },
-                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId": {
-                        "Fn::GetAtt": [
-                            "GERENTE",
-                            "Outputs.transformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId"
-                        ]
                     },
                     "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
                         "Fn::GetAtt": [
@@ -697,12 +685,6 @@
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
                     },
-                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId": {
-                        "Fn::GetAtt": [
-                            "GERENTE",
-                            "Outputs.transformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId"
-                        ]
-                    },
                     "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
                         "Fn::GetAtt": [
                             "INVENTARIOORDENITEMS",
@@ -815,12 +797,6 @@
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
                     },
-                    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
-                        "Fn::GetAtt": [
-                            "GraphQLAPINONEDS95A13CF0",
-                            "Name"
-                        ]
-                    },
                     "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
                         "Fn::GetAtt": [
                             "INVENTARIOORDENITEMS",
@@ -932,12 +908,6 @@
                     },
                     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
                         "Ref": "unauthRoleName"
-                    },
-                    "referencetotransformerrootstackGERENTENestedStackGERENTENestedStackResourceF835494FOutputstransformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId": {
-                        "Fn::GetAtt": [
-                            "GERENTE",
-                            "Outputs.transformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId"
-                        ]
                     },
                     "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
                         "Fn::GetAtt": [

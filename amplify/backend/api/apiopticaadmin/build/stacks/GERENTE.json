@@ -61,9 +61,6 @@
     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
       "Type": "String"
     },
-    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
-      "Type": "String"
-    },
     "referencetotransformerrootstackINVENTARIOORDENITEMSNestedStackINVENTARIOORDENITEMSNestedStackResource4924F3E8OutputstransformerrootstackINVENTARIOORDENITEMSMutationcreateINVENTARIOORDENITEMSinit0FunctionMutationcreateINVENTARIOORDENITEMSini53DCF945": {
       "Type": "String"
     },
@@ -729,7 +726,10 @@
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
         "DataSourceName": {
-          "Ref": "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name"
+          "Fn::GetAtt": [
+            "GERENTEDataSource",
+            "Name"
+          ]
         },
         "Name": "QuerysyncGERENTESpreAuth0Function",
         "FunctionVersion": "2018-05-29",
@@ -750,7 +750,10 @@
           ]
         },
         "ResponseMappingTemplate": "$util.toJson({})"
-      }
+      },
+      "DependsOn": [
+        "GERENTEDataSource"
+      ]
     },
     "QuerySyncGERENTESDataResolverFnQuerySyncGERENTESDataResolverFnAppSyncFunction66920E1A": {
       "Type": "AWS::AppSync::FunctionConfiguration",
@@ -1669,14 +1672,6 @@
             ]
           ]
         }
-      }
-    },
-    "transformerrootstackGERENTEQuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction9FF37B52FunctionId": {
-      "Value": {
-        "Fn::GetAtt": [
-          "QuerysyncGERENTESpreAuth0FunctionQuerysyncGERENTESpreAuth0FunctionAppSyncFunction97200869",
-          "FunctionId"
-        ]
       }
     },
     "transformerrootstackGERENTEGERENTEDataSource4D7C2A2EName": {

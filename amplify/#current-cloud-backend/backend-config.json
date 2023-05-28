@@ -82,6 +82,14 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_GROUP": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
+        }
+      ]
+    },
     "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
