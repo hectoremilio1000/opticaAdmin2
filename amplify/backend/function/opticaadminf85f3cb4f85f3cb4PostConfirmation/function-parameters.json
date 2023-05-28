@@ -1,0 +1,16 @@
+{
+  "trigger": true,
+  "modules": [
+    "add-to-group"
+  ],
+  "parentResource": "opticaadminf85f3cb4f85f3cb4",
+  "functionName": "opticaadminf85f3cb4f85f3cb4PostConfirmation",
+  "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "C:\\snapshot\\repo\\build\\node_modules\\@aws-amplify\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\PostConfirmation",
+  "triggerTemplate": "PostConfirmation.json.ejs",
+  "triggerEventPath": "PostConfirmation.event.json",
+  "roleName": "opticaadminf85f3cb4f85f3cb4PostConfirmation",
+  "skipEdit": true
+}
