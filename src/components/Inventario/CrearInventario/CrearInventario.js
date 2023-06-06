@@ -34,6 +34,7 @@ function CrearInventario() {
   const [costo, setCosto] = useState(0);
   const [precioVenta, setPrecioVenta] = useState(0);
   const [color, setColor] = useState("");
+  const [stock, setStock] = useState(0);
   const [tipoEstructura, setTipoEstructura] = useState("");
   const [urlImagen, setUrlImagen] = useState("");
   const [tipoMaterial, setTipoMaterial] = useState("");
@@ -72,6 +73,7 @@ function CrearInventario() {
         tipoEstructura,
         urlImagen,
         tipoMaterial,
+        stock: stock.toString(),
       };
       const result = await API.graphql(
         graphqlOperation(createINVENTARIO, { input: newProducto })
@@ -123,7 +125,7 @@ function CrearInventario() {
           style={{
             display: "grid",
             gap: "8px",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(4, 1fr)",
           }}
         >
           <Form.Item
@@ -199,6 +201,24 @@ function CrearInventario() {
                   setPrecioVenta(0);
                 } else {
                   setPrecioVenta(Number(e.target.value));
+                }
+              }}
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Stock"
+            name="stock"
+            rules={[{ required: true, message: "Este campo es requerido" }]}
+          >
+            <Input
+              placeholder="Ingresa la cantidad a agregar"
+              value={stock}
+              onChange={(e) => {
+                if (e.target.value === "") {
+                  setStock(0);
+                } else {
+                  setStock(Number(e.target.value));
                 }
               }}
               style={{ width: "100%" }}

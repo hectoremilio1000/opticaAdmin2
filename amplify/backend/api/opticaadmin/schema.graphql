@@ -1,3 +1,13 @@
+type Caja @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  fechaApertura: String
+  fechaCierre: String
+  montoInicial: String
+  montoFinal: String
+  estado: String
+  ORDENS: [ORDEN] @hasMany(indexName: "byCaja", fields: ["id"])
+}
+
 enum ORDENSTATUS {
   CREADA
   ENVIADAMAQUILA
@@ -84,6 +94,7 @@ type ORDEN @model @auth(rules: [{allow: public}]) {
   ordenStatus: ORDENSTATUS
   precioGraduacion: String
   anticipo: String
+  cajaID: ID! @index(name: "byCaja")
 }
 
 type CLIENTES @model @auth(rules: [{allow: public}]) {

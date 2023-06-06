@@ -1,5 +1,14 @@
 import "./Cart.css";
-import { Button, DatePicker, Form, Input, Select, Table, message } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  Table,
+  message,
+  Tag,
+} from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { MenuContext } from "../../../contexts/MenuContext";
 import { useAuthContext } from "../../../contexts/AuthContext";
@@ -9,6 +18,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import {
   createINVENTARIOORDENITEMS,
   createORDEN,
+  updateINVENTARIO,
 } from "../../../graphql/mutations";
 import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
 import { useGerenteContext } from "../../../contexts/GerenteContext";
@@ -21,10 +31,18 @@ import {
   listINVENTARIOS,
   listOPTICAS,
 } from "../../../graphql/queries";
+import { CajaContext } from "../../../contexts/CajaContext";
 
 const { Option } = Select;
 
 function CrearOrden() {
+  // verificar cajas uststate
+  const { cajaAbierta, nowCaja, verificarCajaAbierta } =
+    useContext(CajaContext);
+
+  const [verificandoCaja, setVerificandoCaja] = useState(true);
+  // const [modalVisible, setModalVisible] = useState(false);
+
   const { groupName } = useAuthContext();
   const { cambiarComponent } = useContext(MenuContext);
   const [clientes, setClientes] = useState([]);
@@ -42,7 +60,7 @@ function CrearOrden() {
   const [referencia, setReferencia] = useState("");
   // const [seRealizoExamen, setSeRealizoExamen] = useState("");
   const [fechaExamen, setFechaExamen] = useState("");
-  const [fechaEntrega, setFechaEntrega] = useState("");
+  const fechaEntrega = "";
 
   // ordenes state carts
   const [carrito, setCarrito] = useState([]);
@@ -92,6 +110,10 @@ function CrearOrden() {
         productosList.map((producto) => {
           const nombreOptica =
             producto?.nombreOptica !== undefined ? producto?.nombreOptica : "";
+          const stock =
+            producto.stock === "0"
+              ? "sin existencias"
+              : producto.stock + " und";
           const option = {
             value: producto.id,
             label:
@@ -101,7 +123,10 @@ function CrearOrden() {
               ", " +
               producto.tipoEstructura +
               ", " +
-              nombreOptica,
+              nombreOptica +
+              stock,
+            stock: Number(producto.stock),
+            disabled: Number(producto.stock) === 0,
           };
           options.push(option);
           return true;
@@ -205,6 +230,8 @@ function CrearOrden() {
           nombre: result.nombreProducto,
           cantidad: cantidad,
           precio: result.precioVenta,
+          stock: result.stock,
+          version: result._version,
           subTotal: Number(result.precioVenta) * Number(cantidad),
         };
         setCarrito([...carrito, carritoInterno]);
@@ -213,7 +240,6 @@ function CrearOrden() {
       setProductoID(null);
     }
   };
-
   const onOrden = async () => {
     if (carrito.length > 0) {
       if (clientesID !== "" && opticaID !== "") {
@@ -240,6 +266,7 @@ function CrearOrden() {
           precioGraduacion: precioGraduacion.toString(),
           precioTotal: (total + Number(precioGraduacion)).toString(),
           anticipo: "0",
+          cajaID: nowCaja.id,
         };
         const result = await API.graphql(
           graphqlOperation(createORDEN, { input: newOrden })
@@ -258,6 +285,15 @@ function CrearOrden() {
                 input: newOrdenItem,
               })
             );
+            let newProducto = {
+              id: cart.id,
+              stock: (Number(cart.stock) - 1).toString(),
+              _version: cart.version,
+            };
+            console.log(newProducto);
+            await API.graphql(
+              graphqlOperation(updateINVENTARIO, { input: newProducto })
+            );
           })
         );
         setCarrito([]);
@@ -269,10 +305,6 @@ function CrearOrden() {
     } else {
       message.info("Te faltan agregar productos");
     }
-    try {
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const desCarrito = (record) => {
@@ -281,8 +313,14 @@ function CrearOrden() {
         if (objeto.cantidad > 1) {
           const newCantidad = objeto.cantidad - cantidad;
           const newSubtotal = newCantidad * objeto.precio;
+          const newStock = Number(objeto.stock) + 1;
           setTotal(total - cantidad * objeto.precio);
-          return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+          return {
+            ...objeto,
+            cantidad: newCantidad,
+            subTotal: newSubtotal,
+            stock: newStock,
+          };
         }
       }
       return objeto;
@@ -292,10 +330,18 @@ function CrearOrden() {
   const aumentCarrito = (record) => {
     const nuevosObjetos = carrito.map((objeto) => {
       if (objeto.id === record.id) {
-        const newCantidad = objeto.cantidad + cantidad;
-        const newSubtotal = newCantidad * objeto.precio;
-        setTotal(total + cantidad * objeto.precio);
-        return { ...objeto, cantidad: newCantidad, subTotal: newSubtotal };
+        if (objeto.stock - 1 > 0) {
+          const newCantidad = objeto.cantidad + cantidad;
+          const newSubtotal = newCantidad * objeto.precio;
+          setTotal(total + cantidad * objeto.precio);
+          const newStock = Number(objeto.stock) - 1;
+          return {
+            ...objeto,
+            cantidad: newCantidad,
+            subTotal: newSubtotal,
+            stock: newStock,
+          };
+        }
       }
       return objeto;
     });
@@ -311,6 +357,24 @@ function CrearOrden() {
 
   // Table source
   const columns = [
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (_, record) => {
+        let stock = Number(record?.stock);
+        if (stock - 1 > 0) {
+          return (
+            <>
+              <Tag color="green">En stock</Tag>
+              <p>{Number(record?.stock) - 1} und</p>
+            </>
+          );
+        } else {
+          return <Tag color="red">Sin existencia</Tag>;
+        }
+      },
+    },
     {
       title: "Producto",
       dataIndex: "nombre",
@@ -387,7 +451,21 @@ function CrearOrden() {
       },
     },
   ];
-  return (
+  useEffect(() => {
+    const verificarCaja = async () => {
+      // Realizar la verificación del estado de la caja aquí
+      // Reemplaza el siguiente código con tu lógica de verificación real
+      await verificarCajaAbierta(); // Supongamos que esto es una función asincrónica
+
+      setVerificandoCaja(false); // Finaliza la verificación
+    };
+
+    verificarCaja();
+  }, [verificarCajaAbierta]);
+
+  return verificandoCaja ? (
+    <p>Verificando cajas abiertas</p>
+  ) : cajaAbierta ? (
     <div
       style={{
         padding: "20px 30px",
@@ -495,13 +573,6 @@ function CrearOrden() {
                 />
               </Form.Item>
 
-              <Form.Item label="Fecha de entrega">
-                <DatePicker
-                  style={{ width: "100%" }}
-                  format="YYYY-MM-DD"
-                  onChange={(date, dateString) => setFechaEntrega(dateString)}
-                />
-              </Form.Item>
               <Form.Item label="Precio de graduacion">
                 <Input
                   value={precioGraduacion}
@@ -525,6 +596,8 @@ function CrearOrden() {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            // options={productos.filter((producto) => producto.stock > 0)} // Filtrar productos con existencias
+            optionLabelProp="label"
             options={productos}
           />
           <Table
@@ -627,6 +700,26 @@ function CrearOrden() {
           </div>
         </div>
       </div>
+    </div>
+  ) : (
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "400px",
+        gap: "15px",
+      }}
+    >
+      <h1>Debes primero abrir una caja, para empezar a vender</h1>
+      <Button
+        onClick={() => cambiarComponent({ key: "8" })}
+        className="primary"
+      >
+        Abrir una caja
+      </Button>
     </div>
   );
 }

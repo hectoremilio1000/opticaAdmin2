@@ -23,6 +23,44 @@ export enum Enumcategoria {
 
 
 
+type EagerCaja = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Caja, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly fechaApertura?: string | null;
+  readonly fechaCierre?: string | null;
+  readonly montoInicial?: string | null;
+  readonly montoFinal?: string | null;
+  readonly estado?: string | null;
+  readonly ORDENS?: (ORDEN | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyCaja = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Caja, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly fechaApertura?: string | null;
+  readonly fechaCierre?: string | null;
+  readonly montoInicial?: string | null;
+  readonly montoFinal?: string | null;
+  readonly estado?: string | null;
+  readonly ORDENS: AsyncCollection<ORDEN>;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Caja = LazyLoading extends LazyLoadingDisabled ? EagerCaja : LazyCaja
+
+export declare const Caja: (new (init: ModelInit<Caja>) => Caja) & {
+  copyOf(source: Caja, mutator: (draft: MutableModel<Caja>) => MutableModel<Caja> | void): Caja;
+}
+
 type EagerINVENTARIOORDENITEMS = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<INVENTARIOORDENITEMS, 'id'>;
@@ -212,6 +250,7 @@ type EagerORDEN = {
   readonly ordenStatus?: Ordenstatus | keyof typeof Ordenstatus | null;
   readonly precioGraduacion?: string | null;
   readonly anticipo?: string | null;
+  readonly cajaID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -241,6 +280,7 @@ type LazyORDEN = {
   readonly ordenStatus?: Ordenstatus | keyof typeof Ordenstatus | null;
   readonly precioGraduacion?: string | null;
   readonly anticipo?: string | null;
+  readonly cajaID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

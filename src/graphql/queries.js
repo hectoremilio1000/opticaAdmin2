@@ -1,6 +1,118 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getCaja = /* GraphQL */ `
+  query GetCaja($id: ID!) {
+    getCaja(id: $id) {
+      id
+      fechaApertura
+      fechaCierre
+      montoInicial
+      montoFinal
+      estado
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          precioGraduacion
+          anticipo
+          cajaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listCajas = /* GraphQL */ `
+  query ListCajas(
+    $filter: ModelCajaFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCajas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        fechaApertura
+        fechaCierre
+        montoInicial
+        montoFinal
+        estado
+        ORDENS {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncCajas = /* GraphQL */ `
+  query SyncCajas(
+    $filter: ModelCajaFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncCajas(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        fechaApertura
+        fechaCierre
+        montoInicial
+        montoFinal
+        estado
+        ORDENS {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getINVENTARIOORDENITEMS = /* GraphQL */ `
   query GetINVENTARIOORDENITEMS($id: ID!) {
     getINVENTARIOORDENITEMS(id: $id) {
@@ -563,6 +675,7 @@ export const getORDEN = /* GraphQL */ `
       ordenStatus
       precioGraduacion
       anticipo
+      cajaID
       createdAt
       updatedAt
       _version
@@ -602,6 +715,7 @@ export const listORDENS = /* GraphQL */ `
         ordenStatus
         precioGraduacion
         anticipo
+        cajaID
         createdAt
         updatedAt
         _version
@@ -650,6 +764,7 @@ export const syncORDENS = /* GraphQL */ `
         ordenStatus
         precioGraduacion
         anticipo
+        cajaID
         createdAt
         updatedAt
         _version
@@ -700,6 +815,7 @@ export const oRDENSByOpticaID = /* GraphQL */ `
         ordenStatus
         precioGraduacion
         anticipo
+        cajaID
         createdAt
         updatedAt
         _version
@@ -750,6 +866,58 @@ export const oRDENSByClientesID = /* GraphQL */ `
         ordenStatus
         precioGraduacion
         anticipo
+        cajaID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const oRDENSByCajaID = /* GraphQL */ `
+  query ORDENSByCajaID(
+    $cajaID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelORDENFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    oRDENSByCajaID(
+      cajaID: $cajaID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        opticaID
+        tipoOrden
+        clientesID
+        usadoLentes
+        fechaOrden
+        horaOrden
+        precioTotal
+        referencia
+        fechaEntrega
+        seRealizoExamen
+        graduacionDerechaVieja
+        graduacionIzquierdaVieja
+        graduacionDerechaNueva
+        graduacionIzquierdaNueva
+        fechaExamen
+        INVENTARIOORDENITEMS {
+          nextToken
+          startedAt
+        }
+        ordenStatus
+        precioGraduacion
+        anticipo
+        cajaID
         createdAt
         updatedAt
         _version
@@ -795,6 +963,7 @@ export const getCLIENTES = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version
@@ -990,6 +1159,7 @@ export const getOPTICA = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version

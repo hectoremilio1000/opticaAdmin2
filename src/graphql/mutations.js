@@ -1,6 +1,159 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createCaja = /* GraphQL */ `
+  mutation CreateCaja(
+    $input: CreateCajaInput!
+    $condition: ModelCajaConditionInput
+  ) {
+    createCaja(input: $input, condition: $condition) {
+      id
+      fechaApertura
+      fechaCierre
+      montoInicial
+      montoFinal
+      estado
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          precioGraduacion
+          anticipo
+          cajaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateCaja = /* GraphQL */ `
+  mutation UpdateCaja(
+    $input: UpdateCajaInput!
+    $condition: ModelCajaConditionInput
+  ) {
+    updateCaja(input: $input, condition: $condition) {
+      id
+      fechaApertura
+      fechaCierre
+      montoInicial
+      montoFinal
+      estado
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          precioGraduacion
+          anticipo
+          cajaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteCaja = /* GraphQL */ `
+  mutation DeleteCaja(
+    $input: DeleteCajaInput!
+    $condition: ModelCajaConditionInput
+  ) {
+    deleteCaja(input: $input, condition: $condition) {
+      id
+      fechaApertura
+      fechaCierre
+      montoInicial
+      montoFinal
+      estado
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          precioTotal
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          fechaExamen
+          ordenStatus
+          precioGraduacion
+          anticipo
+          cajaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const createINVENTARIOORDENITEMS = /* GraphQL */ `
   mutation CreateINVENTARIOORDENITEMS(
     $input: CreateINVENTARIOORDENITEMSInput!
@@ -357,6 +510,7 @@ export const createORDEN = /* GraphQL */ `
       ordenStatus
       precioGraduacion
       anticipo
+      cajaID
       createdAt
       updatedAt
       _version
@@ -406,6 +560,7 @@ export const updateORDEN = /* GraphQL */ `
       ordenStatus
       precioGraduacion
       anticipo
+      cajaID
       createdAt
       updatedAt
       _version
@@ -455,6 +610,7 @@ export const deleteORDEN = /* GraphQL */ `
       ordenStatus
       precioGraduacion
       anticipo
+      cajaID
       createdAt
       updatedAt
       _version
@@ -500,6 +656,7 @@ export const createCLIENTES = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version
@@ -554,6 +711,7 @@ export const updateCLIENTES = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version
@@ -608,6 +766,7 @@ export const deleteCLIENTES = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version
@@ -693,6 +852,7 @@ export const createOPTICA = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version
@@ -822,6 +982,7 @@ export const updateOPTICA = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version
@@ -951,6 +1112,7 @@ export const deleteOPTICA = /* GraphQL */ `
           ordenStatus
           precioGraduacion
           anticipo
+          cajaID
           createdAt
           updatedAt
           _version

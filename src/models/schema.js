@@ -1,5 +1,108 @@
 export const schema = {
     "models": {
+        "Caja": {
+            "name": "Caja",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fechaApertura": {
+                    "name": "fechaApertura",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaCierre": {
+                    "name": "fechaCierre",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "montoInicial": {
+                    "name": "montoInicial",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "montoFinal": {
+                    "name": "montoFinal",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "estado": {
+                    "name": "estado",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ORDENS": {
+                    "name": "ORDENS",
+                    "isArray": true,
+                    "type": {
+                        "model": "ORDEN"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "cajaID"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Cajas",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "INVENTARIOORDENITEMS": {
             "name": "INVENTARIOORDENITEMS",
             "fields": {
@@ -630,6 +733,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "cajaID": {
+                    "name": "cajaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -669,6 +779,15 @@ export const schema = {
                         "name": "byCLIENTES",
                         "fields": [
                             "clientesID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byCaja",
+                        "fields": [
+                            "cajaID"
                         ]
                     }
                 },
@@ -1006,5 +1125,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "cdef99b61b3b9e48faaeaf12e086d896"
+    "version": "f9c5d8a5777d3b74d0392e04cf169105"
 };

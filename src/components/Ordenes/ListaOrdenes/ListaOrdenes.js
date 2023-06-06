@@ -78,11 +78,16 @@ function ListaOrdenes() {
   const [tipoOrden, setTipoOrden] = useState("");
   const [ordenNow, setOrdenNow] = useState(null);
   const [ordenID, setOrdenID] = useState("");
+  const [verProblemas, setVerProblemas] = useState(false);
+  const [version, setVersion] = useState("");
+
+  const [fechaEntrega, setFechaEntrega] = useState("");
 
   // state for search
   const [searchOrden, setSearchOrden] = useState(undefined);
   const [searchStatus, setSearchStatus] = useState(undefined);
   const [searchFecha, setSearchFecha] = useState("");
+  const [searchEntrega, setSearchEntrega] = useState("");
 
   // optica id
   const { labId } = useGerenteContext();
@@ -214,10 +219,12 @@ function ListaOrdenes() {
   };
   const entregarOrden = async (record) => {
     const split = record.anticipo.split("-");
+    const fecha_entrega = dayjs().format("YYYY-MM-DD");
     const total = split[0];
     const deuda = `${total} - ${total}`;
     const updateOrden = {
       id: record?.id,
+      fechaEntrega: fecha_entrega,
       tipoOrden: "ORDEN",
       ordenStatus: "ENTREGADA",
       _version: record?._version,
@@ -247,19 +254,28 @@ function ListaOrdenes() {
       console.log(error);
     }
   };
-  const problemasOrden = async (record) => {
-    const updateOrden = {
-      id: record?.id,
-      ordenStatus: "CONPROBLEMAS",
-      _version: record?._version,
-    };
-    try {
-      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
-      fetchOrdenes();
-      message.success("Se registro un problema en la orden");
-    } catch (error) {
-      message.error("Hubo un error contacta con el administrador");
-      console.log(error);
+  const problemasOrden = async () => {
+    console.log(fechaEntrega);
+    if (fechaEntrega !== "") {
+      const updateOrden = {
+        id: ordenID,
+        fechaEntrega: fechaEntrega.toString(),
+        ordenStatus: "CONPROBLEMAS",
+        _version: version,
+      };
+      try {
+        await API.graphql(
+          graphqlOperation(updateORDEN, { input: updateOrden })
+        );
+        fetchOrdenes();
+        setVerProblemas(false);
+        message.success("Se registro un problema en la orden");
+      } catch (error) {
+        message.error("Hubo un error contacta con el administrador");
+        console.log(error);
+      }
+    } else {
+      message.warning("Debe ingresar una nueva fecha de entrega");
     }
   };
   const maquilaOrden = async (record) => {
@@ -304,6 +320,15 @@ function ListaOrdenes() {
     setDetalleProductos([...detalleProductos, ...productosNewList]);
     setCargandoProductos(false);
   };
+
+  const calcularDiasRestantes = (fechaEstimada, fechaActual) => {
+    const fechaEstimadaObj = dayjs(fechaEstimada);
+    const fechaActualObj = dayjs(fechaActual);
+    const diasRestantes = fechaEstimadaObj.diff(fechaActualObj, "day");
+
+    return diasRestantes;
+  };
+
   const columns = [
     {
       title: "Tipo Orden",
@@ -338,6 +363,51 @@ function ListaOrdenes() {
       title: "Hora Orden",
       dataIndex: "horaOrden",
       key: "horaOrden",
+    },
+    {
+      title: "Fecha Entrega",
+      dataIndex: "fechaEntrega",
+      key: "fechaEntrega",
+      render: (_, record) => {
+        if (record.fechaEntrega !== "") {
+          if (
+            record.ordenStatus === "ENTREGADA" ||
+            record.ordenStatus === "FINALIZADA"
+          ) {
+            return (
+              <>
+                <Tag color="green">Entregada </Tag>
+                <p>{record.fechaEntrega}</p>
+              </>
+            );
+          } else {
+            const fechaEstimada = record.fechaEntrega;
+            const fechaActual = dayjs().format("YYYY-MM-DD");
+            // const fechaAnterior = fechaActual.add(1, "day").format("YYYY-MM-DD");
+            const diasRestantes = calcularDiasRestantes(
+              fechaEstimada,
+              fechaActual
+            );
+            if (diasRestantes === 0) {
+              return <Tag color="warning">Es hoy</Tag>;
+            } else if (diasRestantes < 0) {
+              return (
+                <Tag color="red">
+                  Entrega retrasada por
+                  <br /> {Math.abs(diasRestantes)} dias
+                </Tag>
+              );
+            }
+            return (
+              <Tag color="blue">
+                Entrega a tiempo <br /> {diasRestantes} días restantes
+              </Tag>
+            );
+          }
+        } else {
+          return "-";
+        }
+      },
     },
     {
       title: "Cliente",
@@ -418,7 +488,7 @@ function ListaOrdenes() {
                     <Tag color="geekblue">{record.ordenStatus}</Tag>
                     <Popconfirm
                       title="Entregar al Cliente"
-                      description="¿Esta seguro de entregar la orden?"
+                      description="Debe cobrar si hay deuda antes de entregar, si es el caso pulse SI"
                       onConfirm={() => entregarOrden(record)}
                       okText="Si"
                       cancelText="No"
@@ -440,21 +510,21 @@ function ListaOrdenes() {
                       okText="Si"
                       cancelText="No"
                     >
-                      <Button success onClick={() => setOrdenID(record?.id)}>
+                      <Button onClick={() => setOrdenID(record?.id)}>
                         Finalizar Orden
                       </Button>
                     </Popconfirm>
-                    <Popconfirm
-                      title="Registrar Problema"
-                      description="¿Esta seguro de registrar problema?"
-                      onConfirm={() => problemasOrden(record)}
-                      okText="Si"
-                      cancelText="No"
+
+                    <Button
+                      danger
+                      onClick={() => {
+                        setOrdenID(record?.id);
+                        setVerProblemas(true);
+                        setVersion(record?._version);
+                      }}
                     >
-                      <Button danger onClick={() => setOrdenID(record?.id)}>
-                        Problemas
-                      </Button>
-                    </Popconfirm>
+                      Problemas
+                    </Button>
                   </>
                 );
               case "CONPROBLEMAS":
@@ -702,9 +772,10 @@ function ListaOrdenes() {
     const ordenUpdate = original?.data?.getORDEN?._version;
     console.log(ordenUpdate);
     if (isGraduation === "GRADUATION") {
-      if (Number(precioAnticipo) !== 0) {
+      if (Number(precioAnticipo) !== 0 && fechaEntrega !== "") {
         const updateOrden = {
           id: ordenID,
+          fechaEntrega,
           tipoOrden: "ORDEN",
           ordenStatus: "ENVIADAMAQUILA",
           precioTotal: (
@@ -721,6 +792,29 @@ function ListaOrdenes() {
           graphqlOperation(updateORDEN, { input: updateOrden })
         );
         message.success("La cotizacion se envio a Maquila");
+        if (carrito.length > 0) {
+          try {
+            await Promise.all(
+              carrito.map(async (cart) => {
+                const newDetail = {
+                  cantidad: cart.cantidad,
+                  ordenID: ordenID,
+                  inventarioID: cart.id,
+                  costo: cart.subTotal,
+                };
+                await API.graphql(
+                  graphqlOperation(createINVENTARIOORDENITEMS, {
+                    input: newDetail,
+                  })
+                );
+              })
+            );
+            setCarrito([]);
+            message.success("La agrego nuevos productos a la orden");
+          } catch (error) {
+            console.log(error);
+          }
+        }
         fetchOrdenes();
         setIsEditing(false);
         setDetalleProductos([]);
@@ -728,7 +822,12 @@ function ListaOrdenes() {
         setprecioMaquila(0);
         setTotalCarrito(0);
       } else {
-        message.warning("El anticipo no debe ser 0");
+        if (Number(precioAnticipo) === 0) {
+          message.warning("El anticipo no debe ser 0");
+        }
+        if (fechaEntrega === "") {
+          message.warning("Debe asignar una fecha estimada de entrega");
+        }
       }
     } else {
       const updateOrden = {
@@ -746,6 +845,29 @@ function ListaOrdenes() {
         graphqlOperation(updateORDEN, { input: updateOrden })
       );
       console.log(resolver);
+      if (carrito.length > 0) {
+        try {
+          await Promise.all(
+            carrito.map(async (cart) => {
+              const newDetail = {
+                cantidad: cart.cantidad,
+                ordenID: ordenID,
+                inventarioID: cart.id,
+                costo: cart.subTotal,
+              };
+              await API.graphql(
+                graphqlOperation(createINVENTARIOORDENITEMS, {
+                  input: newDetail,
+                })
+              );
+            })
+          );
+          setCarrito([]);
+          message.success("La agrego nuevos productos a la orden");
+        } catch (error) {
+          console.log(error);
+        }
+      }
       message.success("La venta se ha confirmado correctamente");
       fetchOrdenes();
       setIsEditing(false);
@@ -753,28 +875,6 @@ function ListaOrdenes() {
       setTotal(0);
       setprecioMaquila(0);
       setTotalCarrito(0);
-    }
-
-    if (carrito.length > 0) {
-      try {
-        await Promise.all(
-          carrito.map(async (cart) => {
-            const newDetail = {
-              cantidad: cart.cantidad,
-              ordenID: ordenID,
-              inventarioID: cart.id,
-              costo: cart.subTotal,
-            };
-            await API.graphql(
-              graphqlOperation(createINVENTARIOORDENITEMS, { input: newDetail })
-            );
-          })
-        );
-        setCarrito([]);
-        message.success("La agrego nuevos productos a la orden");
-      } catch (error) {
-        console.log(error);
-      }
     }
   };
 
@@ -816,12 +916,14 @@ function ListaOrdenes() {
     if (
       searchOrden !== undefined ||
       searchStatus !== undefined ||
-      searchFecha !== ""
+      searchFecha !== "" ||
+      searchEntrega !== ""
     ) {
       const filteredOrdenes = ordenes.filter((orden) => {
         let matchOrden = true;
         let matchStatus = true;
         let matchFecha = true;
+        let matchFechaEntrega = true;
 
         if (searchOrden && orden.tipoOrden !== searchOrden) {
           matchOrden = false;
@@ -832,8 +934,15 @@ function ListaOrdenes() {
         if (searchFecha && orden.fechaOrden !== searchFecha) {
           matchFecha = false;
         }
+        if (
+          searchEntrega &&
+          !dayjs(orden.fechaEntrega).isSame(searchEntrega, "day") &&
+          !dayjs(orden.fechaEntrega).isBefore(searchEntrega, "day")
+        ) {
+          matchFechaEntrega = false;
+        }
 
-        return matchOrden && matchStatus && matchFecha;
+        return matchOrden && matchStatus && matchFecha && matchFechaEntrega;
       });
       setDataSource(filteredOrdenes);
     } else {
@@ -845,6 +954,7 @@ function ListaOrdenes() {
     setSearchFecha("");
     setSearchOrden(undefined);
     setSearchStatus(undefined);
+    setSearchEntrega("");
   };
   // funcion de imprimir
   const handlePrint = () => {
@@ -867,7 +977,7 @@ function ListaOrdenes() {
       <Form
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(5, 1fr)",
           gap: "15px",
         }}
       >
@@ -904,7 +1014,18 @@ function ListaOrdenes() {
             onChange={(date, dateString) => setSearchFecha(dateString)}
             style={{ width: "100%" }}
             format="YYYY-MM-DD"
-            placeholder="Filtrar por fecha"
+            placeholder="Fecha de orden"
+          />
+        </Form.Item>
+        <Form.Item>
+          <DatePicker
+            value={
+              searchEntrega !== "" ? dayjs(searchEntrega, "YYYY-MM-DD") : ""
+            }
+            onChange={(date, dateString) => setSearchEntrega(dateString)}
+            style={{ width: "100%" }}
+            format="YYYY-MM-DD"
+            placeholder="Fecha de Entrega"
           />
         </Form.Item>
         <div style={{ display: "flex", gap: "10px" }}>
@@ -1078,6 +1199,13 @@ function ListaOrdenes() {
                     placeholder="Ingrese el anticipo del cliente $.00 de la orden"
                   />
                 </Form.Item>
+                <Form.Item label="Fecha de entrega">
+                  <DatePicker
+                    style={{ width: "100%" }}
+                    format="YYYY-MM-DD"
+                    onChange={(date, dateString) => setFechaEntrega(dateString)}
+                  />
+                </Form.Item>
                 <div>
                   <h1 style={{ color: "red", fontSize: "18px" }}>
                     Deuda de Anticipo : $
@@ -1208,6 +1336,20 @@ function ListaOrdenes() {
             </div>
           </div>
         </Form>
+      </Modal>
+      <Modal
+        onCancel={() => setVerProblemas(false)}
+        title="Registrar problema"
+        open={verProblemas}
+        onOk={() => problemasOrden()}
+      >
+        <Form.Item label="Fecha de próxima entrega">
+          <DatePicker
+            style={{ width: "100%" }}
+            format="YYYY-MM-DD"
+            onChange={(date, dateString) => setFechaEntrega(dateString)}
+          />
+        </Form.Item>
       </Modal>
     </div>
   );

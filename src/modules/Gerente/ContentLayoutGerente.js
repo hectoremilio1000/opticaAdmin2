@@ -8,6 +8,9 @@ import CrearCliente from "../../components/Clientes/CrearCliente/CrearCliente";
 import ListaClientes from "../../components/Clientes/ListaClientes/ListaClientes";
 import CrearOrden from "../../components/Ordenes/CrearOrden/CrearOrden";
 import ListaOrdenes from "../../components/Ordenes/ListaOrdenes/ListaOrdenes";
+import { CajaProvider } from "../../contexts/CajaContext";
+import CrearCaja from "../../components/Caja/CrearCaja/CrearCaja";
+import ListaCaja from "../../components/Caja/ListaCaja/ListaCaja";
 
 const { Content } = Layout;
 
@@ -21,6 +24,16 @@ function ContentLayoutGerente({ current }) {
       ) : current === "11" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
           <ListaInventario />
+        </div>
+      ) : current === "8" ? (
+        <div className="site-layout-background" style={{ minHeight: 100 }}>
+          <CajaProvider>
+            <CrearCaja />
+          </CajaProvider>
+        </div>
+      ) : current === "9" ? (
+        <div className="site-layout-background" style={{ minHeight: 100 }}>
+          <ListaCaja />
         </div>
       ) : current === "16" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
@@ -40,7 +53,9 @@ function ContentLayoutGerente({ current }) {
         </div>
       ) : current === "20" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
-          <CrearOrden />
+          <CajaProvider>
+            <CrearOrden />
+          </CajaProvider>
         </div>
       ) : current === "21" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
