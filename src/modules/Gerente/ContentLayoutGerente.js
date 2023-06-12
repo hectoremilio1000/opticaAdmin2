@@ -59,7 +59,9 @@ function ContentLayoutGerente({ current }) {
         </div>
       ) : current === "21" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
-          <ListaOrdenes />
+          <CajaProvider>
+            <ListaOrdenes />
+          </CajaProvider>
         </div>
       ) : (
         <div style={{}}>Aun no se ha creado las demas rutas</div>

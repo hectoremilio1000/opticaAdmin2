@@ -12,7 +12,6 @@ import {
 import { DeleteOutlined } from "@ant-design/icons";
 import { MenuContext } from "../../../contexts/MenuContext";
 import { useAuthContext } from "../../../contexts/AuthContext";
-import dayjs from "dayjs";
 import { React, useState, useEffect, useContext } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import {
@@ -37,7 +36,7 @@ const { Option } = Select;
 
 function CrearOrden() {
   // verificar cajas uststate
-  const { cajaAbierta, nowCaja, verificarCajaAbierta } =
+  const { cajaAbierta, nowTurno, verificarCajaAbierta } =
     useContext(CajaContext);
 
   const [verificandoCaja, setVerificandoCaja] = useState(true);
@@ -72,7 +71,7 @@ function CrearOrden() {
   const [precioGraduacion, setPrecioGraduacion] = useState(0);
 
   // optica id
-  const { labId } = useGerenteContext();
+  const { labId, gerenteId } = useGerenteContext();
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -134,7 +133,7 @@ function CrearOrden() {
         setProductos(options);
         setListaProductos(productosList);
       } catch (error) {
-        message.error("No se encontraron clientes");
+        message.error("No se encontraron produtos");
       }
     };
     fetchProductos();
@@ -241,64 +240,73 @@ function CrearOrden() {
     }
   };
   const onOrden = async () => {
+    let checkOrden = 1;
     if (carrito.length > 0) {
       if (clientesID !== "" && opticaID !== "") {
-        const fecha = dayjs().format("YYYY-MM-DD");
-
-        // Obtener la hora actual en el formato deseado: 09:57:05
-        const hora = dayjs().format("HH:mm:ss");
-        const newOrden = {
-          tipoOrden: "COTIZACION",
-          clientesID,
-          opticaID,
-          seRealizoExamen: "SI",
-          fechaEntrega,
-          usadoLentes: "-",
-          referencia,
-          graduacionDerechaVieja,
-          graduacionIzquierdaVieja,
-          graduacionDerechaNueva,
-          graduacionIzquierdaNueva,
-          fechaExamen,
-          ordenStatus: "CREADA",
-          fechaOrden: fecha,
-          horaOrden: hora,
-          precioGraduacion: precioGraduacion.toString(),
-          precioTotal: (total + Number(precioGraduacion)).toString(),
-          anticipo: "0",
-          cajaID: nowCaja.id,
-        };
-        const result = await API.graphql(
-          graphqlOperation(createORDEN, { input: newOrden })
-        );
-        const orden = result.data.createORDEN;
-        await Promise.all(
-          carrito.map(async (cart) => {
-            let newOrdenItem = {
-              cantidad: cart.cantidad,
-              ordenID: orden.id,
-              inventarioID: cart.id,
-              costo: cart.subTotal,
-            };
-            await API.graphql(
-              graphqlOperation(createINVENTARIOORDENITEMS, {
-                input: newOrdenItem,
-              })
+        if (graduacion === "SI") {
+          if (precioGraduacion !== 0) {
+            checkOrden = 1;
+          } else {
+            checkOrden = 0;
+            message.warning(
+              "Estas creando una graducacion, tienes que agregar el Precio de AR-MAQUILA"
             );
-            let newProducto = {
-              id: cart.id,
-              stock: (Number(cart.stock) - 1).toString(),
-              _version: cart.version,
-            };
-            console.log(newProducto);
-            await API.graphql(
-              graphqlOperation(updateINVENTARIO, { input: newProducto })
-            );
-          })
-        );
-        setCarrito([]);
-        cambiarComponent({ key: "21" });
-        message.success("La orden se ha registrado correctamente");
+          }
+        }
+        if (checkOrden === 1) {
+          const newOrden = {
+            tipoOrden: "COTIZACION",
+            clientesID,
+            opticaID,
+            seRealizoExamen: graduacionDerechaVieja ? "SI" : "NO",
+            fechaEntrega,
+            usadoLentes: "-",
+            referencia,
+            graduacionDerechaVieja,
+            graduacionIzquierdaVieja,
+            graduacionDerechaNueva,
+            graduacionIzquierdaNueva,
+            fechaExamen,
+            ordenStatus: "CREADA",
+            fechaOrden: "",
+            horaOrden: "",
+            precioGraduacion: precioGraduacion,
+            precioTotal: total + Number(precioGraduacion),
+            anticipo: 0,
+            turnoID: nowTurno.id,
+          };
+          const result = await API.graphql(
+            graphqlOperation(createORDEN, { input: newOrden })
+          );
+          const orden = result.data.createORDEN;
+          await Promise.all(
+            carrito.map(async (cart) => {
+              let newOrdenItem = {
+                cantidad: cart.cantidad,
+                ordenID: orden.id,
+                inventarioID: cart.id,
+                costo: cart.subTotal,
+              };
+              await API.graphql(
+                graphqlOperation(createINVENTARIOORDENITEMS, {
+                  input: newOrdenItem,
+                })
+              );
+              let newProducto = {
+                id: cart.id,
+                stock: Number(cart.stock) - 1,
+                _version: cart.version,
+              };
+              console.log(newProducto);
+              await API.graphql(
+                graphqlOperation(updateINVENTARIO, { input: newProducto })
+              );
+            })
+          );
+          setCarrito([]);
+          cambiarComponent({ key: "21" });
+          message.success("La orden se ha registrado correctamente");
+        }
       } else {
         message.warning("Te faltan llenar campos");
       }
@@ -455,13 +463,14 @@ function CrearOrden() {
     const verificarCaja = async () => {
       // Realizar la verificación del estado de la caja aquí
       // Reemplaza el siguiente código con tu lógica de verificación real
-      await verificarCajaAbierta(); // Supongamos que esto es una función asincrónica
+      await verificarCajaAbierta(gerenteId); // Supongamos que esto es una función asincrónica
 
       setVerificandoCaja(false); // Finaliza la verificación
     };
 
     verificarCaja();
-  }, [verificarCajaAbierta]);
+    // eslint-disable-next-line
+  }, []);
 
   return verificandoCaja ? (
     <p>Verificando cajas abiertas</p>
@@ -573,7 +582,7 @@ function CrearOrden() {
                 />
               </Form.Item>
 
-              <Form.Item label="Precio de graduacion">
+              <Form.Item label="Precio AR-MAQUILA">
                 <Input
                   value={precioGraduacion}
                   onChange={(e) => setPrecioGraduacion(e.target.value)}

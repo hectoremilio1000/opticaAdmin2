@@ -1,35 +1,57 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Card, Col, Row, Tag, Form, Input, message } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Tag,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  Popconfirm,
+} from "antd";
 import { FiDollarSign, FiShoppingBag, FiInbox, FiLock } from "react-icons/fi";
 import { CajaContext } from "../../../contexts/CajaContext";
 import { API, graphqlOperation } from "aws-amplify";
 
-import { createCaja } from "../../../graphql/mutations";
 import dayjs from "dayjs";
-import { oRDENSByCajaID } from "../../../graphql/queries";
+import {
+  cajasByOpticaID,
+  deudasByTurnoID,
+  transaccionesByTurnoID,
+} from "../../../graphql/queries";
+import { useGerenteContext } from "../../../contexts/GerenteContext";
+import { createTurno, updateTurno } from "../../../graphql/mutations";
+
+const { Option } = Select;
 
 const CrearCaja = () => {
+  const { labId, gerenteId } = useGerenteContext();
   const [montoInicial, setMontoInicial] = useState(0);
   const [ventas, setVentas] = useState(0);
+  const [adeudos, setAdeudos] = useState(0);
+  const [cajas, setCajas] = useState([]);
+  const [cajaID, setCajaID] = useState(null);
 
   const [verificandoCaja, setVerificandoCaja] = useState(true);
-  const { cajaAbierta, nowCaja, verificarCajaAbierta } =
+  const { cajaAbierta, nowTurno, verificarCajaAbierta } =
     useContext(CajaContext);
+  const [isModal, setIsModal] = useState(true);
 
   const revisarVentas = async () => {
     if (cajaAbierta) {
       try {
         const result = await API.graphql(
-          graphqlOperation(oRDENSByCajaID, { cajaID: nowCaja.id })
+          graphqlOperation(transaccionesByTurnoID, { turnoID: nowTurno.id })
         );
-        const ordenes = result.data.oRDENSByCajaID.items;
+        const transacciones = result.data.transaccionesByTurnoID.items;
         let monto = 0;
-        if (ordenes.length > 0) {
-          for (const orden of ordenes) {
-            if (orden.tipoOrden === "ORDEN") {
-              monto = monto + Number(orden.precioTotal);
-              setVentas(monto);
-            }
+        if (transacciones.length > 0) {
+          for (const trans of transacciones) {
+            monto = monto + Number(trans.monto);
+            setVentas(monto);
           }
         }
       } catch (error) {
@@ -37,60 +59,162 @@ const CrearCaja = () => {
       }
     }
   };
+  const revisarDeudas = async () => {
+    if (cajaAbierta) {
+      try {
+        const result = await API.graphql(
+          graphqlOperation(deudasByTurnoID, { turnoID: nowTurno.id })
+        );
+        const deudas = result.data.deudasByTurnoID.items;
+        let adeudo = 0;
+        if (deudas.length > 0) {
+          for (const deuda of deudas) {
+            adeudo = adeudo + Number(deuda.montoDeuda);
+            setAdeudos(adeudo);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  const corteCaja = async () => {
+    let fechaActual = dayjs().format("YYYY-MM-DD");
+    try {
+      const updateTurnos = {
+        id: nowTurno.id,
+        _version: nowTurno._version,
+        montoCierre: Number(ventas) + nowTurno.montoInicial,
+        fechaCierre: fechaActual,
+        estado: "Cerrado",
+      };
+      await API.graphql(graphqlOperation(updateTurno, { input: updateTurnos }));
+      verificarCajaAbierta(gerenteId);
+      message.success("Se hizo corte de la caja correctamente");
+    } catch (error) {
+      console.log(error);
+      message.error("Hubo un error contacta con administrador");
+    }
+  };
+
   useEffect(() => {
     revisarVentas();
     // eslint-disable-next-line
   }, [cajaAbierta, ventas]);
+  useEffect(() => {
+    revisarDeudas();
+    // eslint-disable-next-line
+  }, [cajaAbierta, adeudos]);
   const abrirCaja = async () => {
-    let fechaApertura = dayjs().format("YYYY-MM-DD");
+    let fechaApertura = dayjs().format("YYYY-MM-DD HH:mm:ss");
     try {
       let newCaja = {
-        montoInicial,
+        montoInicial: Number(montoInicial),
         fechaApertura,
-        estado: "Abierta",
+        estado: "Abierto",
+        usuario: gerenteId,
+        cajaID,
       };
-      await API.graphql(graphqlOperation(createCaja, { input: newCaja }));
+      console.log(newCaja);
+      await API.graphql(graphqlOperation(createTurno, { input: newCaja }));
       message.success("Se aperturo la caja");
-      verificarCajaAbierta();
+      verificarCajaAbierta(gerenteId);
     } catch (error) {
+      console.log(error);
       message.error("Hubo un error contacta al administrador");
     }
   };
+  const fetchCajas = async () => {
+    try {
+      if (labId !== "") {
+        const result = await API.graphql(
+          graphqlOperation(cajasByOpticaID, { opticaID: labId })
+        );
+        const cajas = result?.data?.cajasByOpticaID?.items;
+        setCajas(cajas);
+      }
+    } catch (error) {
+      message.error("Hubo un error contacta con el administrador");
+    }
+  };
+  useEffect(() => {
+    fetchCajas();
+    // eslint-disable-next-line
+  }, [labId]);
+
   useEffect(() => {
     const verificarCaja = async () => {
       // Realizar la verificación del estado de la caja aquí
       // Reemplaza el siguiente código con tu lógica de verificación real
-      await verificarCajaAbierta(); // Supongamos que esto es una función asincrónica
-
-      setVerificandoCaja(false); // Finaliza la verificación
+      try {
+        const result = await verificarCajaAbierta(gerenteId); // Supongamos que esto es una función asincrónica
+        if (result === true) {
+          setVerificandoCaja(false); // Finaliza la verificación
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
-
     verificarCaja();
-  }, [verificarCajaAbierta]);
+    // eslint-disable-next-line
+  }, []);
   return (
     <div>
       {verificandoCaja ? (
         <p>Verificando cajas abiertas...</p>
       ) : cajaAbierta === false ? (
-        <div
-          style={{
-            maxWidth: "300px",
-            padding: "20px",
-            boxShadow: "0px 0px 10px 2px #ececec",
-          }}
+        <Modal
+          open={isModal}
+          onOk={abrirCaja}
+          onCancel={() => setIsModal(false)}
+          okText="Aperturar caja"
+          title="Aperturar turno de caja"
         >
-          <h1>Apertura de Caja</h1>
-          <Form.Item label="Monto Inicial">
-            <Input
-              value={montoInicial}
-              onChange={(e) => setMontoInicial(e.target.value)}
-              placeholder="Ingresa el monto inicial"
-            />
-          </Form.Item>
-          <div>
-            <Button onClick={abrirCaja}>Aperturar Caja</Button>
+          <div
+            style={{
+              maxWidth: "100%",
+              display: "grid",
+              gridTemplateColumns: "repeat(1, 1fr)",
+              gap: "10px",
+            }}
+          >
+            <Form.Item style={{ width: "100%" }} label="Monto Inicial">
+              <Input
+                value={montoInicial}
+                onChange={(e) => setMontoInicial(e.target.value)}
+                placeholder="Ingresa el monto inicial"
+              />
+            </Form.Item>
+            <Form.Item
+              style={{ width: "100%" }}
+              label="Cajas"
+              rules={[{ required: true, message: "Este campo es requerido" }]}
+            >
+              <Select
+                onSelect={(e) => setCajaID(e)}
+                placeholder="Select una Optica"
+              >
+                {cajas.map((caja) => {
+                  const turnosAbiertos = caja.Turnos.items.some(
+                    (turno) => turno.estado === "Abierto"
+                  );
+                  const textoAdicional = turnosAbiertos
+                    ? " - Caja abierta"
+                    : "";
+                  return (
+                    <Option
+                      key={caja.id}
+                      value={caja.id}
+                      disabled={turnosAbiertos}
+                    >
+                      {caja.nombre} {textoAdicional}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
           </div>
-        </div>
+        </Modal>
       ) : (
         <>
           <Col span={32} style={{ margin: "20px 0px" }}>
@@ -99,34 +223,48 @@ const CrearCaja = () => {
                 <div style={{ display: "flex", gap: "10px" }}>
                   <FiInbox style={{ fontSize: "30px", color: "#1677ff" }} />
                   <div>
-                    <p>Caja : {nowCaja.id}</p>
+                    <p>Caja : {nowTurno.id}</p>
                     <Tag color="green">Aperturado</Tag>
                     <p>
                       Responsable: <b> Gerente</b>
                     </p>
                     <p>
-                      Apertura: <b> {nowCaja.fechaApertura}</b>
+                      Apertura:{" "}
+                      <b>
+                        {" "}
+                        {dayjs(nowTurno.fechaApertura).format(
+                          "D [de] MMM [del] YYYY [a las] hh:mm:ss a"
+                        )}
+                      </b>
                     </p>
                   </div>
                 </div>
                 <div>
-                  <Button
-                    style={{
-                      background: "#ff6016",
-                      color: "#fff",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
+                  <Popconfirm
+                    title="Corte de Caja"
+                    description="¿Esta seguro de hacer corte de caja?"
+                    onConfirm={() => corteCaja()}
+                    okText="Si"
+                    cancelText="No"
                   >
-                    <FiLock /> Hacer corte de caja
-                  </Button>
+                    <Button
+                      style={{
+                        background: "#ff6016",
+                        color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                      }}
+                    >
+                      <FiLock /> Hacer corte de caja
+                    </Button>{" "}
+                  </Popconfirm>
                 </div>
               </div>
             </Card>
           </Col>
           <Row gutter={16}>
-            <Col span={8}>
+            <Col span={6}>
               <Card bordered={false}>
                 <p>Saldo inicial</p>
                 <div
@@ -136,21 +274,23 @@ const CrearCaja = () => {
                     <h1>
                       $
                       {(
-                        Math.round(Number(nowCaja.montoInicial) * 100) / 100
+                        Math.round(Number(nowTurno.montoInicial) * 100) / 100
                       ).toFixed(2)}
                     </h1>
                   </div>
                   <div>
                     <FiDollarSign
-                      style={{ fontSize: "30", color: "#1677ff" }}
+                      style={{ fontSize: "30", color: "#529f00" }}
                     />
                   </div>
                 </div>
               </Card>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
               <Card bordered={false}>
-                <p>Mis Ventas</p>
+                <p style={{ color: "#1677ff", fontWeight: "bold" }}>
+                  Mis Ventas
+                </p>
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
@@ -168,7 +308,29 @@ const CrearCaja = () => {
                 </div>
               </Card>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
+              <Card bordered={false}>
+                <p style={{ color: "#ff1616", fontWeight: "bold" }}>
+                  Adeudos en Caja
+                </p>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div>
+                    <h1>
+                      ${(Math.round(Number(adeudos) * 100) / 100).toFixed(2)}
+                    </h1>
+                    <p>Resultado de adeudos de ordenes aceptadas</p>
+                  </div>
+                  <div>
+                    <FiShoppingBag
+                      style={{ fontSize: "30", color: "#ff1616" }}
+                    />
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col span={6}>
               <Card bordered={false}>
                 <p>Total a rendir</p>
                 <div
@@ -179,14 +341,14 @@ const CrearCaja = () => {
                       $
                       {(
                         Math.round(
-                          (Number(ventas) + Number(nowCaja.montoInicial)) * 100
+                          (Number(ventas) + Number(nowTurno.montoInicial)) * 100
                         ) / 100
                       ).toFixed(2)}
                     </h1>
                   </div>
                   <div>
                     <FiDollarSign
-                      style={{ fontSize: "30", color: "#1677ff" }}
+                      style={{ fontSize: "30", color: "#529f00" }}
                     />
                   </div>
                 </div>

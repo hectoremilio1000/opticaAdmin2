@@ -1,56 +1,62 @@
 // CajaContext.js
 import { API, graphqlOperation } from "aws-amplify";
-import React, { createContext, useEffect, useState } from "react";
-import { listCajas } from "../graphql/queries";
+import React, { createContext, useState } from "react";
+import { listTurnos } from "../graphql/queries";
 import { message } from "antd";
 
 const CajaContext = createContext();
+
 const CajaProvider = ({ children }) => {
   const [cajaAbierta, setCajaAbierta] = useState(false);
-  const [nowCaja, setNowCaja] = useState({});
-  const verificarCajaAbierta = async () => {
+  const [nowTurno, setNowTurno] = useState({});
+  //   const [turnoSeleccionado, setTurnoSeleccionado] = useState(""); // Almacena el ID del turno seleccionado por el usuario
+
+  const verificarCajaAbierta = async (gerenteId) => {
     try {
       const response = await API.graphql(
-        graphqlOperation(listCajas, {
+        graphqlOperation(listTurnos, {
           filter: {
-            estado: { eq: "Abierta" },
+            estado: { eq: "Abierto" },
+            usuario: { eq: gerenteId }, // Reemplazar con el ID del usuario actual
           },
-          limit: 1, // Limitamos la consulta a 1 resultado
         })
       );
 
-      const cajasAbiertas = response.data.listCajas.items;
+      const turnosAbiertos = response.data.listTurnos.items;
 
-      if (cajasAbiertas.length > 0) {
-        // Si hay al menos una caja abierta, actualiza el estado
+      if (turnosAbiertos.length > 0) {
+        // Si hay al menos un turno abierto por el usuario, actualiza el estado
         setCajaAbierta(true);
-        let newCaja = {
-          id: cajasAbiertas[0].id,
-          montoInicial: cajasAbiertas[0].montoInicial,
-          montoFinal: cajasAbiertas[0].montoFinal,
-          fechaApertura: cajasAbiertas[0].fechaApertura,
+        let newTurno = {
+          id: turnosAbiertos[0].id,
+          montoInicial: turnosAbiertos[0].montoInicial,
+          //   montoFinal: turnosAbiertos[0].montoFinal,
+          fechaApertura: turnosAbiertos[0].fechaApertura,
+          _version: turnosAbiertos[0]._version,
         };
-        setNowCaja(newCaja);
+        setNowTurno(newTurno);
       } else {
-        // Si no hay cajas abiertas, redirige al usuario para que cree una nueva caja
-        //   cambiarComponent({ key: "21" });
-        message.warning("No haz abierto ninguna caja");
+        // Si no hay turnos abiertos por el usuario, redirige al usuario para que seleccione un turno
+        // Aquí puedes mostrar una lista de los turnos registrados y permitir al usuario seleccionar uno
+        // Luego, actualizas el estado con el turno seleccionado
+        // setTurnoSeleccionado(ID_TURNO_SELECCIONADO);
+        message.warning("No has abierto ningún turno");
       }
+      return true;
     } catch (error) {
       // Manejo de errores
       console.error(error);
     }
-  };
-  useEffect(() => {
-    verificarCajaAbierta();
     // eslint-disable-next-line
-  }, []);
+  };
+
   return (
     <CajaContext.Provider
-      value={{ cajaAbierta, setCajaAbierta, nowCaja, verificarCajaAbierta }}
+      value={{ cajaAbierta, setCajaAbierta, nowTurno, verificarCajaAbierta }}
     >
       {children}
     </CajaContext.Provider>
   );
 };
+
 export { CajaContext, CajaProvider };

@@ -232,7 +232,7 @@ function ListaInventario() {
         let stock = record?.stock;
         if (stock > 10) {
           return <Tag color="green">En stock</Tag>;
-        } else if (stock === 0) {
+        } else if (stock === "0") {
           return <Tag color="red">Sin existencias</Tag>;
         } else if (stock > 0 && stock < 11) {
           return <Tag color="warning">Limitado</Tag>;

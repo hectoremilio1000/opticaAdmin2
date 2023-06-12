@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "Caja": {
-            "name": "Caja",
+        "DOCUMENTOS": {
+            "name": "DOCUMENTOS",
             "fields": {
                 "id": {
                     "name": "id",
@@ -10,31 +10,331 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "fechaApertura": {
-                    "name": "fechaApertura",
+                "tipoDocumento": {
+                    "name": "tipoDocumento",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Tipodocumento"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "serie": {
+                    "name": "serie",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "fechaCierre": {
-                    "name": "fechaCierre",
+                "numeroSecuencial": {
+                    "name": "numeroSecuencial",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ordenID": {
+                    "name": "ordenID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "DOCUMENTOS",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byORDEN",
+                        "fields": [
+                            "ordenID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "CONFIGURACIONDOCUMENTO": {
+            "name": "CONFIGURACIONDOCUMENTO",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "tipoDocumento": {
+                    "name": "tipoDocumento",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Tipodocumento"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "serieActual": {
+                    "name": "serieActual",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "montoInicial": {
-                    "name": "montoInicial",
+                "numeroSecuencialActual": {
+                    "name": "numeroSecuencialActual",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "CONFIGURACIONDOCUMENTOS",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Transacciones": {
+            "name": "Transacciones",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "monto": {
+                    "name": "monto",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "montoFinal": {
-                    "name": "montoFinal",
+                "metodoPago": {
+                    "name": "metodoPago",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Metodopago"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "turnoID": {
+                    "name": "turnoID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "ordenID": {
+                    "name": "ordenID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "tipoTransaccion": {
+                    "name": "tipoTransaccion",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Tipotransaccion"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fecha": {
+                    "name": "fecha",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Transacciones",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byTurno",
+                        "fields": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byORDEN",
+                        "fields": [
+                            "ordenID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Deudas": {
+            "name": "Deudas",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fecha": {
+                    "name": "fecha",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "montoDeuda": {
+                    "name": "montoDeuda",
+                    "isArray": false,
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -45,11 +345,267 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "turnoID": {
+                    "name": "turnoID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "ordenID": {
+                    "name": "ordenID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Deudas",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byTurno",
+                        "fields": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byORDEN",
+                        "fields": [
+                            "ordenID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Turno": {
+            "name": "Turno",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "montoInicial": {
+                    "name": "montoInicial",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fechaApertura": {
+                    "name": "fechaApertura",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "montoCierre": {
+                    "name": "montoCierre",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "fechaCierre": {
+                    "name": "fechaCierre",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cajaID": {
+                    "name": "cajaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "ORDENS": {
                     "name": "ORDENS",
                     "isArray": true,
                     "type": {
                         "model": "ORDEN"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                "Deudas": {
+                    "name": "Deudas",
+                    "isArray": true,
+                    "type": {
+                        "model": "Deudas"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                "usuario": {
+                    "name": "usuario",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "estado": {
+                    "name": "estado",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Transacciones": {
+                    "name": "Transacciones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Transacciones"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Turnos",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byCaja",
+                        "fields": [
+                            "cajaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Caja": {
+            "name": "Caja",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "nombre": {
+                    "name": "nombre",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "Turnos": {
+                    "name": "Turnos",
+                    "isArray": true,
+                    "type": {
+                        "model": "Turno"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -84,6 +640,15 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
+                        ]
+                    }
                 },
                 {
                     "type": "auth",
@@ -631,8 +1196,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "precioTotal": {
-                    "name": "precioTotal",
+                "fechaExamen": {
+                    "name": "fechaExamen",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -687,10 +1252,12 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "fechaExamen": {
-                    "name": "fechaExamen",
+                "ordenStatus": {
+                    "name": "ordenStatus",
                     "isArray": false,
-                    "type": "String",
+                    "type": {
+                        "enum": "Ordenstatus"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -710,35 +1277,88 @@ export const schema = {
                         ]
                     }
                 },
-                "ordenStatus": {
-                    "name": "ordenStatus",
+                "precioTotal": {
+                    "name": "precioTotal",
                     "isArray": false,
-                    "type": {
-                        "enum": "Ordenstatus"
-                    },
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
-                "precioGraduacion": {
-                    "name": "precioGraduacion",
+                "montoPagado": {
+                    "name": "montoPagado",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
                 "anticipo": {
                     "name": "anticipo",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
-                "cajaID": {
-                    "name": "cajaID",
+                "precioGraduacion": {
+                    "name": "precioGraduacion",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "turnoID": {
+                    "name": "turnoID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
+                },
+                "Deudas": {
+                    "name": "Deudas",
+                    "isArray": true,
+                    "type": {
+                        "model": "Deudas"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "ordenID"
+                        ]
+                    }
+                },
+                "Transacciones": {
+                    "name": "Transacciones",
+                    "isArray": true,
+                    "type": {
+                        "model": "Transacciones"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "ordenID"
+                        ]
+                    }
+                },
+                "DOCUMENTOS": {
+                    "name": "DOCUMENTOS",
+                    "isArray": true,
+                    "type": {
+                        "model": "DOCUMENTOS"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "ordenID"
+                        ]
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -785,9 +1405,9 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byCaja",
+                        "name": "byTurno",
                         "fields": [
-                            "cajaID"
+                            "turnoID"
                         ]
                     }
                 },
@@ -1053,6 +1673,89 @@ export const schema = {
                         ]
                     }
                 },
+                "Cajas": {
+                    "name": "Cajas",
+                    "isArray": true,
+                    "type": {
+                        "model": "Caja"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "CONFIGURACIONDOCUMENTOS": {
+                    "name": "CONFIGURACIONDOCUMENTOS",
+                    "isArray": true,
+                    "type": {
+                        "model": "CONFIGURACIONDOCUMENTO"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "DOCUMENTOS": {
+                    "name": "DOCUMENTOS",
+                    "isArray": true,
+                    "type": {
+                        "model": "DOCUMENTOS"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "direction": {
+                    "name": "direction",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cp": {
+                    "name": "cp",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "rfc": {
+                    "name": "rfc",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "contactPhone": {
+                    "name": "contactPhone",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "codSerial": {
+                    "name": "codSerial",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1097,6 +1800,29 @@ export const schema = {
         }
     },
     "enums": {
+        "Tipodocumento": {
+            "name": "Tipodocumento",
+            "values": [
+                "TICKET",
+                "NOTADEVENTA",
+                "FACTURA"
+            ]
+        },
+        "Tipotransaccion": {
+            "name": "Tipotransaccion",
+            "values": [
+                "VENTA",
+                "COBRO"
+            ]
+        },
+        "Metodopago": {
+            "name": "Metodopago",
+            "values": [
+                "TARJETA_CREDITO",
+                "TRANSFERENCIA",
+                "EFECTIVO"
+            ]
+        },
         "Ordenstatus": {
             "name": "Ordenstatus",
             "values": [
@@ -1125,5 +1851,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "f9c5d8a5777d3b74d0392e04cf169105"
+    "version": "fd563dfa546294c63ba68487c642f69c"
 };

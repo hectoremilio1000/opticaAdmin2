@@ -1,5 +1,5 @@
 import { API, DataStore, graphqlOperation } from "aws-amplify";
-import React, { useEffect } from "react";
+import { React, useState, useContext, useEffect } from "react";
 import {
   Table,
   Modal,
@@ -11,8 +11,9 @@ import {
   Input,
   Select,
   DatePicker,
+  Checkbox,
+  Space,
 } from "antd";
-import { useState } from "react";
 import { INVENTARIO, INVENTARIOORDENITEMS, ORDEN } from "../../../models";
 import TicketPDF from "./TicketPdf";
 import Cotizacion from "./Cotizacion";
@@ -29,22 +30,39 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import {
+  deudasByOrdenID,
   getCLIENTES,
   getINVENTARIO,
   getOPTICA,
   getORDEN,
   iNVENTARIOORDENITEMSByOrdenID,
+  iNVENTARIOSByOpticaID,
+  listCONFIGURACIONDOCUMENTOS,
+  listINVENTARIOS,
   listORDENS,
   oRDENSByOpticaID,
 } from "../../../graphql/queries";
 import {
+  createDOCUMENTOS,
+  createDeudas,
   createINVENTARIOORDENITEMS,
+  createTransacciones,
+  updateCONFIGURACIONDOCUMENTO,
+  updateDeudas,
   updateORDEN,
 } from "../../../graphql/mutations";
+import { CajaContext } from "../../../contexts/CajaContext";
 
 const { Option } = Select;
 
 function ListaOrdenes() {
+  // verificar cajas uststate
+  const { cajaAbierta, nowTurno, verificarCajaAbierta } =
+    useContext(CajaContext);
+  const [filterMode, setFilterMode] = useState("MeOrden");
+
+  const [verificandoCaja, setVerificandoCaja] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [ordenes, setOrdenes] = useState([]);
   const [dataSource, setDataSource] = useState([]);
@@ -55,6 +73,18 @@ function ListaOrdenes() {
   const [cargandoProductos, setCargandoProductos] = useState(true);
   const [checkAdd, setCheckAdd] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [tipoDocumento, setTipoDocumento] = useState("NOTADEVENTA");
+  const [serie, setSerie] = useState("");
+  const [numeroSerie, setNumeroSerie] = useState("");
+  const [numeroSecuencialActual, setNumeroSecuencialActual] = useState("");
+  const [versionDocumento, setVersionDocumento] = useState("");
+  const [idConfigDoc, setIdConfigDoc] = useState("");
+  // ustate de pago de entregar orden con pago
+  const [isModalpago, setIsModalpago] = useState(false);
+  const [deuda, setDeuda] = useState(0);
+  const [precioTotal, setPrecioTotal] = useState(0);
+  const [montoPagado, setMontoPagado] = useState(0);
+  // fin de pago
   var cantidad = 1;
   const [productoID, setProductoID] = useState(null);
   const [carrito, setCarrito] = useState([]);
@@ -70,6 +100,8 @@ function ListaOrdenes() {
   const [products, setProducts] = useState([]);
   const [listaProductos, setListaProductos] = useState([]);
   const [cliente, setCliente] = useState("");
+  const [metodoPago, setMetodoPago] = useState("");
+  const [turnoID, setTurnoID] = useState("");
   // graduaciones
   const [graduacionDerechaVieja, setGraduacionDerechaVieja] = useState("");
   const [graduacionIzquierdaVieja, setGraduacionIzquierdaVieja] = useState("");
@@ -85,12 +117,64 @@ function ListaOrdenes() {
 
   // state for search
   const [searchOrden, setSearchOrden] = useState(undefined);
+  const [searchCodOrden, setSearchCodOrden] = useState("");
   const [searchStatus, setSearchStatus] = useState(undefined);
   const [searchFecha, setSearchFecha] = useState("");
   const [searchEntrega, setSearchEntrega] = useState("");
 
   // optica id
-  const { labId } = useGerenteContext();
+  const { labId, gerenteId } = useGerenteContext();
+
+  const buscarDocumento = async () => {
+    try {
+      if (tipoDocumento !== "" || tipoDocumento !== null) {
+        const result = await API.graphql(
+          graphqlOperation(listCONFIGURACIONDOCUMENTOS, {
+            filter: {
+              opticaID: { eq: labId },
+              tipoDocumento: { eq: tipoDocumento },
+            },
+          })
+        );
+        const optica = await API.graphql(
+          graphqlOperation(getOPTICA, { id: labId })
+        );
+        const codOptica = optica?.data?.getOPTICA.codSerial;
+        const documento = result?.data?.listCONFIGURACIONDOCUMENTOS?.items[0];
+        console.log(documento?.numeroSecuencialActual);
+        let newSerie = documento?.serieActual;
+        let newNumero = documento?.numeroSecuencialActual;
+        if (documento.numeroSecuencialActual === 10000) {
+          newSerie = incrementSerialNumber(documento?.serieActual);
+          newNumero = 1;
+          console.log(newSerie);
+        }
+        if (tipoDocumento === "NOTADEVENTA") {
+          setSerie(codOptica + "NV" + newSerie);
+        }
+        if (tipoDocumento === "FACTURA") {
+          setSerie(codOptica + "FA" + newSerie);
+        }
+        setNumeroSerie(newSerie);
+        setNumeroSecuencialActual(newNumero);
+        setVersionDocumento(documento?._version);
+        setIdConfigDoc(documento?.id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  function incrementSerialNumber(originalString) {
+    const incrementedSerialNumber = (parseInt(originalString, 10) + 1)
+      .toString()
+      .padStart(3, "0");
+    // Aquí puedes hacer lo que necesites con la cadena actualizada
+    return incrementedSerialNumber;
+  }
+  useEffect(() => {
+    buscarDocumento();
+    // eslint-disable-next-line
+  }, [tipoDocumento]);
 
   const fetchOrdenes = async () => {
     try {
@@ -135,7 +219,7 @@ function ListaOrdenes() {
         ordenesConNombres.push(ordenConNombre);
       }
       setOrdenes(ordenesConNombres);
-      setDataSource(ordenesConNombres);
+      // setDataSource(ordenesConNombres);
       setLoading(true);
     } catch (error) {
       console.log(error);
@@ -145,6 +229,7 @@ function ListaOrdenes() {
     fetchOrdenes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const edithandle = async (record) => {
     setOrdenID(record.id);
     setprecioMaquila(record.precioGraduacion);
@@ -200,6 +285,7 @@ function ListaOrdenes() {
   };
 
   const envioOrdenCot = (record) => {
+    setTurnoID(record.turnoID);
     setCliente(record.nombreCliente);
     setGraduacionDerechaNueva(record?.graduacionDerechaNueva);
     setGraduacionDerechaVieja(record?.graduacionDerechaVieja);
@@ -216,27 +302,65 @@ function ListaOrdenes() {
 
     setOrdenID(record.id);
     viewListaProductos(record?.id);
+    buscarDocumento();
   };
-  const entregarOrden = async (record) => {
-    const split = record.anticipo.split("-");
-    const fecha_entrega = dayjs().format("YYYY-MM-DD");
-    const total = split[0];
-    const deuda = `${total} - ${total}`;
-    const updateOrden = {
-      id: record?.id,
-      fechaEntrega: fecha_entrega,
-      tipoOrden: "ORDEN",
-      ordenStatus: "ENTREGADA",
-      _version: record?._version,
-      anticipo: deuda,
-    };
-    try {
-      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
-      fetchOrdenes();
-      message.success("La orden se ha entregado correctamente");
-    } catch (error) {
-      message.error("Hubo un error contacta con el administrador");
-      console.log(error);
+  const entregarOrden = async () => {
+    if (metodoPago !== "") {
+      let deudaNow = precioTotal - montoPagado;
+      const fechaActual = dayjs().format("YYYY-MM-DD");
+      const fecha_entrega = dayjs().format("YYYY-MM-DD");
+      const updateOrden = {
+        id: ordenID,
+        fechaEntrega: fecha_entrega,
+        tipoOrden: "ORDEN",
+        ordenStatus: "ENTREGADA",
+        _version: version,
+        montoPagado: precioTotal,
+      };
+      const newTransaccion = {
+        monto: deudaNow,
+        fecha: fechaActual,
+        metodoPago,
+        turnoID: nowTurno.id,
+        ordenID,
+        tipoTransaccion: "VENTA",
+      };
+
+      try {
+        const result = await API.graphql(
+          graphqlOperation(deudasByOrdenID, { ordenID: ordenID })
+        );
+        console.log(result);
+        const adeudoFetch = result?.data?.deudasByOrdenID.items[0];
+        console.log(adeudoFetch);
+
+        const updateAdeudo = {
+          id: adeudoFetch.id,
+          _version: adeudoFetch._version,
+          montoDeuda: 0,
+          estado: "PAGADO",
+          fecha: fechaActual,
+        };
+        await API.graphql(
+          graphqlOperation(updateDeudas, { input: updateAdeudo })
+        );
+        message.success("Se pago la deuda pendiente");
+        await API.graphql(
+          graphqlOperation(updateORDEN, { input: updateOrden })
+        );
+        message.success("La orden se ha entregado correctamente");
+        await API.graphql(
+          graphqlOperation(createTransacciones, { input: newTransaccion })
+        );
+        setIsModalpago(false);
+        message.success("Se realizo el pago del adeudo");
+        fetchOrdenes();
+      } catch (error) {
+        message.error("Hubo un error contacta con el administrador");
+        console.log(error);
+      }
+    } else {
+      message.warning("Debe seleccionar el metodo de pago");
     }
   };
   const finalizarOrden = async (record) => {
@@ -328,6 +452,14 @@ function ListaOrdenes() {
 
     return diasRestantes;
   };
+  const pagarAdeudo = (record) => {
+    setOrdenID(record?.id);
+    setVersion(record?._version);
+    setPrecioTotal(record?.precioTotal);
+    setMontoPagado(record?.montoPagado);
+    setIsModalpago(true);
+    setDeuda(record?.precioTotal - record?.montoPagado);
+  };
 
   const columns = [
     {
@@ -414,11 +546,11 @@ function ListaOrdenes() {
       dataIndex: "nombreCliente",
       key: "nombreCliente",
     },
-    {
-      title: "Optica",
-      dataIndex: "nombreOptica",
-      key: "nombreOptica",
-    },
+    // {
+    //   title: "Optica",
+    //   dataIndex: "nombreOptica",
+    //   key: "nombreOptica",
+    // },
     {
       title: "Precio total",
       dataIndex: "precioTotal",
@@ -430,30 +562,37 @@ function ListaOrdenes() {
       },
     },
     {
-      title: "Anticipo",
-      dataIndex: "anticipo",
-      key: "anticipo",
+      title: "Monto Pagado",
+      dataIndex: "montoPagado",
+      key: "montoPagado",
       render: (_, record) => {
-        if (Number(record.anticipo) !== 0) {
-          const split = record.anticipo.split("-");
-          const anticipo = split[1];
-          return <p style={{ color: "green" }}>${anticipo}</p>;
-          // return <p>${(Math.round(record.anticipo * 100) / 100).toFixed(2)}</p>;
+        if (Number(record.montoPagado) !== 0) {
+          return <p style={{ color: "green" }}>${record.montoPagado}</p>;
         } else {
           return <p>-</p>;
         }
       },
     },
     {
-      title: "Deuda por anticipo",
+      title: "Anticipo",
+      dataIndex: "anticipo",
+      key: "anticipo",
+      render: (_, record) => {
+        if (Number(record.anticipo) !== 0) {
+          return <p style={{ color: "blue" }}>${record.anticipo}</p>;
+        } else {
+          return <p>-</p>;
+        }
+      },
+    },
+    {
+      title: "Adeudo",
       dataIndex: "deudaanticipo",
       key: "deudaanticipo",
       render: (_, record) => {
         if (Number(record.anticipo) !== 0) {
-          const split = record.anticipo.split("-");
-          const total = split[0];
-          const anticipo = split[1];
-          const deuda = Number(total) - Number(anticipo);
+          const deuda =
+            Number(record.precioTotal) - Number(record?.montoPagado);
           if (deuda === 0) {
             return <Tag color="green">Pagado</Tag>;
           } else {
@@ -486,17 +625,9 @@ function ListaOrdenes() {
                 return (
                   <>
                     <Tag color="geekblue">{record.ordenStatus}</Tag>
-                    <Popconfirm
-                      title="Entregar al Cliente"
-                      description="Debe cobrar si hay deuda antes de entregar, si es el caso pulse SI"
-                      onConfirm={() => entregarOrden(record)}
-                      okText="Si"
-                      cancelText="No"
-                    >
-                      <Button onClick={() => setOrdenID(record?.id)}>
-                        Entregar Orden
-                      </Button>
-                    </Popconfirm>
+                    <Button onClick={() => pagarAdeudo(record)}>
+                      Entregar Orden
+                    </Button>
                   </>
                 );
               case "ENTREGADA":
@@ -599,19 +730,61 @@ function ListaOrdenes() {
   const fetchProductos = async () => {
     try {
       const options = [];
-      const result = await DataStore.query(INVENTARIO);
-      result.map((producto) => {
+      let productosList;
+      if (labId === "") {
+        const result = await API.graphql(graphqlOperation(listINVENTARIOS));
+        const nodelete = result?.data?.listINVENTARIOS?.items;
+        const deletew = nodelete.filter(
+          (elemento) => elemento._deleted !== true
+        );
+        const tempProducts = [];
+        // productosList = deletew;
+        for (const producto of deletew) {
+          const resultOptica = await API.graphql(
+            graphqlOperation(getOPTICA, { id: producto.opticaID })
+          );
+          const optica = resultOptica.data.getOPTICA;
+          const productOptica = { ...producto, nombreOptica: optica.nombre };
+          tempProducts.push(productOptica);
+        }
+        productosList = tempProducts;
+      } else {
+        const result = await API.graphql(
+          graphqlOperation(iNVENTARIOSByOpticaID, { opticaID: labId })
+        );
+        const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
+        const deletew = nodelete.filter(
+          (elemento) => elemento._deleted !== true
+        );
+        productosList = deletew;
+      }
+
+      productosList.map((producto) => {
+        const nombreOptica =
+          producto?.nombreOptica !== undefined ? producto?.nombreOptica : "";
+        const stock =
+          producto.stock === "0" ? "sin existencias" : producto.stock + " und";
         const option = {
           value: producto.id,
-          label: producto.nombreProducto,
+          label:
+            producto.nombreProducto +
+            ", " +
+            producto.tipoMaterial +
+            ", " +
+            producto.tipoEstructura +
+            ", " +
+            nombreOptica +
+            stock,
+          stock: Number(producto.stock),
+          disabled: Number(producto.stock) === 0,
         };
         options.push(option);
         return true;
       });
       setProductos(options);
-      setListaProductos(result);
+      setListaProductos(productosList);
     } catch (error) {
-      message.error("No se encontraron clientes");
+      message.error("No se encontraron productos");
     }
   };
   // Table source
@@ -771,110 +944,192 @@ function ListaOrdenes() {
     );
     const ordenUpdate = original?.data?.getORDEN?._version;
     console.log(ordenUpdate);
-    if (isGraduation === "GRADUATION") {
-      if (Number(precioAnticipo) !== 0 && fechaEntrega !== "") {
-        const updateOrden = {
-          id: ordenID,
-          fechaEntrega,
-          tipoOrden: "ORDEN",
-          ordenStatus: "ENVIADAMAQUILA",
-          precioTotal: (
-            Number(precioMaquila) +
-            Number(total) +
-            Number(totalCarrito)
-          ).toString(),
-          anticipo: `${Number(precioMaquila) + Number(total)}-${Number(
-            precioAnticipo
-          )}`,
-          _version: ordenUpdate,
-        };
-        await API.graphql(
-          graphqlOperation(updateORDEN, { input: updateOrden })
-        );
-        message.success("La cotizacion se envio a Maquila");
-        if (carrito.length > 0) {
-          try {
-            await Promise.all(
-              carrito.map(async (cart) => {
-                const newDetail = {
-                  cantidad: cart.cantidad,
-                  ordenID: ordenID,
-                  inventarioID: cart.id,
-                  costo: cart.subTotal,
-                };
-                await API.graphql(
-                  graphqlOperation(createINVENTARIOORDENITEMS, {
-                    input: newDetail,
+
+    const fecha = dayjs().format("YYYY-MM-DD");
+
+    // Obtener la hora actual en el formato deseado: 09:57:05
+    const hora = dayjs().format("HH:mm:ss");
+    if (tipoDocumento !== undefined && numeroSerie && numeroSecuencialActual) {
+      if (metodoPago !== "") {
+        if (isGraduation === "GRADUATION") {
+          if (Number(precioAnticipo) !== 0 && fechaEntrega !== "") {
+            let totalVenta =
+              Number(precioMaquila) + Number(total) + Number(totalCarrito);
+            let montoPagadoCliente =
+              Number(precioAnticipo) + Number(totalCarrito);
+            const updateOrden = {
+              id: ordenID,
+              fechaEntrega,
+              fechaOrden: fecha,
+              horaOrden: hora,
+              tipoOrden: "ORDEN",
+              ordenStatus: "ENVIADAMAQUILA",
+              precioTotal: totalVenta,
+              anticipo: Number(precioAnticipo),
+              montoPagado: montoPagadoCliente,
+              _version: ordenUpdate,
+            };
+            await API.graphql(
+              graphqlOperation(updateORDEN, { input: updateOrden })
+            );
+            message.success("La cotizacion se envio a Maquila");
+            if (carrito.length > 0) {
+              try {
+                await Promise.all(
+                  carrito.map(async (cart) => {
+                    const newDetail = {
+                      cantidad: cart.cantidad,
+                      ordenID: ordenID,
+                      inventarioID: cart.id,
+                      costo: cart.subTotal,
+                    };
+                    await API.graphql(
+                      graphqlOperation(createINVENTARIOORDENITEMS, {
+                        input: newDetail,
+                      })
+                    );
                   })
                 );
-              })
+                setCarrito([]);
+                message.success("La agrego nuevos productos a la orden");
+              } catch (error) {
+                console.log(error);
+              }
+            }
+            const newTransaccion = {
+              monto: montoPagadoCliente,
+              fecha: fecha,
+              metodoPago,
+              turnoID,
+              ordenID,
+              tipoTransaccion: "VENTA",
+            };
+            const result = await API.graphql(
+              graphqlOperation(createTransacciones, { input: newTransaccion })
             );
-            setCarrito([]);
-            message.success("La agrego nuevos productos a la orden");
-          } catch (error) {
-            console.log(error);
+            console.log(result);
+            if (totalVenta !== montoPagadoCliente) {
+              try {
+                const newDeuda = {
+                  fecha,
+                  montoDeuda: totalVenta - montoPagadoCliente,
+                  estado: "ADEUDO",
+                  turnoID: turnoID,
+                  ordenID: ordenID,
+                };
+                await API.graphql(
+                  graphqlOperation(createDeudas, { input: newDeuda })
+                );
+                message.success("Se registro la deuda");
+              } catch (error) {
+                console.log(error);
+              }
+            }
+            fetchOrdenes();
+            setIsEditing(false);
+            setDetalleProductos([]);
+            setTotal(0);
+            setprecioMaquila(0);
+            setTotalCarrito(0);
+          } else {
+            if (Number(precioAnticipo) === 0) {
+              message.warning("El anticipo no debe ser 0");
+            }
+            if (fechaEntrega === "") {
+              message.warning("Debe asignar una fecha estimada de entrega");
+            }
+            if (metodoPago === "") {
+              message.warning("Debe establecer el metodo de pago");
+            }
           }
-        }
-        fetchOrdenes();
-        setIsEditing(false);
-        setDetalleProductos([]);
-        setTotal(0);
-        setprecioMaquila(0);
-        setTotalCarrito(0);
-      } else {
-        if (Number(precioAnticipo) === 0) {
-          message.warning("El anticipo no debe ser 0");
-        }
-        if (fechaEntrega === "") {
-          message.warning("Debe asignar una fecha estimada de entrega");
-        }
-      }
-    } else {
-      const updateOrden = {
-        id: ordenID,
-        tipoOrden: "ORDEN",
-        ordenStatus: "FINALIZADA",
-        precioTotal: (
-          Number(precioMaquila) +
-          Number(total) +
-          Number(totalCarrito)
-        ).toString(),
-        _version: ordenUpdate,
-      };
-      const resolver = await API.graphql(
-        graphqlOperation(updateORDEN, { input: updateOrden })
-      );
-      console.log(resolver);
-      if (carrito.length > 0) {
-        try {
-          await Promise.all(
-            carrito.map(async (cart) => {
-              const newDetail = {
-                cantidad: cart.cantidad,
-                ordenID: ordenID,
-                inventarioID: cart.id,
-                costo: cart.subTotal,
-              };
-              await API.graphql(
-                graphqlOperation(createINVENTARIOORDENITEMS, {
-                  input: newDetail,
+        } else {
+          const updateOrden = {
+            id: ordenID,
+            fechaOrden: fecha,
+            horaOrden: hora,
+            tipoOrden: "ORDEN",
+            ordenStatus: "FINALIZADA",
+            precioTotal: Number(total) + Number(totalCarrito),
+            montoPagado: Number(total) + Number(totalCarrito),
+            _version: ordenUpdate,
+          };
+          const newTransaccion = {
+            monto: Number(total) + Number(totalCarrito),
+            fecha: fecha,
+            metodoPago,
+            turnoID,
+            ordenID,
+            tipoTransaccion: "VENTA",
+          };
+          const result = await API.graphql(
+            graphqlOperation(createTransacciones, { input: newTransaccion })
+          );
+          const resolver = await API.graphql(
+            graphqlOperation(updateORDEN, { input: updateOrden })
+          );
+          console.log(result);
+          console.log(resolver);
+          if (carrito.length > 0) {
+            try {
+              await Promise.all(
+                carrito.map(async (cart) => {
+                  const newDetail = {
+                    cantidad: cart.cantidad,
+                    ordenID: ordenID,
+                    inventarioID: cart.id,
+                    costo: cart.subTotal,
+                  };
+                  await API.graphql(
+                    graphqlOperation(createINVENTARIOORDENITEMS, {
+                      input: newDetail,
+                    })
+                  );
                 })
               );
+              setCarrito([]);
+              message.success("La agrego nuevos productos a la orden");
+            } catch (error) {
+              console.log(error);
+            }
+          }
+          message.success("La venta se ha confirmado correctamente");
+          fetchOrdenes();
+          setIsEditing(false);
+          setDetalleProductos([]);
+          setTotal(0);
+          setprecioMaquila(0);
+          setTotalCarrito(0);
+        }
+        try {
+          const newDocumento = {
+            tipoDocumento,
+            serie,
+            numeroSecuencial: numeroSecuencialActual,
+            ordenID,
+            opticaID: labId,
+          };
+          const updateConfig = {
+            id: idConfigDoc,
+            tipoDocumento,
+            serieActual: numeroSerie,
+            numeroSecuencialActual: numeroSecuencialActual + 1,
+            _version: versionDocumento,
+          };
+          await API.graphql(
+            graphqlOperation(createDOCUMENTOS, { input: newDocumento })
+          );
+          await API.graphql(
+            graphqlOperation(updateCONFIGURACIONDOCUMENTO, {
+              input: updateConfig,
             })
           );
-          setCarrito([]);
-          message.success("La agrego nuevos productos a la orden");
-        } catch (error) {
-          console.log(error);
-        }
+          message.success("Se gravo el documento");
+        } catch (error) {}
+      } else {
+        message.warning("Debe establecer el metodo de pago");
       }
-      message.success("La venta se ha confirmado correctamente");
-      fetchOrdenes();
-      setIsEditing(false);
-      setDetalleProductos([]);
-      setTotal(0);
-      setprecioMaquila(0);
-      setTotalCarrito(0);
+    } else {
+      message.warning("Establece el tipo de documento a generar");
     }
   };
 
@@ -968,16 +1223,72 @@ function ListaOrdenes() {
     printWindow.document.close();
     printWindow.print();
   };
-  return (
+
+  useEffect(() => {
+    const verificarCaja = async () => {
+      // Realizar la verificación del estado de la caja aquí
+      // Reemplaza el siguiente código con tu lógica de verificación real
+      await verificarCajaAbierta(gerenteId); // Supongamos que esto es una función asincrónica
+
+      setVerificandoCaja(false); // Finaliza la verificación
+    };
+
+    verificarCaja();
+    // eslint-disable-next-line
+  }, []);
+
+  const filterOrdenesMe = (orden) => {
+    switch (orden) {
+      case "MeOrden":
+        const result = ordenes.filter((orden) => orden.turnoID === nowTurno.id);
+        setDataSource(result);
+
+        break;
+      case "TodoOrden":
+        setDataSource(ordenes);
+
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    filterOrdenesMe(filterMode);
+    // eslint-disable-next-line
+  }, [filterMode, ordenes]);
+
+  console.log(serie);
+  return verificandoCaja ? (
+    <p>Verificando cajas abiertas</p>
+  ) : cajaAbierta ? (
     <div>
-      <h1>Lista Ordenes</h1>
-      <div style={{ margin: "20px 0px" }}>
-        <p>Filtrado avanzado</p>
+      {/* <h1>Lista Ordenes</h1> */}
+      {/* <div style={{ margin: "20px 0px" }}> */}
+      <p>Filtrado avanzado</p>
+      {/* </div> */}
+
+      <div style={{ display: "flex", gap: "10px", margin: "20px 0px" }}>
+        <Button
+          onClick={() => setFilterMode("MeOrden")}
+          title="Filtrar"
+          type={filterMode === "MeOrden" ? "primary" : "secondary"}
+        >
+          Mis Ordenes
+        </Button>
+        <Button
+          type={filterMode === "TodoOrden" ? "primary" : "secondary"}
+          onClick={() => setFilterMode("TodoOrden")}
+          title="reset"
+        >
+          Todo Ordenes
+        </Button>
       </div>
       <Form
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(5, 1fr)",
+          gridTemplateColumns: "repeat(6, 1fr)",
           gap: "15px",
         }}
       >
@@ -992,6 +1303,15 @@ function ListaOrdenes() {
             <Option value="ORDEN">ORDEN</Option>
             <Option value="COTIZACION">COTIZACION</Option>
           </Select>
+        </Form.Item>
+        <Form.Item>
+          <Input
+            value={searchCodOrden}
+            onChange={(e) => {
+              setSearchCodOrden(e.target.value);
+            }}
+            placeholder="Buscar codigo de armazon"
+          />
         </Form.Item>
         <Form.Item>
           <Select
@@ -1128,8 +1448,40 @@ function ListaOrdenes() {
           </>
         )}
       </Modal>
+      {/* modal de pago entregar orden */}
+      <Modal
+        title="Pagar Orden"
+        open={isModalpago}
+        onOk={() => entregarOrden()}
+        onCancel={() => setIsModalpago(false)}
+      >
+        <div className="m-6">
+          <h3 style={{ width: "100%", textAlign: "start" }}>Adeudo</h3>
+          <p>${Math.round((deuda * 100) / 100).toFixed(2)}</p>
+          <h3 style={{ width: "100%", textAlign: "start" }}>Método de Pago</h3>
+          <Checkbox
+            checked={metodoPago === "TARJETA_CREDITO"}
+            onChange={(e) => setMetodoPago("TARJETA_CREDITO")}
+          >
+            TARJETA_CREDITO
+          </Checkbox>
+          <Checkbox
+            checked={metodoPago === "TRANSFERENCIA"}
+            onChange={(e) => setMetodoPago("TRANSFERENCIA")}
+          >
+            TRANSFERENCIA
+          </Checkbox>
+          <Checkbox
+            checked={metodoPago === "EFECTIVO"}
+            onChange={(e) => setMetodoPago("EFECTIVO")}
+          >
+            EFECTIVO
+          </Checkbox>
+        </div>
+      </Modal>
       {/* modal de enviar ordenes view */}
       <Modal
+        width={"800px"}
         onCancel={() => {
           setIsEditing(false);
           setDetalleProductos([]);
@@ -1145,9 +1497,51 @@ function ListaOrdenes() {
       >
         <Form>
           <div>
-            <h3 style={{ width: "100%", textAlign: "center" }}>
-              Cliente: <br /> {cliente}
-            </h3>
+            <div
+              style={{
+                marginBottom: "30px",
+              }}
+            >
+              <h3
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                Cliente: {cliente}
+              </h3>{" "}
+            </div>
+            <div>
+              <Space.Compact style={{ gap: "15px" }}>
+                <Form.Item style={{ width: "40%" }}>
+                  <Select
+                    value={tipoDocumento}
+                    onSelect={(e) => setTipoDocumento(e)}
+                    onClear={(e) => setTipoDocumento(e)}
+                    allowClear
+                    placeholder="Seleccione el tipo de documento"
+                  >
+                    <Option value="NOTADEVENTA">NOTADEVENTA</Option>
+                    <Option value="FACTURA">FACTURA</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  style={{ width: "60%" }}
+                  rules={[
+                    { required: true, message: "Este campo es requerido" },
+                  ]}
+                >
+                  <Space.Compact>
+                    <Input disabled value={serie} />
+                    <Input
+                      disabled
+                      type="number"
+                      value={numeroSecuencialActual}
+                    />
+                  </Space.Compact>
+                </Form.Item>
+              </Space.Compact>
+            </div>
             {graduacionDerechaNueva ? (
               <>
                 <h4>Graduaciones</h4>
@@ -1208,7 +1602,7 @@ function ListaOrdenes() {
                 </Form.Item>
                 <div>
                   <h1 style={{ color: "red", fontSize: "18px" }}>
-                    Deuda de Anticipo : $
+                    Adeudo : $
                     {Number(total) +
                       Number(precioMaquila) -
                       Number(precioAnticipo)}
@@ -1333,6 +1727,29 @@ function ListaOrdenes() {
                 Total Venta Neta : $
                 {Number(total) + Number(precioMaquila) + Number(totalCarrito)}
               </h1>
+              <div className="m-6">
+                <h3 style={{ width: "100%", textAlign: "start" }}>
+                  Método de Pago
+                </h3>
+                <Checkbox
+                  checked={metodoPago === "TARJETA_CREDITO"}
+                  onChange={(e) => setMetodoPago("TARJETA_CREDITO")}
+                >
+                  TARJETA_CREDITO
+                </Checkbox>
+                <Checkbox
+                  checked={metodoPago === "TRANSFERENCIA"}
+                  onChange={(e) => setMetodoPago("TRANSFERENCIA")}
+                >
+                  TRANSFERENCIA
+                </Checkbox>
+                <Checkbox
+                  checked={metodoPago === "EFECTIVO"}
+                  onChange={(e) => setMetodoPago("EFECTIVO")}
+                >
+                  EFECTIVO
+                </Checkbox>
+              </div>
             </div>
           </div>
         </Form>
@@ -1352,7 +1769,7 @@ function ListaOrdenes() {
         </Form.Item>
       </Modal>
     </div>
-  );
+  ) : null;
 }
 
 export default ListaOrdenes;

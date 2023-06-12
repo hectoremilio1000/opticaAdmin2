@@ -5,7 +5,5 @@
  **************************************************************************/
 
 export { default as studioTheme } from "./studioTheme";
-export { default as CajaCreateForm } from "./CajaCreateForm";
-export { default as CajaUpdateForm } from "./CajaUpdateForm";
 export { default as OPTICACreateForm } from "./OPTICACreateForm";
 export { default as OPTICAUpdateForm } from "./OPTICAUpdateForm";
