@@ -244,7 +244,7 @@ function CrearOrden() {
     if (carrito.length > 0) {
       if (clientesID !== "" && opticaID !== "") {
         if (graduacion === "SI") {
-          if (precioGraduacion !== 0) {
+          if (Number(precioGraduacion) !== 0) {
             checkOrden = 1;
           } else {
             checkOrden = 0;

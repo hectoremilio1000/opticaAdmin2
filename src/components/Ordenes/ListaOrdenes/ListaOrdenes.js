@@ -102,6 +102,7 @@ function ListaOrdenes() {
   const [cliente, setCliente] = useState("");
   const [metodoPago, setMetodoPago] = useState("");
   const [turnoID, setTurnoID] = useState("");
+  const [optica, setOptica] = useState({});
   // graduaciones
   const [graduacionDerechaVieja, setGraduacionDerechaVieja] = useState("");
   const [graduacionIzquierdaVieja, setGraduacionIzquierdaVieja] = useState("");
@@ -176,17 +177,43 @@ function ListaOrdenes() {
     // eslint-disable-next-line
   }, [tipoDocumento]);
 
+  const fetchOptica = async (opticaID) => {
+    try {
+      const result = await API.graphql(
+        graphqlOperation(getOPTICA, { id: opticaID })
+      );
+      console.log(result);
+      const optica = result?.data?.getOPTICA;
+      return optica;
+    } catch (error) {
+      return error;
+    }
+  };
+
   const fetchOrdenes = async () => {
     try {
       let ordenes;
       if (labId === "") {
-        const result = await API.graphql(graphqlOperation(listORDENS));
+        const result = await API.graphql(
+          graphqlOperation(listORDENS, {
+            filter: {
+              _deleted: { ne: true },
+            },
+          })
+        );
         ordenes = result.data.listORDENS.items;
       } else {
         const result = await API.graphql(
-          graphqlOperation(oRDENSByOpticaID, { opticaID: labId })
+          graphqlOperation(oRDENSByOpticaID, {
+            opticaID: labId,
+            filter: {
+              _deleted: { ne: true },
+            },
+          })
         );
+        console.log(result);
         ordenes = result.data.oRDENSByOpticaID.items;
+        console.log(ordenes);
       }
       const ordenesSorted = ordenes.sort((a, b) => {
         // Ordenar por fecha de creación descendente (más reciente primero)
@@ -235,9 +262,13 @@ function ListaOrdenes() {
     setprecioMaquila(record.precioGraduacion);
     setTipoOrden(record.tipoOrden);
     setOrdenNow(record.id);
+
     // setTotal(record.precioTotal);
     setCliente(record.nombreCliente);
     try {
+      let opticasearch = await fetchOptica(record?.opticaID);
+      setOptica(opticasearch);
+
       const ordenes = await DataStore.query(INVENTARIOORDENITEMS, (d) =>
         d.ordenID.eq(record.id)
       );
@@ -1000,7 +1031,7 @@ function ListaOrdenes() {
               monto: montoPagadoCliente,
               fecha: fecha,
               metodoPago,
-              turnoID,
+              turnoID: nowTurno.id,
               ordenID,
               tipoTransaccion: "VENTA",
             };
@@ -1014,7 +1045,7 @@ function ListaOrdenes() {
                   fecha,
                   montoDeuda: totalVenta - montoPagadoCliente,
                   estado: "ADEUDO",
-                  turnoID: turnoID,
+                  turnoID: nowTurno.id,
                   ordenID: ordenID,
                 };
                 await API.graphql(
@@ -1057,7 +1088,7 @@ function ListaOrdenes() {
             monto: Number(total) + Number(totalCarrito),
             fecha: fecha,
             metodoPago,
-            turnoID,
+            turnoID: nowTurno.id,
             ordenID,
             tipoTransaccion: "VENTA",
           };
@@ -1174,7 +1205,7 @@ function ListaOrdenes() {
       searchFecha !== "" ||
       searchEntrega !== ""
     ) {
-      const filteredOrdenes = ordenes.filter((orden) => {
+      const filteredOrdenes = dataSource.filter((orden) => {
         let matchOrden = true;
         let matchStatus = true;
         let matchFecha = true;
@@ -1259,7 +1290,6 @@ function ListaOrdenes() {
     // eslint-disable-next-line
   }, [filterMode, ordenes]);
 
-  console.log(serie);
   return verificandoCaja ? (
     <p>Verificando cajas abiertas</p>
   ) : cajaAbierta ? (
@@ -1416,6 +1446,8 @@ function ListaOrdenes() {
               style={{ width: "100%", height: "50vh" }}
             >
               <TicketPDF
+                optica={optica}
+                ordenID={ordenNow}
                 tipoOrden={tipoOrden}
                 logoSrc={logo}
                 title="Ticket de Compra"
@@ -1430,6 +1462,8 @@ function ListaOrdenes() {
               fileName={ordenID + "-" + cliente}
               document={
                 <TicketPDF
+                  optica={optica}
+                  ordenID={ordenNow}
                   tipoOrden={tipoOrden}
                   logoSrc={logo}
                   title="Ticket de Compra"

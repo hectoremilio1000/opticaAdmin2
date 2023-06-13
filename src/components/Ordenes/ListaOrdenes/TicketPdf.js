@@ -25,6 +25,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: "10px",
   },
+  info: {
+    fontSize: "8px",
+    fontWeight: "bold",
+    marginBottom: "10px",
+    textAlign: "start",
+    width: "100%",
+  },
   customer: {
     marginBottom: "10px",
     fontSize: "8px",
@@ -46,6 +53,13 @@ const styles = StyleSheet.create({
     padding: "5px",
     borderBottom: "1px solid black",
     textAlign: "center",
+    fontSize: "8px",
+  },
+  tableRowInfo: {
+    display: "flex",
+    flexDirection: "row",
+    padding: "5px",
+    textAlign: "start",
     fontSize: "8px",
   },
   tableCell: {
@@ -72,8 +86,15 @@ export default function TicketPDF({
   customer,
   products,
   precioGraduacion,
+  optica,
+  ordenID,
   // total,
 }) {
+  var documento = optica.DOCUMENTOS.items.filter(
+    (documento) => documento.ordenID === ordenID
+  );
+  var fecha = documento[0].createdAt.split("T");
+  console.log(documento);
   var total = 0;
   const sumarPrecioGraduacion = () => {
     total = total + Number(precioGraduacion);
@@ -85,7 +106,33 @@ export default function TicketPDF({
           <Image src={logoSrc} alt="Logo" />
         </View>
         <View style={styles.title}>
-          <Text>{title}</Text>
+          <Text>{documento[0].tipoDocumento}</Text>
+          <Text>
+            {documento[0].serie}-{documento[0].numeroSecuencial}
+          </Text>
+        </View>
+        <View style={styles.table}>
+          <View style={styles.tableRowInfo}>
+            <View style={styles.tableCell}>
+              <Text>Dirección: {optica.direction}</Text>
+            </View>
+          </View>
+          <View style={styles.tableRowInfo}>
+            <View style={styles.tableCell}>
+              <Text>Fecha de emisión: {fecha[0]}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>Cp: {optica.cp}</Text>
+            </View>
+          </View>
+          <View style={styles.tableRowInfo}>
+            <View style={styles.tableCell}>
+              <Text>RFC: {optica.rfc}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>Teléfono: {optica.contactPhone}</Text>
+            </View>
+          </View>
         </View>
         <View style={styles.customer}>
           <Text>Cliente: {customer}</Text>
