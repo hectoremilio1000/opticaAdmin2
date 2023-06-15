@@ -1,5 +1,110 @@
 export const schema = {
     "models": {
+        "GASTOS": {
+            "name": "GASTOS",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "montoGasto": {
+                    "name": "montoGasto",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "descripcion": {
+                    "name": "descripcion",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "turnoID": {
+                    "name": "turnoID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "fecha": {
+                    "name": "fecha",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "GASTOS",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byTurno",
+                        "fields": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "DOCUMENTOS": {
             "name": "DOCUMENTOS",
             "fields": {
@@ -359,6 +464,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "opticaID": {
+                    "name": "opticaID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -398,6 +510,15 @@ export const schema = {
                         "name": "byORDEN",
                         "fields": [
                             "ordenID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byOPTICA",
+                        "fields": [
+                            "opticaID"
                         ]
                     }
                 },
@@ -515,6 +636,22 @@ export const schema = {
                     "isArray": true,
                     "type": {
                         "model": "Transacciones"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "turnoID"
+                        ]
+                    }
+                },
+                "GASTOS": {
+                    "name": "GASTOS",
+                    "isArray": true,
+                    "type": {
+                        "model": "GASTOS"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -1756,6 +1893,38 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "Deudas": {
+                    "name": "Deudas",
+                    "isArray": true,
+                    "type": {
+                        "model": "Deudas"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
+                "GASTOS": {
+                    "name": "GASTOS",
+                    "isArray": true,
+                    "type": {
+                        "model": "GASTOS"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "opticaID"
+                        ]
+                    }
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1851,5 +2020,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "fd563dfa546294c63ba68487c642f69c"
+    "version": "45ff3aa6d682b4cd235c26ddc864c362"
 };

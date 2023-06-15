@@ -11,6 +11,7 @@ import ListaOrdenes from "../../components/Ordenes/ListaOrdenes/ListaOrdenes";
 import { CajaProvider } from "../../contexts/CajaContext";
 import CrearCaja from "../../components/Caja/CrearCaja/CrearCaja";
 import ListaCaja from "../../components/Caja/ListaCaja/ListaCaja";
+import GastosCaja from "../../components/Caja/GastosCaja/GastosCaja";
 
 const { Content } = Layout;
 
@@ -34,6 +35,12 @@ function ContentLayoutGerente({ current }) {
       ) : current === "9" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>
           <ListaCaja />
+        </div>
+      ) : current === "22" ? (
+        <div className="site-layout-background" style={{ minHeight: 100 }}>
+          <CajaProvider>
+            <GastosCaja />
+          </CajaProvider>
         </div>
       ) : current === "16" ? (
         <div className="site-layout-background" style={{ minHeight: 100 }}>

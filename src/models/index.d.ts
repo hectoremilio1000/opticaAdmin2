@@ -40,6 +40,42 @@ export enum Enumcategoria {
 
 
 
+type EagerGASTOS = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<GASTOS, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly montoGasto?: number | null;
+  readonly descripcion?: string | null;
+  readonly turnoID: string;
+  readonly fecha?: string | null;
+  readonly opticaID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyGASTOS = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<GASTOS, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly montoGasto?: number | null;
+  readonly descripcion?: string | null;
+  readonly turnoID: string;
+  readonly fecha?: string | null;
+  readonly opticaID: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type GASTOS = LazyLoading extends LazyLoadingDisabled ? EagerGASTOS : LazyGASTOS
+
+export declare const GASTOS: (new (init: ModelInit<GASTOS>) => GASTOS) & {
+  copyOf(source: GASTOS, mutator: (draft: MutableModel<GASTOS>) => MutableModel<GASTOS> | void): GASTOS;
+}
+
 type EagerDOCUMENTOS = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<DOCUMENTOS, 'id'>;
@@ -159,6 +195,7 @@ type EagerDeudas = {
   readonly estado?: string | null;
   readonly turnoID: string;
   readonly ordenID: string;
+  readonly opticaID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -174,6 +211,7 @@ type LazyDeudas = {
   readonly estado?: string | null;
   readonly turnoID: string;
   readonly ordenID: string;
+  readonly opticaID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -200,6 +238,7 @@ type EagerTurno = {
   readonly usuario?: string | null;
   readonly estado?: string | null;
   readonly Transacciones?: (Transacciones | null)[] | null;
+  readonly GASTOS?: (GASTOS | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -220,6 +259,7 @@ type LazyTurno = {
   readonly usuario?: string | null;
   readonly estado?: string | null;
   readonly Transacciones: AsyncCollection<Transacciones>;
+  readonly GASTOS: AsyncCollection<GASTOS>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -567,6 +607,8 @@ type EagerOPTICA = {
   readonly rfc?: string | null;
   readonly contactPhone?: string | null;
   readonly codSerial?: string | null;
+  readonly Deudas?: (Deudas | null)[] | null;
+  readonly GASTOS?: (GASTOS | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -592,6 +634,8 @@ type LazyOPTICA = {
   readonly rfc?: string | null;
   readonly contactPhone?: string | null;
   readonly codSerial?: string | null;
+  readonly Deudas: AsyncCollection<Deudas>;
+  readonly GASTOS: AsyncCollection<GASTOS>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

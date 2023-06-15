@@ -49,6 +49,7 @@ import {
   createTransacciones,
   updateCONFIGURACIONDOCUMENTO,
   updateDeudas,
+  updateINVENTARIO,
   updateORDEN,
 } from "../../../graphql/mutations";
 import { CajaContext } from "../../../contexts/CajaContext";
@@ -101,7 +102,7 @@ function ListaOrdenes() {
   const [listaProductos, setListaProductos] = useState([]);
   const [cliente, setCliente] = useState("");
   const [metodoPago, setMetodoPago] = useState("");
-  const [turnoID, setTurnoID] = useState("");
+  // const [turnoID, setTurnoID] = useState("");
   const [optica, setOptica] = useState({});
   // graduaciones
   const [graduacionDerechaVieja, setGraduacionDerechaVieja] = useState("");
@@ -316,7 +317,6 @@ function ListaOrdenes() {
   };
 
   const envioOrdenCot = (record) => {
-    setTurnoID(record.turnoID);
     setCliente(record.nombreCliente);
     setGraduacionDerechaNueva(record?.graduacionDerechaNueva);
     setGraduacionDerechaVieja(record?.graduacionDerechaVieja);
@@ -973,13 +973,17 @@ function ListaOrdenes() {
     const original = await API.graphql(
       graphqlOperation(getORDEN, { id: ordenID })
     );
+    console.log(original.data.getORDEN.INVENTARIOORDENITEMS.items);
     const ordenUpdate = original?.data?.getORDEN?._version;
     console.log(ordenUpdate);
+    console.log(carrito);
+    console.log(listaProductos);
 
     const fecha = dayjs().format("YYYY-MM-DD");
 
     // Obtener la hora actual en el formato deseado: 09:57:05
     const hora = dayjs().format("HH:mm:ss");
+
     if (tipoDocumento !== undefined && numeroSerie && numeroSecuencialActual) {
       if (metodoPago !== "") {
         if (isGraduation === "GRADUATION") {
@@ -1008,6 +1012,9 @@ function ListaOrdenes() {
               try {
                 await Promise.all(
                   carrito.map(async (cart) => {
+                    const result = listaProductos.find(
+                      (elemento) => elemento.id === cart.id
+                    );
                     const newDetail = {
                       cantidad: cart.cantidad,
                       ordenID: ordenID,
@@ -1018,6 +1025,15 @@ function ListaOrdenes() {
                       graphqlOperation(createINVENTARIOORDENITEMS, {
                         input: newDetail,
                       })
+                    );
+                    let newProducto = {
+                      id: cart.id,
+                      stock: Number(result.stock) - Number(cart.cantidad),
+                      _version: result._version,
+                    };
+                    console.log(newProducto);
+                    await API.graphql(
+                      graphqlOperation(updateINVENTARIO, { input: newProducto })
                     );
                   })
                 );
@@ -1047,6 +1063,7 @@ function ListaOrdenes() {
                   estado: "ADEUDO",
                   turnoID: nowTurno.id,
                   ordenID: ordenID,
+                  opticaID: labId,
                 };
                 await API.graphql(
                   graphqlOperation(createDeudas, { input: newDeuda })
@@ -1062,6 +1079,52 @@ function ListaOrdenes() {
             setTotal(0);
             setprecioMaquila(0);
             setTotalCarrito(0);
+
+            try {
+              const newDocumento = {
+                tipoDocumento,
+                serie,
+                numeroSecuencial: numeroSecuencialActual,
+                ordenID,
+                opticaID: labId,
+              };
+              const updateConfig = {
+                id: idConfigDoc,
+                tipoDocumento,
+                serieActual: numeroSerie,
+                numeroSecuencialActual: numeroSecuencialActual + 1,
+                _version: versionDocumento,
+              };
+              await API.graphql(
+                graphqlOperation(createDOCUMENTOS, { input: newDocumento })
+              );
+              await API.graphql(
+                graphqlOperation(updateCONFIGURACIONDOCUMENTO, {
+                  input: updateConfig,
+                })
+              );
+              message.success("Se gravo el documento");
+            } catch (error) {
+              message.error("Hubo un error contacta al administrador");
+            }
+            await Promise.all(
+              original.data.getORDEN.INVENTARIOORDENITEMS.items.map(
+                async (cart) => {
+                  const result = listaProductos.find(
+                    (elemento) => elemento.id === cart.inventarioID
+                  );
+                  let newProducto = {
+                    id: cart.inventarioID,
+                    stock: Number(result.stock) - Number(cart.cantidad),
+                    _version: result._version,
+                  };
+                  console.log(newProducto);
+                  await API.graphql(
+                    graphqlOperation(updateINVENTARIO, { input: newProducto })
+                  );
+                }
+              )
+            );
           } else {
             if (Number(precioAnticipo) === 0) {
               message.warning("El anticipo no debe ser 0");
@@ -1104,6 +1167,9 @@ function ListaOrdenes() {
             try {
               await Promise.all(
                 carrito.map(async (cart) => {
+                  const result = listaProductos.find(
+                    (elemento) => elemento.id === cart.id
+                  );
                   const newDetail = {
                     cantidad: cart.cantidad,
                     ordenID: ordenID,
@@ -1114,6 +1180,15 @@ function ListaOrdenes() {
                     graphqlOperation(createINVENTARIOORDENITEMS, {
                       input: newDetail,
                     })
+                  );
+                  let newProducto = {
+                    id: cart.id,
+                    stock: Number(result.stock) - Number(cart.cantidad),
+                    _version: result._version,
+                  };
+                  console.log(newProducto);
+                  await API.graphql(
+                    graphqlOperation(updateINVENTARIO, { input: newProducto })
                   );
                 })
               );
@@ -1130,32 +1205,53 @@ function ListaOrdenes() {
           setTotal(0);
           setprecioMaquila(0);
           setTotalCarrito(0);
+
+          try {
+            const newDocumento = {
+              tipoDocumento,
+              serie,
+              numeroSecuencial: numeroSecuencialActual,
+              ordenID,
+              opticaID: labId,
+            };
+            const updateConfig = {
+              id: idConfigDoc,
+              tipoDocumento,
+              serieActual: numeroSerie,
+              numeroSecuencialActual: numeroSecuencialActual + 1,
+              _version: versionDocumento,
+            };
+            await API.graphql(
+              graphqlOperation(createDOCUMENTOS, { input: newDocumento })
+            );
+            await API.graphql(
+              graphqlOperation(updateCONFIGURACIONDOCUMENTO, {
+                input: updateConfig,
+              })
+            );
+            message.success("Se gravo el documento");
+          } catch (error) {
+            message.error("Hubo un error contacta al administrador");
+          }
+          await Promise.all(
+            original.data.getORDEN.INVENTARIOORDENITEMS.items.map(
+              async (cart) => {
+                const result = listaProductos.find(
+                  (elemento) => elemento.id === cart.inventarioID
+                );
+                let newProducto = {
+                  id: cart.inventarioID,
+                  stock: Number(result.stock) - Number(cart.cantidad),
+                  _version: result._version,
+                };
+                console.log(newProducto);
+                await API.graphql(
+                  graphqlOperation(updateINVENTARIO, { input: newProducto })
+                );
+              }
+            )
+          );
         }
-        try {
-          const newDocumento = {
-            tipoDocumento,
-            serie,
-            numeroSecuencial: numeroSecuencialActual,
-            ordenID,
-            opticaID: labId,
-          };
-          const updateConfig = {
-            id: idConfigDoc,
-            tipoDocumento,
-            serieActual: numeroSerie,
-            numeroSecuencialActual: numeroSecuencialActual + 1,
-            _version: versionDocumento,
-          };
-          await API.graphql(
-            graphqlOperation(createDOCUMENTOS, { input: newDocumento })
-          );
-          await API.graphql(
-            graphqlOperation(updateCONFIGURACIONDOCUMENTO, {
-              input: updateConfig,
-            })
-          );
-          message.success("Se gravo el documento");
-        } catch (error) {}
       } else {
         message.warning("Debe establecer el metodo de pago");
       }

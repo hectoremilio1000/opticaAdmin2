@@ -17,7 +17,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import {
   createINVENTARIOORDENITEMS,
   createORDEN,
-  updateINVENTARIO,
+  // updateINVENTARIO,
 } from "../../../graphql/mutations";
 import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
 import { useGerenteContext } from "../../../contexts/GerenteContext";
@@ -292,15 +292,15 @@ function CrearOrden() {
                   input: newOrdenItem,
                 })
               );
-              let newProducto = {
-                id: cart.id,
-                stock: Number(cart.stock) - 1,
-                _version: cart.version,
-              };
-              console.log(newProducto);
-              await API.graphql(
-                graphqlOperation(updateINVENTARIO, { input: newProducto })
-              );
+              // let newProducto = {
+              //   id: cart.id,
+              //   stock: Number(cart.stock) - 1,
+              //   _version: cart.version,
+              // };
+              // console.log(newProducto);
+              // await API.graphql(
+              //   graphqlOperation(updateINVENTARIO, { input: newProducto })
+              // );
             })
           );
           setCarrito([]);

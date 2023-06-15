@@ -1,6 +1,145 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getGASTOS = /* GraphQL */ `
+  query GetGASTOS($id: ID!) {
+    getGASTOS(id: $id) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listGASTOS = /* GraphQL */ `
+  query ListGASTOS(
+    $filter: ModelGASTOSFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGASTOS(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        montoGasto
+        descripcion
+        turnoID
+        fecha
+        opticaID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncGASTOS = /* GraphQL */ `
+  query SyncGASTOS(
+    $filter: ModelGASTOSFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncGASTOS(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        montoGasto
+        descripcion
+        turnoID
+        fecha
+        opticaID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const gASTOSByTurnoID = /* GraphQL */ `
+  query GASTOSByTurnoID(
+    $turnoID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGASTOSFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    gASTOSByTurnoID(
+      turnoID: $turnoID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        montoGasto
+        descripcion
+        turnoID
+        fecha
+        opticaID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const gASTOSByOpticaID = /* GraphQL */ `
+  query GASTOSByOpticaID(
+    $opticaID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGASTOSFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    gASTOSByOpticaID(
+      opticaID: $opticaID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        montoGasto
+        descripcion
+        turnoID
+        fecha
+        opticaID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getDOCUMENTOS = /* GraphQL */ `
   query GetDOCUMENTOS($id: ID!) {
     getDOCUMENTOS(id: $id) {
@@ -399,6 +538,7 @@ export const getDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -421,6 +561,7 @@ export const listDeudas = /* GraphQL */ `
         estado
         turnoID
         ordenID
+        opticaID
         createdAt
         updatedAt
         _version
@@ -452,6 +593,7 @@ export const syncDeudas = /* GraphQL */ `
         estado
         turnoID
         ordenID
+        opticaID
         createdAt
         updatedAt
         _version
@@ -485,6 +627,7 @@ export const deudasByTurnoID = /* GraphQL */ `
         estado
         turnoID
         ordenID
+        opticaID
         createdAt
         updatedAt
         _version
@@ -518,6 +661,41 @@ export const deudasByOrdenID = /* GraphQL */ `
         estado
         turnoID
         ordenID
+        opticaID
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const deudasByOpticaID = /* GraphQL */ `
+  query DeudasByOpticaID(
+    $opticaID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelDeudasFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    deudasByOpticaID(
+      opticaID: $opticaID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        fecha
+        montoDeuda
+        estado
+        turnoID
+        ordenID
+        opticaID
         createdAt
         updatedAt
         _version
@@ -578,6 +756,7 @@ export const getTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -598,6 +777,23 @@ export const getTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -640,6 +836,10 @@ export const listTurnos = /* GraphQL */ `
         usuario
         estado
         Transacciones {
+          nextToken
+          startedAt
+        }
+        GASTOS {
           nextToken
           startedAt
         }
@@ -688,6 +888,10 @@ export const syncTurnos = /* GraphQL */ `
           nextToken
           startedAt
         }
+        GASTOS {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -732,6 +936,10 @@ export const turnosByCajaID = /* GraphQL */ `
         usuario
         estado
         Transacciones {
+          nextToken
+          startedAt
+        }
+        GASTOS {
           nextToken
           startedAt
         }
@@ -1451,6 +1659,7 @@ export const getORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1545,9 +1754,6 @@ export const listORDENS = /* GraphQL */ `
           startedAt
         }
         DOCUMENTOS {
-          tipoDocumento
-          serie
-          numeroSecuencial
           nextToken
           startedAt
         }
@@ -2154,6 +2360,41 @@ export const getOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -2210,6 +2451,14 @@ export const listOPTICAS = /* GraphQL */ `
         rfc
         contactPhone
         codSerial
+        Deudas {
+          nextToken
+          startedAt
+        }
+        GASTOS {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version
@@ -2275,6 +2524,14 @@ export const syncOPTICAS = /* GraphQL */ `
         rfc
         contactPhone
         codSerial
+        Deudas {
+          nextToken
+          startedAt
+        }
+        GASTOS {
+          nextToken
+          startedAt
+        }
         createdAt
         updatedAt
         _version

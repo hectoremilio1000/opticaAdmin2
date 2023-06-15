@@ -1,6 +1,66 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createGASTOS = /* GraphQL */ `
+  mutation CreateGASTOS(
+    $input: CreateGASTOSInput!
+    $condition: ModelGASTOSConditionInput
+  ) {
+    createGASTOS(input: $input, condition: $condition) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateGASTOS = /* GraphQL */ `
+  mutation UpdateGASTOS(
+    $input: UpdateGASTOSInput!
+    $condition: ModelGASTOSConditionInput
+  ) {
+    updateGASTOS(input: $input, condition: $condition) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteGASTOS = /* GraphQL */ `
+  mutation DeleteGASTOS(
+    $input: DeleteGASTOSInput!
+    $condition: ModelGASTOSConditionInput
+  ) {
+    deleteGASTOS(input: $input, condition: $condition) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const createDOCUMENTOS = /* GraphQL */ `
   mutation CreateDOCUMENTOS(
     $input: CreateDOCUMENTOSInput!
@@ -193,6 +253,7 @@ export const createDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -213,6 +274,7 @@ export const updateDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -233,6 +295,7 @@ export const deleteDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -293,6 +356,7 @@ export const createTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -313,6 +377,23 @@ export const createTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -382,6 +463,7 @@ export const updateTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -402,6 +484,23 @@ export const updateTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -471,6 +570,7 @@ export const deleteTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -491,6 +591,23 @@ export const deleteTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -982,6 +1099,7 @@ export const createORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1085,6 +1203,7 @@ export const updateORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1188,6 +1307,7 @@ export const deleteORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1583,6 +1703,41 @@ export const createOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -1766,6 +1921,41 @@ export const updateOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -1949,6 +2139,41 @@ export const deleteOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version

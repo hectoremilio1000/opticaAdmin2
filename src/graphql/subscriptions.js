@@ -1,6 +1,57 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateGASTOS = /* GraphQL */ `
+  subscription OnCreateGASTOS($filter: ModelSubscriptionGASTOSFilterInput) {
+    onCreateGASTOS(filter: $filter) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateGASTOS = /* GraphQL */ `
+  subscription OnUpdateGASTOS($filter: ModelSubscriptionGASTOSFilterInput) {
+    onUpdateGASTOS(filter: $filter) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteGASTOS = /* GraphQL */ `
+  subscription OnDeleteGASTOS($filter: ModelSubscriptionGASTOSFilterInput) {
+    onDeleteGASTOS(filter: $filter) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const onCreateDOCUMENTOS = /* GraphQL */ `
   subscription OnCreateDOCUMENTOS(
     $filter: ModelSubscriptionDOCUMENTOSFilterInput
@@ -181,6 +232,7 @@ export const onCreateDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -198,6 +250,7 @@ export const onUpdateDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -215,6 +268,7 @@ export const onDeleteDeudas = /* GraphQL */ `
       estado
       turnoID
       ordenID
+      opticaID
       createdAt
       updatedAt
       _version
@@ -272,6 +326,7 @@ export const onCreateTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -292,6 +347,23 @@ export const onCreateTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -358,6 +430,7 @@ export const onUpdateTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -378,6 +451,23 @@ export const onUpdateTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -444,6 +534,7 @@ export const onDeleteTurno = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -464,6 +555,23 @@ export const onDeleteTurno = /* GraphQL */ `
           ordenID
           tipoTransaccion
           fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -925,6 +1033,7 @@ export const onCreateORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1025,6 +1134,7 @@ export const onUpdateORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1125,6 +1235,7 @@ export const onDeleteORDEN = /* GraphQL */ `
           estado
           turnoID
           ordenID
+          opticaID
           createdAt
           updatedAt
           _version
@@ -1508,6 +1619,41 @@ export const onCreateOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -1688,6 +1834,41 @@ export const onUpdateOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -1868,6 +2049,41 @@ export const onDeleteOPTICA = /* GraphQL */ `
       rfc
       contactPhone
       codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version

@@ -1,3 +1,12 @@
+type GASTOS @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  montoGasto: Float
+  descripcion: String
+  turnoID: ID! @index(name: "byTurno")
+  fecha: String
+  opticaID: ID! @index(name: "byOPTICA")
+}
+
 type DOCUMENTOS @model @auth(rules: [{allow: public}]) {
   id: ID!
   tipoDocumento: TIPODOCUMENTO
@@ -49,6 +58,7 @@ type Deudas @model @auth(rules: [{allow: public}]) {
   estado: String
   turnoID: ID! @index(name: "byTurno")
   ordenID: ID! @index(name: "byORDEN")
+  opticaID: ID! @index(name: "byOPTICA")
 }
 
 type Turno @model @auth(rules: [{allow: public}]) {
@@ -63,6 +73,7 @@ type Turno @model @auth(rules: [{allow: public}]) {
   usuario: ID
   estado: String
   Transacciones: [Transacciones] @hasMany(indexName: "byTurno", fields: ["id"])
+  GASTOS: [GASTOS] @hasMany(indexName: "byTurno", fields: ["id"])
 }
 
 type Caja @model @auth(rules: [{allow: public}]) {
@@ -196,5 +207,7 @@ type OPTICA @model @auth(rules: [{allow: public}]) {
   rfc: String
   contactPhone: String
   codSerial: String
+  Deudas: [Deudas] @hasMany(indexName: "byOPTICA", fields: ["id"])
+  GASTOS: [GASTOS] @hasMany(indexName: "byOPTICA", fields: ["id"])
 }
  
