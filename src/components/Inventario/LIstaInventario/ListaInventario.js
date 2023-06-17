@@ -88,6 +88,7 @@ function ListaInventario() {
   //     console.error("Error al obtener la imagen:", error);
   //   }
   // };
+  console.log(dataSource.length);
 
   const aumentProduct = (record) => {
     setId(record?.id);
@@ -310,64 +311,62 @@ function ListaInventario() {
   };
 
   const fetchInventario = useCallback(async () => {
-    let productosList;
+    let productosList = [];
     if (labId === "") {
       try {
-        const result = await API.graphql(graphqlOperation(listINVENTARIOS));
-        const nodelete = result?.data?.listINVENTARIOS?.items;
-        const deletew = nodelete.filter(
-          (elemento) => elemento._deleted !== true
-        );
-        productosList = deletew;
+        let nextToken = null;
+        do {
+          const result = await API.graphql(
+            graphqlOperation(listINVENTARIOS, { limit: 100, nextToken })
+          );
+          console.log(result);
+          const nodelete = result?.data?.listINVENTARIOS?.items;
+          const deletew = nodelete.filter(
+            (elemento) => elemento._deleted !== true
+          );
+          productosList.push(...deletew);
+          nextToken = result?.data?.listINVENTARIOS?.nextToken;
+        } while (nextToken);
       } catch (error) {
         console.log(error);
       }
     } else {
       try {
-        const result = await API.graphql(
-          graphqlOperation(iNVENTARIOSByOpticaID, { opticaID: labId })
-        );
-        const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
-        const deletew = nodelete.filter(
-          (elemento) => elemento._deleted !== true
-        );
-        productosList = deletew;
+        let nextToken = null;
+        do {
+          const result = await API.graphql(
+            graphqlOperation(iNVENTARIOSByOpticaID, {
+              opticaID: labId,
+              limit: 100,
+              nextToken,
+            })
+          );
+          const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
+          const deletew = nodelete.filter(
+            (elemento) => elemento._deleted !== true
+          );
+          productosList.push(...deletew);
+          nextToken = result?.data?.iNVENTARIOSByOpticaID?.nextToken;
+        } while (nextToken);
       } catch (error) {
         console.log(error);
       }
     }
+    console.log(productosList);
     // const ordenProducts = productosList.sort((a, b) => {
     //   // Ordenar por fecha de creación descendente (más reciente primero)
     //   return new Date(b.createdAt) - new Date(a.createdAt);
     // });
-    // setDataSource(ordenProducts);
-    // setInventario(ordenProducts);
-    // Obtener las categorías únicas presentes en los productos
-    const categoriasUnicas = [
-      ...new Set(productosList.map((item) => item.tipoEstructura)),
-    ];
 
-    // Ordenar las categorías alfabéticamente
-    const categoriasOrdenadas = categoriasUnicas.sort();
+    productosList.sort((a, b) => a.tipoMaterial.localeCompare(b.tipoMaterial));
 
-    // Ordenar los productos agrupando por categoría según la cantidad de apariciones de cada categoría
-    const ordenProducts = categoriasOrdenadas.flatMap((categoria) => {
-      const productosCategoria = productosList.filter(
-        (item) => item.tipoEstructura === categoria
-      );
-      return Array(productosCategoria.length).fill(productosCategoria);
-    });
-
-    // Aplanar el array multidimensional
-    const productosOrdenados = ordenProducts.flat();
-
-    setDataSource(productosOrdenados);
-    setInventario(productosOrdenados);
+    setDataSource(productosList);
+    setInventario(productosList);
   }, [labId]);
   useEffect(() => {
     fetchInventario();
     // eslint-disable-next-line
-  }, [0]);
+  }, []);
 
   const deletehandle = async () => {
     console.log(id);
