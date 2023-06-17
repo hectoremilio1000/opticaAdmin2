@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Form,
   Input,
@@ -15,6 +15,7 @@ import {
 } from "antd";
 // amplify API
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { FaFilePdf } from "react-icons/fa";
 import { API, DataStore, graphqlOperation } from "aws-amplify";
 // import { useNavigate } from "react-router-dom";
 import { OPTICA } from "../../../models";
@@ -27,10 +28,15 @@ import { useGerenteContext } from "../../../contexts/GerenteContext";
 import { deleteINVENTARIO, updateINVENTARIO } from "../../../graphql/mutations";
 import LaboratorioSelector from "../../RoleBased/LaboratorioSelector";
 import { useAuthContext } from "../../../contexts/AuthContext";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import TicketInventario from "./TicketInventario";
 
 const { Content } = Layout;
 const { Option } = Select;
 function ListaInventario() {
+  // carga de pdf
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const { groupName } = useAuthContext();
   // use state de form modal
   const [categoria, setCategoria] = useState("");
@@ -303,7 +309,7 @@ function ListaInventario() {
     setVersion(record?._version);
   };
 
-  const fetchInventario = async () => {
+  const fetchInventario = useCallback(async () => {
     let productosList;
     if (labId === "") {
       try {
@@ -330,18 +336,38 @@ function ListaInventario() {
         console.log(error);
       }
     }
-    const ordenProducts = productosList.sort((a, b) => {
-      // Ordenar por fecha de creación descendente (más reciente primero)
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-    setDataSource(ordenProducts);
-    setInventario(ordenProducts);
-  };
+    // const ordenProducts = productosList.sort((a, b) => {
+    //   // Ordenar por fecha de creación descendente (más reciente primero)
+    //   return new Date(b.createdAt) - new Date(a.createdAt);
+    // });
+    // setDataSource(ordenProducts);
+    // setInventario(ordenProducts);
+    // Obtener las categorías únicas presentes en los productos
+    const categoriasUnicas = [
+      ...new Set(productosList.map((item) => item.tipoEstructura)),
+    ];
 
+    // Ordenar las categorías alfabéticamente
+    const categoriasOrdenadas = categoriasUnicas.sort();
+
+    // Ordenar los productos agrupando por categoría según la cantidad de apariciones de cada categoría
+    const ordenProducts = categoriasOrdenadas.flatMap((categoria) => {
+      const productosCategoria = productosList.filter(
+        (item) => item.tipoEstructura === categoria
+      );
+      return Array(productosCategoria.length).fill(productosCategoria);
+    });
+
+    // Aplanar el array multidimensional
+    const productosOrdenados = ordenProducts.flat();
+
+    setDataSource(productosOrdenados);
+    setInventario(productosOrdenados);
+  }, [labId]);
   useEffect(() => {
     fetchInventario();
     // eslint-disable-next-line
-  }, [labId]);
+  }, [0]);
 
   const deletehandle = async () => {
     console.log(id);
@@ -485,6 +511,27 @@ function ListaInventario() {
             <Button onClick={resetFilters} title="reset">
               Resetear
             </Button>
+            {dataSource.length > 0 && (
+              <PDFDownloadLink
+                document={<TicketInventario data={dataSource} />}
+                fileName="inventario.pdf"
+              >
+                {({ load }) => (
+                  <Button
+                    onClick={() => setIsGenerating(load)}
+                    disabled={load || isGenerating}
+                  >
+                    {load || isGenerating ? (
+                      "Generando PDF..."
+                    ) : (
+                      <>
+                        <FaFilePdf /> Descargar reporte
+                      </>
+                    )}
+                  </Button>
+                )}
+              </PDFDownloadLink>
+            )}
           </div>
         </Form>
         <Table
