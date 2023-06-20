@@ -158,7 +158,7 @@ export default function TicketCaja({
         </View>
         <View style={styles.info}>
           <Text>
-            Total a entregar en fectivo: $
+            Total a entregar en efectivo: $
             {Math.round(
               ((montoInicial + efectivoTotal - gastoEfectivo) * 100) / 100
             ).toFixed(2)}

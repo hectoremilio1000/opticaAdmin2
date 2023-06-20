@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import {
   cajasByOpticaID,
   deudasByTurnoID,
-  gASTOSByOpticaID,
+  gASTOSByTurnoID,
   transaccionesByTurnoID,
 } from "../../../graphql/queries";
 import { useGerenteContext } from "../../../contexts/GerenteContext";
@@ -123,9 +123,9 @@ const CrearCaja = () => {
   const revisarGastos = async () => {
     try {
       const result = await API.graphql(
-        graphqlOperation(gASTOSByOpticaID, { opticaID: labId })
+        graphqlOperation(gASTOSByTurnoID, { turnoID: nowTurno.id })
       );
-      const gastos = result?.data?.gASTOSByOpticaID?.items;
+      const gastos = result?.data?.gASTOSByTurnoID?.items;
       if (gastos.length > 0) {
         let montoGasto = 0;
         for (const gasto of gastos) {
@@ -148,7 +148,7 @@ const CrearCaja = () => {
       const updateTurnos = {
         id: nowTurno.id,
         _version: nowTurno._version,
-        montoCierre: Number(ventas) + nowTurno.montoInicial,
+        montoCierre: Number(ventas) + nowTurno.montoInicial - gastoEfectivo,
         fechaCierre: fechaActual,
         estado: "Cerrado",
       };
