@@ -89,22 +89,6 @@
           "resourceName": "apioticapoolPostConfirmation"
         }
       ]
-    },
-    "AMPLIFY_function_apioticapoolPostConfirmation_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "apioticapoolPostConfirmation"
-        }
-      ]
-    },
-    "AMPLIFY_function_apioticapoolPostConfirmation_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "apioticapoolPostConfirmation"
-        }
-      ]
     }
   },
   "storage": {
