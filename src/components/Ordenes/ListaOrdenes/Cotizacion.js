@@ -80,7 +80,7 @@ export default function Cotizacion({
   };
   return (
     <Document>
-      <Page size={[209.76, 300]} style={styles.page}>
+      <Page size={[209.76, 600]} style={styles.page}>
         <View style={styles.logo}>
           <Image src={logoSrc} alt="Logo" />
         </View>

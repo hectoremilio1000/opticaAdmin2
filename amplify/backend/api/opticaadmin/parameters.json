@@ -1,0 +1,6 @@
+{
+  "AppSyncApiName": "opticaadmin",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2023-06-06T14:46:36.599Z"
+}

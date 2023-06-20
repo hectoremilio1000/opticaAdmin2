@@ -1,6 +1,6 @@
 {
   "api": {
-    "apiopticaadmin": {
+    "opticaadmin": {
       "dependsOn": [],
       "output": {
         "authConfig": {
@@ -23,7 +23,7 @@
     }
   },
   "auth": {
-    "opticaadminf85f3cb4f85f3cb4": {
+    "apioticapool": {
       "customAuth": false,
       "dependsOn": [
         {
@@ -32,7 +32,7 @@
             "Name"
           ],
           "category": "function",
-          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation",
+          "resourceName": "apioticapoolPostConfirmation",
           "triggerProvider": "Cognito"
         }
       ],
@@ -67,7 +67,7 @@
             "IdentityPoolId"
           ],
           "category": "auth",
-          "resourceName": "opticaadminf85f3cb4f85f3cb4"
+          "resourceName": "apioticapool"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -75,47 +75,47 @@
     }
   },
   "function": {
-    "opticaadminf85f3cb4f85f3cb4PostConfirmation": {
+    "apioticapoolPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_GROUP": {
+    "AMPLIFY_function_apioticapoolPostConfirmation_GROUP": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
+          "resourceName": "apioticapoolPostConfirmation"
         }
       ]
     },
-    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_deploymentBucketName": {
+    "AMPLIFY_function_apioticapoolPostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
+          "resourceName": "apioticapoolPostConfirmation"
         }
       ]
     },
-    "AMPLIFY_function_opticaadminf85f3cb4f85f3cb4PostConfirmation_s3Key": {
+    "AMPLIFY_function_apioticapoolPostConfirmation_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "opticaadminf85f3cb4f85f3cb4PostConfirmation"
+          "resourceName": "apioticapoolPostConfirmation"
         }
       ]
     }
   },
   "storage": {
-    "OpticaImages": {
+    "opticaImages": {
       "dependsOn": [
         {
           "attributes": [
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "opticaadminf85f3cb4f85f3cb4"
+          "resourceName": "apioticapool"
         },
         {
           "attributes": [

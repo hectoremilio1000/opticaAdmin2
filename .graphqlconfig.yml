@@ -1,5 +1,16 @@
 projects:
-  apiopticaadmin:
+  opticaapp2:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+  opticaadmin:
     schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js

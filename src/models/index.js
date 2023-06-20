@@ -2,6 +2,23 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const Tipodocumento = {
+  "TICKET": "TICKET",
+  "NOTADEVENTA": "NOTADEVENTA",
+  "FACTURA": "FACTURA"
+};
+
+const Tipotransaccion = {
+  "VENTA": "VENTA",
+  "COBRO": "COBRO"
+};
+
+const Metodopago = {
+  "TARJETA_CREDITO": "TARJETA_CREDITO",
+  "TRANSFERENCIA": "TRANSFERENCIA",
+  "EFECTIVO": "EFECTIVO"
+};
+
 const Ordenstatus = {
   "CREADA": "CREADA",
   "ENVIADAMAQUILA": "ENVIADAMAQUILA",
@@ -21,9 +38,16 @@ const Enumcategoria = {
   "BOY": "BOY"
 };
 
-const { INVENTARIOORDENITEMS, GERENTE, VENDEDORES, INVENTARIO, ORDEN, CLIENTES, OPTICA } = initSchema(schema);
+const { GASTOS, DOCUMENTOS, CONFIGURACIONDOCUMENTO, Transacciones, Deudas, Turno, Caja, INVENTARIOORDENITEMS, GERENTE, VENDEDORES, INVENTARIO, ORDEN, CLIENTES, OPTICA } = initSchema(schema);
 
 export {
+  GASTOS,
+  DOCUMENTOS,
+  CONFIGURACIONDOCUMENTO,
+  Transacciones,
+  Deudas,
+  Turno,
+  Caja,
   INVENTARIOORDENITEMS,
   GERENTE,
   VENDEDORES,
@@ -31,6 +55,9 @@ export {
   ORDEN,
   CLIENTES,
   OPTICA,
+  Tipodocumento,
+  Tipotransaccion,
+  Metodopago,
   Ordenstatus,
   Tipoorden,
   Enumcategoria

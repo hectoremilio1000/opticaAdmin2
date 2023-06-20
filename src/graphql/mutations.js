@@ -1,6 +1,738 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createGASTOS = /* GraphQL */ `
+  mutation CreateGASTOS(
+    $input: CreateGASTOSInput!
+    $condition: ModelGASTOSConditionInput
+  ) {
+    createGASTOS(input: $input, condition: $condition) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateGASTOS = /* GraphQL */ `
+  mutation UpdateGASTOS(
+    $input: UpdateGASTOSInput!
+    $condition: ModelGASTOSConditionInput
+  ) {
+    updateGASTOS(input: $input, condition: $condition) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteGASTOS = /* GraphQL */ `
+  mutation DeleteGASTOS(
+    $input: DeleteGASTOSInput!
+    $condition: ModelGASTOSConditionInput
+  ) {
+    deleteGASTOS(input: $input, condition: $condition) {
+      id
+      montoGasto
+      descripcion
+      turnoID
+      fecha
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createDOCUMENTOS = /* GraphQL */ `
+  mutation CreateDOCUMENTOS(
+    $input: CreateDOCUMENTOSInput!
+    $condition: ModelDOCUMENTOSConditionInput
+  ) {
+    createDOCUMENTOS(input: $input, condition: $condition) {
+      id
+      tipoDocumento
+      serie
+      numeroSecuencial
+      ordenID
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateDOCUMENTOS = /* GraphQL */ `
+  mutation UpdateDOCUMENTOS(
+    $input: UpdateDOCUMENTOSInput!
+    $condition: ModelDOCUMENTOSConditionInput
+  ) {
+    updateDOCUMENTOS(input: $input, condition: $condition) {
+      id
+      tipoDocumento
+      serie
+      numeroSecuencial
+      ordenID
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteDOCUMENTOS = /* GraphQL */ `
+  mutation DeleteDOCUMENTOS(
+    $input: DeleteDOCUMENTOSInput!
+    $condition: ModelDOCUMENTOSConditionInput
+  ) {
+    deleteDOCUMENTOS(input: $input, condition: $condition) {
+      id
+      tipoDocumento
+      serie
+      numeroSecuencial
+      ordenID
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createCONFIGURACIONDOCUMENTO = /* GraphQL */ `
+  mutation CreateCONFIGURACIONDOCUMENTO(
+    $input: CreateCONFIGURACIONDOCUMENTOInput!
+    $condition: ModelCONFIGURACIONDOCUMENTOConditionInput
+  ) {
+    createCONFIGURACIONDOCUMENTO(input: $input, condition: $condition) {
+      id
+      tipoDocumento
+      serieActual
+      numeroSecuencialActual
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateCONFIGURACIONDOCUMENTO = /* GraphQL */ `
+  mutation UpdateCONFIGURACIONDOCUMENTO(
+    $input: UpdateCONFIGURACIONDOCUMENTOInput!
+    $condition: ModelCONFIGURACIONDOCUMENTOConditionInput
+  ) {
+    updateCONFIGURACIONDOCUMENTO(input: $input, condition: $condition) {
+      id
+      tipoDocumento
+      serieActual
+      numeroSecuencialActual
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteCONFIGURACIONDOCUMENTO = /* GraphQL */ `
+  mutation DeleteCONFIGURACIONDOCUMENTO(
+    $input: DeleteCONFIGURACIONDOCUMENTOInput!
+    $condition: ModelCONFIGURACIONDOCUMENTOConditionInput
+  ) {
+    deleteCONFIGURACIONDOCUMENTO(input: $input, condition: $condition) {
+      id
+      tipoDocumento
+      serieActual
+      numeroSecuencialActual
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createTransacciones = /* GraphQL */ `
+  mutation CreateTransacciones(
+    $input: CreateTransaccionesInput!
+    $condition: ModelTransaccionesConditionInput
+  ) {
+    createTransacciones(input: $input, condition: $condition) {
+      id
+      monto
+      metodoPago
+      turnoID
+      ordenID
+      tipoTransaccion
+      fecha
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateTransacciones = /* GraphQL */ `
+  mutation UpdateTransacciones(
+    $input: UpdateTransaccionesInput!
+    $condition: ModelTransaccionesConditionInput
+  ) {
+    updateTransacciones(input: $input, condition: $condition) {
+      id
+      monto
+      metodoPago
+      turnoID
+      ordenID
+      tipoTransaccion
+      fecha
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteTransacciones = /* GraphQL */ `
+  mutation DeleteTransacciones(
+    $input: DeleteTransaccionesInput!
+    $condition: ModelTransaccionesConditionInput
+  ) {
+    deleteTransacciones(input: $input, condition: $condition) {
+      id
+      monto
+      metodoPago
+      turnoID
+      ordenID
+      tipoTransaccion
+      fecha
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createDeudas = /* GraphQL */ `
+  mutation CreateDeudas(
+    $input: CreateDeudasInput!
+    $condition: ModelDeudasConditionInput
+  ) {
+    createDeudas(input: $input, condition: $condition) {
+      id
+      fecha
+      montoDeuda
+      estado
+      turnoID
+      ordenID
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateDeudas = /* GraphQL */ `
+  mutation UpdateDeudas(
+    $input: UpdateDeudasInput!
+    $condition: ModelDeudasConditionInput
+  ) {
+    updateDeudas(input: $input, condition: $condition) {
+      id
+      fecha
+      montoDeuda
+      estado
+      turnoID
+      ordenID
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteDeudas = /* GraphQL */ `
+  mutation DeleteDeudas(
+    $input: DeleteDeudasInput!
+    $condition: ModelDeudasConditionInput
+  ) {
+    deleteDeudas(input: $input, condition: $condition) {
+      id
+      fecha
+      montoDeuda
+      estado
+      turnoID
+      ordenID
+      opticaID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createTurno = /* GraphQL */ `
+  mutation CreateTurno(
+    $input: CreateTurnoInput!
+    $condition: ModelTurnoConditionInput
+  ) {
+    createTurno(input: $input, condition: $condition) {
+      id
+      montoInicial
+      fechaApertura
+      montoCierre
+      fechaCierre
+      cajaID
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          fechaExamen
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          ordenStatus
+          precioTotal
+          montoPagado
+          anticipo
+          precioGraduacion
+          turnoID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      usuario
+      estado
+      Transacciones {
+        items {
+          id
+          monto
+          metodoPago
+          turnoID
+          ordenID
+          tipoTransaccion
+          fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateTurno = /* GraphQL */ `
+  mutation UpdateTurno(
+    $input: UpdateTurnoInput!
+    $condition: ModelTurnoConditionInput
+  ) {
+    updateTurno(input: $input, condition: $condition) {
+      id
+      montoInicial
+      fechaApertura
+      montoCierre
+      fechaCierre
+      cajaID
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          fechaExamen
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          ordenStatus
+          precioTotal
+          montoPagado
+          anticipo
+          precioGraduacion
+          turnoID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      usuario
+      estado
+      Transacciones {
+        items {
+          id
+          monto
+          metodoPago
+          turnoID
+          ordenID
+          tipoTransaccion
+          fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteTurno = /* GraphQL */ `
+  mutation DeleteTurno(
+    $input: DeleteTurnoInput!
+    $condition: ModelTurnoConditionInput
+  ) {
+    deleteTurno(input: $input, condition: $condition) {
+      id
+      montoInicial
+      fechaApertura
+      montoCierre
+      fechaCierre
+      cajaID
+      ORDENS {
+        items {
+          id
+          opticaID
+          tipoOrden
+          clientesID
+          usadoLentes
+          fechaOrden
+          horaOrden
+          fechaExamen
+          referencia
+          fechaEntrega
+          seRealizoExamen
+          graduacionDerechaVieja
+          graduacionIzquierdaVieja
+          graduacionDerechaNueva
+          graduacionIzquierdaNueva
+          ordenStatus
+          precioTotal
+          montoPagado
+          anticipo
+          precioGraduacion
+          turnoID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      usuario
+      estado
+      Transacciones {
+        items {
+          id
+          monto
+          metodoPago
+          turnoID
+          ordenID
+          tipoTransaccion
+          fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createCaja = /* GraphQL */ `
+  mutation CreateCaja(
+    $input: CreateCajaInput!
+    $condition: ModelCajaConditionInput
+  ) {
+    createCaja(input: $input, condition: $condition) {
+      id
+      nombre
+      opticaID
+      Turnos {
+        items {
+          id
+          montoInicial
+          fechaApertura
+          montoCierre
+          fechaCierre
+          cajaID
+          usuario
+          estado
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateCaja = /* GraphQL */ `
+  mutation UpdateCaja(
+    $input: UpdateCajaInput!
+    $condition: ModelCajaConditionInput
+  ) {
+    updateCaja(input: $input, condition: $condition) {
+      id
+      nombre
+      opticaID
+      Turnos {
+        items {
+          id
+          montoInicial
+          fechaApertura
+          montoCierre
+          fechaCierre
+          cajaID
+          usuario
+          estado
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteCaja = /* GraphQL */ `
+  mutation DeleteCaja(
+    $input: DeleteCajaInput!
+    $condition: ModelCajaConditionInput
+  ) {
+    deleteCaja(input: $input, condition: $condition) {
+      id
+      nombre
+      opticaID
+      Turnos {
+        items {
+          id
+          montoInicial
+          fechaApertura
+          montoCierre
+          fechaCierre
+          cajaID
+          usuario
+          estado
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const createINVENTARIOORDENITEMS = /* GraphQL */ `
   mutation CreateINVENTARIOORDENITEMS(
     $input: CreateINVENTARIOORDENITEMSInput!
@@ -329,7 +1061,7 @@ export const createORDEN = /* GraphQL */ `
       usadoLentes
       fechaOrden
       horaOrden
-      precioTotal
+      fechaExamen
       referencia
       fechaEntrega
       seRealizoExamen
@@ -337,7 +1069,7 @@ export const createORDEN = /* GraphQL */ `
       graduacionIzquierdaVieja
       graduacionDerechaNueva
       graduacionIzquierdaNueva
-      fechaExamen
+      ordenStatus
       INVENTARIOORDENITEMS {
         items {
           id
@@ -354,9 +1086,64 @@ export const createORDEN = /* GraphQL */ `
         nextToken
         startedAt
       }
-      ordenStatus
-      precioGraduacion
+      precioTotal
+      montoPagado
       anticipo
+      precioGraduacion
+      turnoID
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Transacciones {
+        items {
+          id
+          monto
+          metodoPago
+          turnoID
+          ordenID
+          tipoTransaccion
+          fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      DOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serie
+          numeroSecuencial
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -378,7 +1165,7 @@ export const updateORDEN = /* GraphQL */ `
       usadoLentes
       fechaOrden
       horaOrden
-      precioTotal
+      fechaExamen
       referencia
       fechaEntrega
       seRealizoExamen
@@ -386,7 +1173,7 @@ export const updateORDEN = /* GraphQL */ `
       graduacionIzquierdaVieja
       graduacionDerechaNueva
       graduacionIzquierdaNueva
-      fechaExamen
+      ordenStatus
       INVENTARIOORDENITEMS {
         items {
           id
@@ -403,9 +1190,64 @@ export const updateORDEN = /* GraphQL */ `
         nextToken
         startedAt
       }
-      ordenStatus
-      precioGraduacion
+      precioTotal
+      montoPagado
       anticipo
+      precioGraduacion
+      turnoID
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Transacciones {
+        items {
+          id
+          monto
+          metodoPago
+          turnoID
+          ordenID
+          tipoTransaccion
+          fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      DOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serie
+          numeroSecuencial
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -427,7 +1269,7 @@ export const deleteORDEN = /* GraphQL */ `
       usadoLentes
       fechaOrden
       horaOrden
-      precioTotal
+      fechaExamen
       referencia
       fechaEntrega
       seRealizoExamen
@@ -435,7 +1277,7 @@ export const deleteORDEN = /* GraphQL */ `
       graduacionIzquierdaVieja
       graduacionDerechaNueva
       graduacionIzquierdaNueva
-      fechaExamen
+      ordenStatus
       INVENTARIOORDENITEMS {
         items {
           id
@@ -452,9 +1294,64 @@ export const deleteORDEN = /* GraphQL */ `
         nextToken
         startedAt
       }
-      ordenStatus
-      precioGraduacion
+      precioTotal
+      montoPagado
       anticipo
+      precioGraduacion
+      turnoID
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Transacciones {
+        items {
+          id
+          monto
+          metodoPago
+          turnoID
+          ordenID
+          tipoTransaccion
+          fecha
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      DOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serie
+          numeroSecuencial
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
       createdAt
       updatedAt
       _version
@@ -488,7 +1385,7 @@ export const createCLIENTES = /* GraphQL */ `
           usadoLentes
           fechaOrden
           horaOrden
-          precioTotal
+          fechaExamen
           referencia
           fechaEntrega
           seRealizoExamen
@@ -496,10 +1393,12 @@ export const createCLIENTES = /* GraphQL */ `
           graduacionIzquierdaVieja
           graduacionDerechaNueva
           graduacionIzquierdaNueva
-          fechaExamen
           ordenStatus
-          precioGraduacion
+          precioTotal
+          montoPagado
           anticipo
+          precioGraduacion
+          turnoID
           createdAt
           updatedAt
           _version
@@ -542,7 +1441,7 @@ export const updateCLIENTES = /* GraphQL */ `
           usadoLentes
           fechaOrden
           horaOrden
-          precioTotal
+          fechaExamen
           referencia
           fechaEntrega
           seRealizoExamen
@@ -550,10 +1449,12 @@ export const updateCLIENTES = /* GraphQL */ `
           graduacionIzquierdaVieja
           graduacionDerechaNueva
           graduacionIzquierdaNueva
-          fechaExamen
           ordenStatus
-          precioGraduacion
+          precioTotal
+          montoPagado
           anticipo
+          precioGraduacion
+          turnoID
           createdAt
           updatedAt
           _version
@@ -596,7 +1497,7 @@ export const deleteCLIENTES = /* GraphQL */ `
           usadoLentes
           fechaOrden
           horaOrden
-          precioTotal
+          fechaExamen
           referencia
           fechaEntrega
           seRealizoExamen
@@ -604,10 +1505,12 @@ export const deleteCLIENTES = /* GraphQL */ `
           graduacionIzquierdaVieja
           graduacionDerechaNueva
           graduacionIzquierdaNueva
-          fechaExamen
           ordenStatus
-          precioGraduacion
+          precioTotal
+          montoPagado
           anticipo
+          precioGraduacion
+          turnoID
           createdAt
           updatedAt
           _version
@@ -681,7 +1584,7 @@ export const createOPTICA = /* GraphQL */ `
           usadoLentes
           fechaOrden
           horaOrden
-          precioTotal
+          fechaExamen
           referencia
           fechaEntrega
           seRealizoExamen
@@ -689,10 +1592,12 @@ export const createOPTICA = /* GraphQL */ `
           graduacionIzquierdaVieja
           graduacionDerechaNueva
           graduacionIzquierdaNueva
-          fechaExamen
           ordenStatus
-          precioGraduacion
+          precioTotal
+          montoPagado
           anticipo
+          precioGraduacion
+          turnoID
           createdAt
           updatedAt
           _version
@@ -737,6 +1642,93 @@ export const createOPTICA = /* GraphQL */ `
           categoria
           opticaID
           stock
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Cajas {
+        items {
+          id
+          nombre
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CONFIGURACIONDOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serieActual
+          numeroSecuencialActual
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      DOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serie
+          numeroSecuencial
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      direction
+      cp
+      rfc
+      contactPhone
+      codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -810,7 +1802,7 @@ export const updateOPTICA = /* GraphQL */ `
           usadoLentes
           fechaOrden
           horaOrden
-          precioTotal
+          fechaExamen
           referencia
           fechaEntrega
           seRealizoExamen
@@ -818,10 +1810,12 @@ export const updateOPTICA = /* GraphQL */ `
           graduacionIzquierdaVieja
           graduacionDerechaNueva
           graduacionIzquierdaNueva
-          fechaExamen
           ordenStatus
-          precioGraduacion
+          precioTotal
+          montoPagado
           anticipo
+          precioGraduacion
+          turnoID
           createdAt
           updatedAt
           _version
@@ -866,6 +1860,93 @@ export const updateOPTICA = /* GraphQL */ `
           categoria
           opticaID
           stock
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Cajas {
+        items {
+          id
+          nombre
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CONFIGURACIONDOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serieActual
+          numeroSecuencialActual
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      DOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serie
+          numeroSecuencial
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      direction
+      cp
+      rfc
+      contactPhone
+      codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version
@@ -939,7 +2020,7 @@ export const deleteOPTICA = /* GraphQL */ `
           usadoLentes
           fechaOrden
           horaOrden
-          precioTotal
+          fechaExamen
           referencia
           fechaEntrega
           seRealizoExamen
@@ -947,10 +2028,12 @@ export const deleteOPTICA = /* GraphQL */ `
           graduacionIzquierdaVieja
           graduacionDerechaNueva
           graduacionIzquierdaNueva
-          fechaExamen
           ordenStatus
-          precioGraduacion
+          precioTotal
+          montoPagado
           anticipo
+          precioGraduacion
+          turnoID
           createdAt
           updatedAt
           _version
@@ -995,6 +2078,93 @@ export const deleteOPTICA = /* GraphQL */ `
           categoria
           opticaID
           stock
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      Cajas {
+        items {
+          id
+          nombre
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      CONFIGURACIONDOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serieActual
+          numeroSecuencialActual
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      DOCUMENTOS {
+        items {
+          id
+          tipoDocumento
+          serie
+          numeroSecuencial
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      direction
+      cp
+      rfc
+      contactPhone
+      codSerial
+      Deudas {
+        items {
+          id
+          fecha
+          montoDeuda
+          estado
+          turnoID
+          ordenID
+          opticaID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      GASTOS {
+        items {
+          id
+          montoGasto
+          descripcion
+          turnoID
+          fecha
+          opticaID
           createdAt
           updatedAt
           _version

@@ -1,13 +1,13 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "apiopticaadmin": {
+    "opticaadmin": {
       "GraphQLAPIEndpointOutput": "string",
       "GraphQLAPIIdOutput": "string",
       "GraphQLAPIKeyOutput": "string"
     }
   },
   "auth": {
-    "opticaadminf85f3cb4f85f3cb4": {
+    "apioticapool": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
       "IdentityPoolId": "string",
@@ -17,14 +17,13 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolName": "string"
     },
     "userPoolGroups": {
-      "clienteGroupRole": "string",
       "gerenteGroupRole": "string",
       "superadminGroupRole": "string",
       "vendedorGroupRole": "string"
     }
   },
   "function": {
-    "opticaadminf85f3cb4f85f3cb4PostConfirmation": {
+    "apioticapoolPostConfirmation": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
@@ -33,7 +32,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "OpticaImages": {
+    "opticaImages": {
       "BucketName": "string",
       "Region": "string"
     }
