@@ -13,10 +13,6 @@
       "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-opticaadmin-dev-145224-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
-      "auth": {
-        "apioticapool": {},
-        "userPoolGroups": {}
-      },
       "function": {
         "apioticapoolPostConfirmation": {
           "GROUP": "",
@@ -24,8 +20,9 @@
           "s3Key": "amplify-builds/apioticapoolPostConfirmation-5930635777354d64582b-build.zip"
         }
       },
-      "api": {
-        "opticaadmin": {}
+      "auth": {
+        "apioticapool": {},
+        "userPoolGroups": {}
       },
       "storage": {
         "opticaImages": {}
