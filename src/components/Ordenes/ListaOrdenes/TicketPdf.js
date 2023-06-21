@@ -157,7 +157,7 @@ export default function TicketPDF({
           {Number(precioGraduacion) !== 0 ? (
             <View style={styles.tableRow} key={-1}>
               <View style={styles.tableCell}>
-                <Text>Graduacion de lentes</Text>
+                <Text>Material</Text>
               </View>
               <View style={styles.tableCell}>
                 <Text>1</Text>
