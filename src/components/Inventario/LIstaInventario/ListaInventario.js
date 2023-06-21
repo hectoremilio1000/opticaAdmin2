@@ -54,6 +54,7 @@ function ListaInventario() {
   const [isEditing, setIsEditing] = useState(false);
   const [opticaID, setOpticaID] = useState("");
   const [isaument, setIsaument] = useState(false);
+  const [isRestar, setIsRestar] = useState(false);
   const [stock, setStock] = useState("");
   const [newStock, setNewStock] = useState("");
 
@@ -96,6 +97,12 @@ function ListaInventario() {
     setStock(record?.stock);
     setIsaument(true);
   };
+  const restarProduct = (record) => {
+    setId(record?.id);
+    setVersion(record?._version);
+    setStock(record?.stock);
+    setIsRestar(true);
+  };
   const onAddProduct = async () => {
     try {
       const newInventario = {
@@ -110,6 +117,30 @@ function ListaInventario() {
       setNewStock("");
       message.success("Se agrego mas stock al producto");
       fetchInventario();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onRestarProduct = async () => {
+    try {
+      if (stock >= newStock) {
+        const newInventario = {
+          id: id,
+          _version: version,
+          stock: (Number(stock) - Number(newStock)).toString(),
+        };
+        await API.graphql(
+          graphqlOperation(updateINVENTARIO, { input: newInventario })
+        );
+        setIsaument(false);
+        setNewStock("");
+        message.success("Se agrego mas stock al producto");
+        fetchInventario();
+      } else {
+        message.error(
+          "La cantidad de stock max que se puede dar de baje es " + stock
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -254,6 +285,7 @@ function ListaInventario() {
         return (
           <Space display="horizontal">
             <Button onClick={() => aumentProduct(record)}>+</Button>
+            <Button onClick={() => restarProduct(record)}>-</Button>
             <EditOutlined
               type="link"
               onClick={() => {
@@ -691,6 +723,22 @@ function ListaInventario() {
           title="Aumentar productos"
           open={isaument}
           onOk={() => onAddProduct()}
+        >
+          <p>Stock Actual: {stock}</p>
+          <Form.Item label="Agregar stock">
+            <Input
+              placeholder="Ingresa la cantidad de stock a agregar al actual"
+              value={newStock}
+              onChange={(e) => setNewStock(e.target.value)}
+            />
+          </Form.Item>
+        </Modal>
+        <Modal
+          onCancel={() => setIsRestar(false)}
+          // onOk={() => setIsEditing(false)}
+          title="Dar de baja a producto"
+          open={isRestar}
+          onOk={() => onRestarProduct()}
         >
           <p>Stock Actual: {stock}</p>
           <Form.Item label="Agregar stock">

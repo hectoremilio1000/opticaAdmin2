@@ -1241,7 +1241,9 @@ function ListaOrdenes() {
                 );
                 let newProducto = {
                   id: cart.inventarioID,
-                  stock: Number(result.stock) - Number(cart.cantidad),
+                  stock: (
+                    Number(result.stock) - Number(cart.cantidad)
+                  ).toString(),
                   _version: result._version,
                 };
                 console.log(newProducto);
