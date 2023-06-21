@@ -82,14 +82,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_function_apioticapoolPostConfirmation_GROUP": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "apioticapoolPostConfirmation"
-        }
-      ]
-    },
     "AMPLIFY_function_apioticapoolPostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
