@@ -8,6 +8,7 @@ import {
   Table,
   message,
   Tag,
+  Checkbox,
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { MenuContext } from "../../../contexts/MenuContext";
@@ -257,6 +258,7 @@ function CrearOrden() {
           stock: result.stock,
           version: result._version,
           subTotal: Number(result.precioVenta) * Number(cantidad),
+          idGraduation: false,
         };
         setCarrito([...carrito, carritoInterno]);
         setTotal(total + carritoInterno.subTotal);
@@ -270,7 +272,20 @@ function CrearOrden() {
       if (clientesID !== "" && opticaID !== "") {
         if (graduacion === "SI") {
           if (Number(precioGraduacion) !== 0) {
-            checkOrden = 1;
+            let count = 0;
+            for (const cart of carrito) {
+              if (cart.idGraduation === true) {
+                count = count + 1;
+              }
+            }
+            if (count > 0) {
+              checkOrden = 1;
+            } else {
+              checkOrden = 0;
+              message.warning(
+                "Tienes que seleccionar por lo menos un producto que pertenecera a la graduacion"
+              );
+            }
           } else {
             checkOrden = 0;
             message.warning(
@@ -311,26 +326,19 @@ function CrearOrden() {
                 ordenID: orden.id,
                 inventarioID: cart.id,
                 costo: cart.subTotal,
+                idGraduation: cart.idGraduation,
               };
               await API.graphql(
                 graphqlOperation(createINVENTARIOORDENITEMS, {
                   input: newOrdenItem,
                 })
               );
-              // let newProducto = {
-              //   id: cart.id,
-              //   stock: Number(cart.stock) - 1,
-              //   _version: cart.version,
-              // };
-              // console.log(newProducto);
-              // await API.graphql(
-              //   graphqlOperation(updateINVENTARIO, { input: newProducto })
-              // );
             })
           );
           setCarrito([]);
           cambiarComponent({ key: "21" });
           message.success("La orden se ha registrado correctamente");
+          console.log(carrito);
         }
       } else {
         message.warning("Te faltan llenar campos");
@@ -475,15 +483,42 @@ function CrearOrden() {
       key: "acciones",
       render: (_, record) => {
         return (
-          <>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <Button onClick={() => deleteRowCart(record)} type="primary" danger>
               <DeleteOutlined />
             </Button>
-          </>
+            {graduacion === "SI" ? (
+              <Checkbox
+                checked={record.idGraduation}
+                // disabled={disabled}
+                onChange={(e) => selectGradProdut(record, e.target.checked)}
+              >
+                Graduacion
+              </Checkbox>
+            ) : null}
+          </div>
         );
       },
     },
   ];
+  const selectGradProdut = (record, value) => {
+    console.log(record);
+    console.log(value);
+    const nuevosObjetos = carrito.map((objeto) => {
+      if (objeto.id === record.id) {
+        const newIdGraduation = value;
+        return {
+          ...objeto,
+          idGraduation: newIdGraduation,
+        };
+      }
+      return objeto;
+    });
+    console.log(nuevosObjetos);
+    setCarrito(nuevosObjetos);
+
+    // setCheckGradProduct(!checkGradProduct);
+  };
   useEffect(() => {
     const verificarCaja = async () => {
       // Realizar la verificación del estado de la caja aquí
@@ -511,6 +546,17 @@ function CrearOrden() {
       <Form.Item style={{ marginTop: "20px" }} label="Graduacion?">
         <Select
           onSelect={(e) => {
+            if (e === "NO") {
+              if (carrito.length > 0) {
+                let nuevosObjetos = carrito.map((objeto) => {
+                  return {
+                    ...objeto,
+                    idGraduation: false,
+                  };
+                });
+                setCarrito(nuevosObjetos);
+              }
+            }
             setGraduacion(e);
           }}
           placeholder="Seleccione que tipo de orden desea registrar"
