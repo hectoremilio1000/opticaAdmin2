@@ -14,7 +14,7 @@ import {
   Checkbox,
   Space,
 } from "antd";
-import { INVENTARIO, INVENTARIOORDENITEMS, ORDEN } from "../../../models";
+import { INVENTARIOORDENITEMS, ORDEN } from "../../../models";
 import TicketPDF from "./TicketPdf";
 import Cotizacion from "./Cotizacion";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
@@ -143,13 +143,11 @@ function ListaOrdenes() {
         );
         const codOptica = optica?.data?.getOPTICA.codSerial;
         const documento = result?.data?.listCONFIGURACIONDOCUMENTOS?.items[0];
-        console.log(documento?.numeroSecuencialActual);
         let newSerie = documento?.serieActual;
         let newNumero = documento?.numeroSecuencialActual;
         if (documento.numeroSecuencialActual === 10000) {
           newSerie = incrementSerialNumber(documento?.serieActual);
           newNumero = 1;
-          console.log(newSerie);
         }
         if (tipoDocumento === "NOTADEVENTA") {
           setSerie(codOptica + "NV" + newSerie);
@@ -183,7 +181,6 @@ function ListaOrdenes() {
       const result = await API.graphql(
         graphqlOperation(getOPTICA, { id: opticaID })
       );
-      console.log(result);
       const optica = result?.data?.getOPTICA;
       return optica;
     } catch (error) {
@@ -212,9 +209,7 @@ function ListaOrdenes() {
             },
           })
         );
-        console.log(result);
         ordenes = result.data.oRDENSByOpticaID.items;
-        console.log(ordenes);
       }
       const ordenesSorted = ordenes.sort((a, b) => {
         // Ordenar por fecha de creación descendente (más reciente primero)
@@ -259,6 +254,7 @@ function ListaOrdenes() {
   }, []);
 
   const edithandle = async (record) => {
+    setMontoPagado(record?.montoPagado);
     setOrdenID(record.id);
     setprecioMaquila(record.precioGraduacion);
     setTipoOrden(record.tipoOrden);
@@ -270,16 +266,22 @@ function ListaOrdenes() {
       let opticasearch = await fetchOptica(record?.opticaID);
       setOptica(opticasearch);
 
-      const ordenes = await DataStore.query(INVENTARIOORDENITEMS, (d) =>
-        d.ordenID.eq(record.id)
+      const result = await API.graphql(
+        graphqlOperation(iNVENTARIOORDENITEMSByOrdenID, {
+          ordenID: record.id,
+        })
       );
+      const ordenes = result?.data?.iNVENTARIOORDENITEMSByOrdenID.items;
+
       const ordenesConNombres = [];
       for (const orden of ordenes) {
         // Obtén el cliente correspondiente a través del ID
-        const inventario = await DataStore.query(
-          INVENTARIO,
-          orden.inventarioID
+
+        const resultInvent = await API.graphql(
+          graphqlOperation(getINVENTARIO, { id: orden.inventarioID })
         );
+        const inventario = resultInvent.data.getINVENTARIO;
+
         const ordenConNombre = {
           ...orden,
           nombreProducto: inventario.nombreProducto,
@@ -289,10 +291,10 @@ function ListaOrdenes() {
         ordenesConNombres.push(ordenConNombre);
       }
       setProducts(ordenesConNombres);
+      setVerReport(true);
     } catch (error) {
       console.log(error);
     }
-    setVerReport(true);
   };
 
   const changeDelete = (record) => {
@@ -361,9 +363,7 @@ function ListaOrdenes() {
         const result = await API.graphql(
           graphqlOperation(deudasByOrdenID, { ordenID: ordenID })
         );
-        console.log(result);
         const adeudoFetch = result?.data?.deudasByOrdenID.items[0];
-        console.log(adeudoFetch);
 
         const updateAdeudo = {
           id: adeudoFetch.id,
@@ -410,7 +410,6 @@ function ListaOrdenes() {
     }
   };
   const problemasOrden = async () => {
-    console.log(fechaEntrega);
     if (fechaEntrega !== "") {
       const updateOrden = {
         id: ordenID,
@@ -973,11 +972,7 @@ function ListaOrdenes() {
     const original = await API.graphql(
       graphqlOperation(getORDEN, { id: ordenID })
     );
-    console.log(original.data.getORDEN.INVENTARIOORDENITEMS.items);
     const ordenUpdate = original?.data?.getORDEN?._version;
-    console.log(ordenUpdate);
-    console.log(carrito);
-    console.log(listaProductos);
 
     const fecha = dayjs().format("YYYY-MM-DD");
 
@@ -1031,7 +1026,6 @@ function ListaOrdenes() {
                       stock: Number(result.stock) - Number(cart.cantidad),
                       _version: result._version,
                     };
-                    console.log(newProducto);
                     await API.graphql(
                       graphqlOperation(updateINVENTARIO, { input: newProducto })
                     );
@@ -1051,10 +1045,9 @@ function ListaOrdenes() {
               ordenID,
               tipoTransaccion: "VENTA",
             };
-            const result = await API.graphql(
+            await API.graphql(
               graphqlOperation(createTransacciones, { input: newTransaccion })
             );
-            console.log(result);
             if (totalVenta !== montoPagadoCliente) {
               try {
                 const newDeuda = {
@@ -1118,7 +1111,6 @@ function ListaOrdenes() {
                     stock: Number(result.stock) - Number(cart.cantidad),
                     _version: result._version,
                   };
-                  console.log(newProducto);
                   await API.graphql(
                     graphqlOperation(updateINVENTARIO, { input: newProducto })
                   );
@@ -1155,14 +1147,12 @@ function ListaOrdenes() {
             ordenID,
             tipoTransaccion: "VENTA",
           };
-          const result = await API.graphql(
+          await API.graphql(
             graphqlOperation(createTransacciones, { input: newTransaccion })
           );
-          const resolver = await API.graphql(
+          await API.graphql(
             graphqlOperation(updateORDEN, { input: updateOrden })
           );
-          console.log(result);
-          console.log(resolver);
           if (carrito.length > 0) {
             try {
               await Promise.all(
@@ -1186,7 +1176,6 @@ function ListaOrdenes() {
                     stock: Number(result.stock) - Number(cart.cantidad),
                     _version: result._version,
                   };
-                  console.log(newProducto);
                   await API.graphql(
                     graphqlOperation(updateINVENTARIO, { input: newProducto })
                   );
@@ -1246,7 +1235,6 @@ function ListaOrdenes() {
                   ).toString(),
                   _version: result._version,
                 };
-                console.log(newProducto);
                 await API.graphql(
                   graphqlOperation(updateINVENTARIO, { input: newProducto })
                 );
@@ -1506,24 +1494,35 @@ function ListaOrdenes() {
       >
         {tipoOrden === "COTIZACION" ? (
           <>
-            <PDFViewer style={{ width: "100%", height: "50vh" }}>
-              <Cotizacion
-                tipoOrden={tipoOrden}
-                logoSrc={logo}
-                title="Ticket de Cotizacion"
-                customer={cliente}
-                products={products}
-                // total={total}
-                precioGraduacion={precioMaquila}
-              />
-            </PDFViewer>
-            <PDFDownloadLink
+            {/* {products.length > 0 ? ( */}
+            <>
+              <PDFViewer style={{ width: "100%", height: "50vh" }}>
+                <Cotizacion
+                  optica={optica}
+                  ordenID={ordenNow}
+                  tipoOrden={tipoOrden}
+                  logoSrc={logo}
+                  title="Ticket de Compra"
+                  customer={cliente}
+                  products={products}
+                  // total={total}
+                  precioGraduacion={precioMaquila}
+                />
+              </PDFViewer>
+            </>
+            {/* ) : (
+              <p>Cargando...</p>
+            )} */}
+
+            {/* <PDFDownloadLink
               fileName={ordenID + "-" + ordenNow[0].nombreCliente}
               document={
                 <Cotizacion
+                  optica={optica}
+                  ordenID={ordenNow}
                   tipoOrden={tipoOrden}
                   logoSrc={logo}
-                  title="Ticket de Cotizacion"
+                  title="Ticket de Compra"
                   customer={cliente}
                   products={products}
                   // total={total}
@@ -1534,7 +1533,7 @@ function ListaOrdenes() {
               <Button>
                 <CloudDownloadOutlined /> Descargar
               </Button>
-            </PDFDownloadLink>
+            </PDFDownloadLink> */}
             {/* <Button onClick={handlePrint}>Imprimir</Button> */}
           </>
         ) : (
@@ -1551,6 +1550,7 @@ function ListaOrdenes() {
                 title="Ticket de Compra"
                 customer={cliente}
                 products={products}
+                montoPagado={montoPagado}
                 // total={total}
                 precioGraduacion={precioMaquila}
               />
@@ -1567,6 +1567,7 @@ function ListaOrdenes() {
                   title="Ticket de Compra"
                   customer={cliente}
                   products={products}
+                  montoPagado={montoPagado}
                   // total={total}
                   precioGraduacion={precioMaquila}
                 />
