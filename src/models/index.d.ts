@@ -312,6 +312,7 @@ type EagerINVENTARIOORDENITEMS = {
   readonly costo?: number | null;
   readonly inventarioID: string;
   readonly ordenID: string;
+  readonly idGraduation?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -326,6 +327,7 @@ type LazyINVENTARIOORDENITEMS = {
   readonly costo?: number | null;
   readonly inventarioID: string;
   readonly ordenID: string;
+  readonly idGraduation?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

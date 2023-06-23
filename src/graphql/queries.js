@@ -1095,6 +1095,7 @@ export const getINVENTARIOORDENITEMS = /* GraphQL */ `
       costo
       inventarioID
       ordenID
+      idGraduation
       createdAt
       updatedAt
       _version
@@ -1120,6 +1121,7 @@ export const listINVENTARIOORDENITEMS = /* GraphQL */ `
         costo
         inventarioID
         ordenID
+        idGraduation
         createdAt
         updatedAt
         _version
@@ -1150,6 +1152,7 @@ export const syncINVENTARIOORDENITEMS = /* GraphQL */ `
         costo
         inventarioID
         ordenID
+        idGraduation
         createdAt
         updatedAt
         _version
@@ -1182,6 +1185,7 @@ export const iNVENTARIOORDENITEMSByInventarioID = /* GraphQL */ `
         costo
         inventarioID
         ordenID
+        idGraduation
         createdAt
         updatedAt
         _version
@@ -1214,6 +1218,7 @@ export const iNVENTARIOORDENITEMSByOrdenID = /* GraphQL */ `
         costo
         inventarioID
         ordenID
+        idGraduation
         createdAt
         updatedAt
         _version
@@ -1473,6 +1478,7 @@ export const getINVENTARIO = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version
@@ -1637,6 +1643,7 @@ export const getORDEN = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version

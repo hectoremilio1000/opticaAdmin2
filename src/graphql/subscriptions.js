@@ -698,6 +698,7 @@ export const onCreateINVENTARIOORDENITEMS = /* GraphQL */ `
       costo
       inventarioID
       ordenID
+      idGraduation
       createdAt
       updatedAt
       _version
@@ -716,6 +717,7 @@ export const onUpdateINVENTARIOORDENITEMS = /* GraphQL */ `
       costo
       inventarioID
       ordenID
+      idGraduation
       createdAt
       updatedAt
       _version
@@ -734,6 +736,7 @@ export const onDeleteINVENTARIOORDENITEMS = /* GraphQL */ `
       costo
       inventarioID
       ordenID
+      idGraduation
       createdAt
       updatedAt
       _version
@@ -884,6 +887,7 @@ export const onCreateINVENTARIO = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version
@@ -925,6 +929,7 @@ export const onUpdateINVENTARIO = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version
@@ -966,6 +971,7 @@ export const onDeleteINVENTARIO = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version
@@ -1011,6 +1017,7 @@ export const onCreateORDEN = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version
@@ -1112,6 +1119,7 @@ export const onUpdateORDEN = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version
@@ -1213,6 +1221,7 @@ export const onDeleteORDEN = /* GraphQL */ `
           costo
           inventarioID
           ordenID
+          idGraduation
           createdAt
           updatedAt
           _version

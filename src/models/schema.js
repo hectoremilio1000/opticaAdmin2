@@ -843,6 +843,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "idGraduation": {
+                    "name": "idGraduation",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -2020,5 +2027,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "45ff3aa6d682b4cd235c26ddc864c362"
+    "version": "5a9516721a2c20274676e2ab0df0214c"
 };

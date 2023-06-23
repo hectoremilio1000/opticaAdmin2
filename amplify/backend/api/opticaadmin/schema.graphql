@@ -97,6 +97,7 @@ type INVENTARIOORDENITEMS @model @auth(rules: [{allow: public}]) {
   costo: Float
   inventarioID: ID! @index(name: "byINVENTARIO")
   ordenID: ID! @index(name: "byORDEN")
+  idGraduation: Boolean
 }
 
 enum TIPOORDEN {
