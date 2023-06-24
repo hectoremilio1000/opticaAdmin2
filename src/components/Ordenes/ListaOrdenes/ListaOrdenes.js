@@ -38,6 +38,7 @@ import {
   iNVENTARIOORDENITEMSByOrdenID,
   iNVENTARIOSByOpticaID,
   listCONFIGURACIONDOCUMENTOS,
+  listINVENTARIOORDENITEMS,
   listINVENTARIOS,
   listORDENS,
   oRDENSByOpticaID,
@@ -47,6 +48,8 @@ import {
   createDeudas,
   createINVENTARIOORDENITEMS,
   createTransacciones,
+  deleteINVENTARIOORDENITEMS,
+  deleteORDEN,
   updateCONFIGURACIONDOCUMENTO,
   updateDeudas,
   updateINVENTARIO,
@@ -299,19 +302,34 @@ function ListaOrdenes() {
 
   const changeDelete = (record) => {
     setOrdenID(record?.id);
+    setVersion(record?._version);
   };
   const deletehandle = async (record) => {
     try {
       if (record.tipoOrden === "COTIZACION") {
-        await DataStore.delete(ORDEN, ordenID);
-      } else {
-        await DataStore.delete(INVENTARIOORDENITEMS, (d) =>
-          d.ordenID.eq(record.id)
+        // await DataStore.delete(ORDEN, ordenID);
+        const deleteOrder = {
+          id: ordenID,
+          _version: version,
+        };
+        await API.graphql(
+          graphqlOperation(deleteORDEN, { input: deleteOrder })
         );
-        await DataStore.delete(ORDEN, ordenID);
+        const result = await API.graphql(
+          graphqlOperation(iNVENTARIOORDENITEMSByOrdenID, { ordenID: ordenID })
+        );
+        const detalle = result?.data?.iNVENTARIOORDENITEMSByOrdenID?.items;
+        for (const detail of detalle) {
+          await API.graphql(
+            graphqlOperation(deleteINVENTARIOORDENITEMS, { input: detail })
+          );
+        }
+        message.success("La cotizacion se ha eliminado correctamente");
+        message.success("Se elimino el detalle de la cotizacion");
+        fetchOrdenes();
+      } else {
+        message.warning("No se puede eliminar una orden aceptada");
       }
-      fetchOrdenes();
-      message.success("La orden se ha eliminado correctamente");
     } catch (error) {
       console.log(error);
       message.error("Hubo un error contacta al administrador");
