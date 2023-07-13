@@ -1,4 +1,14 @@
-import { Button, DatePicker, Form, Modal, Table, Tag, message } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Table,
+  Tag,
+  message,
+} from "antd";
 import React, { useEffect, useState } from "react";
 
 import { FiInbox } from "react-icons/fi";
@@ -9,15 +19,17 @@ import {
   deudasByTurnoID,
   gASTOSByTurnoID,
   listCajas,
+  listOPTICAS,
   transaccionesByTurnoID,
   turnosByCajaID,
 } from "../../../graphql/queries";
 import TicketCaja from "../CrearCaja/TicketCaja";
 import { PDFViewer } from "@react-pdf/renderer";
 import logo from "../../../assets/logohilmora.png";
+import { createCaja } from "../../../graphql/mutations";
 const ListaCaja = () => {
   const [cajas, setCajas] = useState([]);
-  //   const [nombre, setNombre] = useState("");
+  const [opticas, setOpticas] = useState([]);
   const [isModalHistory, setIsModalHistory] = useState(false);
   const [historyTurnos, setHistoryTurnos] = useState([]);
   const [dataTurnos, setDataTurnos] = useState([]);
@@ -25,11 +37,15 @@ const ListaCaja = () => {
   const [gastoEfectivo, setGastoEfectivo] = useState(0);
   const [adeudos, setAdeudos] = useState(0);
   const [montoInicial, setMontoInicial] = useState(0);
-  const [fechaApertura, setFechaApertura] = useState("");
+  // const [fechaApertura, setFechaApertura] = useState("");
   const [ventas, setVentas] = useState(0);
   const [efectivoTotal, setEfectivoTotal] = useState(0);
   const [transferenciasTotal, setTransferenciasTotal] = useState(0);
   const [tarjetaTotal, setTarjetaTotal] = useState(0);
+  // state de creacion de caja
+  const [nombre, setNombre] = useState("");
+  const [isModalCreated, setIsModalCreated] = useState(false);
+  const [opticaID, setOpticaID] = useState("");
 
   // optica id
   const { labId } = useGerenteContext();
@@ -139,18 +155,26 @@ const ListaCaja = () => {
     },
   ];
   const searchContabilidad = (record) => {
+    console.log(record);
     setMontoInicial(record?.montoInicial);
-    revisarVentas(record?.id);
-    revisarDeudas(record?.id);
-    revisarGastos(record?.id);
+    setVentas(0);
+    setAdeudos(0);
+    setEfectivoTotal(0);
+    setTarjetaTotal(0);
+    setTransferenciasTotal(0);
+    revisarVentas(record.id);
+    revisarDeudas(record.id);
+    revisarGastos(record.id);
     setIsModalReport(true);
   };
 
-  const revisarVentas = async (turnoId) => {
+  const revisarVentas = async (idturn) => {
+    console.log(idturn);
     try {
       const result = await API.graphql(
-        graphqlOperation(transaccionesByTurnoID, { turnoID: turnoId })
+        graphqlOperation(transaccionesByTurnoID, { turnoID: idturn })
       );
+      console.log(result);
       const transacciones = result.data.transaccionesByTurnoID.items;
       console.log(transacciones);
       let monto = 0;
@@ -250,6 +274,49 @@ const ListaCaja = () => {
     }
   };
 
+  const fetchOpticas = async () => {
+    try {
+      if (labId === "") {
+        const result = await API.graphql(graphqlOperation(listOPTICAS));
+        const opticasList = result?.data?.listOPTICAS?.items;
+        setOpticas(opticasList);
+      } else {
+        setOpticaID(labId);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchOpticas();
+    // eslint-disable-next-line
+  }, [labId]);
+
+  const activeCreatedCaja = async () => {
+    setIsModalCreated(true);
+  };
+  const onCreateCaja = async () => {
+    try {
+      if (opticaID !== "") {
+        const newCaja = {
+          nombre: nombre,
+          opticaID: opticaID,
+        };
+        console.log(newCaja);
+        await API.graphql(graphqlOperation(createCaja, { input: newCaja }));
+        message.success("Se creo exitosamente la caja");
+        fetchCajas();
+        setIsModalCreated(false);
+        setNombre("");
+      } else {
+        message.warning("Debes seleccionar una optica para crear la caja");
+      }
+    } catch (error) {
+      message.error("Hubo un error contacta al administrador");
+      console.log(error);
+    }
+  };
+
   const fetchCajas = async () => {
     try {
       let cajas;
@@ -274,7 +341,9 @@ const ListaCaja = () => {
 
   return (
     <div>
-      <Button type="primary">Crear</Button>
+      <Button onClick={activeCreatedCaja} type="primary">
+        Crear
+      </Button>
       <div style={{ margin: "20px 0px" }}>
         <h1>Lista Cajas</h1>
       </div>
@@ -325,6 +394,39 @@ const ListaCaja = () => {
             columns={columnsTurnos}
             rowClassName="editable-row"
           />
+        </Form>
+      </Modal>
+      <Modal
+        title="Crear Caja"
+        open={isModalCreated}
+        onCancel={() => setIsModalCreated(false)}
+        onOk={onCreateCaja}
+      >
+        <Form layout="vertical">
+          <Form.Item label="Nombre Caja">
+            <Input
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              placeholder="Ingresa el nombre de la caja"
+            />
+          </Form.Item>
+          {labId === "" ? (
+            <>
+              <Form.Item label="Optica">
+                <Select>
+                  {opticas.map((optica) => {
+                    return (
+                      <>
+                        <Select.Option value={optica.id}>
+                          {optica.nombre}
+                        </Select.Option>
+                      </>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </>
+          ) : null}
         </Form>
       </Modal>
     </div>

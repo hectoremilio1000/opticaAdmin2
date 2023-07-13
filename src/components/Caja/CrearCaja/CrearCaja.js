@@ -52,12 +52,13 @@ const CrearCaja = () => {
   const [cajaID, setCajaID] = useState(null);
 
   const [verificandoCaja, setVerificandoCaja] = useState(true);
-  const { cajaAbierta, nowTurno, verificarCajaAbierta } =
+  const { cajaAbierta, nowTurno, setCajaAbierta, verificarCajaAbierta } =
     useContext(CajaContext);
   const [isModal, setIsModal] = useState(true);
 
   const revisarVentas = async () => {
     if (cajaAbierta) {
+      setMontoInicial(nowTurno.montoInicial);
       try {
         const result = await API.graphql(
           graphqlOperation(transaccionesByTurnoID, { turnoID: nowTurno.id })
@@ -115,26 +116,26 @@ const CrearCaja = () => {
       } catch (error) {
         console.log(error);
       }
-    } else {
-      console.log("no entro");
     }
   };
 
   const revisarGastos = async () => {
-    try {
-      const result = await API.graphql(
-        graphqlOperation(gASTOSByTurnoID, { turnoID: nowTurno.id })
-      );
-      const gastos = result?.data?.gASTOSByTurnoID?.items;
-      if (gastos.length > 0) {
-        let montoGasto = 0;
-        for (const gasto of gastos) {
-          montoGasto = montoGasto + gasto.montoGasto;
-          setGastoEfectivo(montoGasto);
+    if (cajaAbierta) {
+      try {
+        const result = await API.graphql(
+          graphqlOperation(gASTOSByTurnoID, { turnoID: nowTurno.id })
+        );
+        const gastos = result?.data?.gASTOSByTurnoID?.items;
+        if (gastos.length > 0) {
+          let montoGasto = 0;
+          for (const gasto of gastos) {
+            montoGasto = montoGasto + gasto.montoGasto;
+            setGastoEfectivo(montoGasto);
+          }
         }
+      } catch (error) {
+        message.error("No se cargaron los gastos de la caja");
       }
-    } catch (error) {
-      message.error("No se cargaron los gastos de la caja");
     }
   };
   useEffect(() => {
@@ -153,7 +154,11 @@ const CrearCaja = () => {
         estado: "Cerrado",
       };
       await API.graphql(graphqlOperation(updateTurno, { input: updateTurnos }));
-      verificarCajaAbierta(gerenteId);
+      setVerificandoCaja(true);
+      setCajaAbierta(false);
+      setMontoInicial(0);
+      verificarCaja();
+
       message.success("Se hizo corte de la caja correctamente");
     } catch (error) {
       console.log(error);
@@ -195,6 +200,7 @@ const CrearCaja = () => {
           graphqlOperation(cajasByOpticaID, { opticaID: labId })
         );
         const cajas = result?.data?.cajasByOpticaID?.items;
+        console.log(cajas);
         setCajas(cajas);
       }
     } catch (error) {
@@ -205,23 +211,26 @@ const CrearCaja = () => {
     fetchCajas();
     // eslint-disable-next-line
   }, [labId]);
+  const verificarCaja = async () => {
+    // Realizar la verificación del estado de la caja aquí
+    // Reemplaza el siguiente código con tu lógica de verificación real
 
-  useEffect(() => {
-    const verificarCaja = async () => {
-      // Realizar la verificación del estado de la caja aquí
-      // Reemplaza el siguiente código con tu lógica de verificación real
-      try {
+    try {
+      if (cajaAbierta === true) {
+        setVerificandoCaja(false); // Finaliza la verificación
+      } else {
         const result = await verificarCajaAbierta(gerenteId); // Supongamos que esto es una función asincrónica
-        if (result === true) {
-          setVerificandoCaja(false); // Finaliza la verificación
-        }
-      } catch (error) {
-        console.log(error);
+        console.log(result);
+        setVerificandoCaja(false); // Finaliza la verificación
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
     verificarCaja();
     // eslint-disable-next-line
-  }, []);
+  }, [gerenteId]);
   return (
     <div>
       {verificandoCaja ? (
@@ -555,7 +564,9 @@ const CrearCaja = () => {
                         $
                         {(
                           Math.round(
-                            (Number(ventas) + Number(nowTurno.montoInicial)) *
+                            (Number(ventas) +
+                              Number(nowTurno.montoInicial) -
+                              Number(gastoEfectivo)) *
                               100
                           ) / 100
                         ).toFixed(2)}

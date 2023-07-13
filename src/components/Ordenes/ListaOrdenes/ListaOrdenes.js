@@ -1,4 +1,4 @@
-import { API, DataStore, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { React, useState, useContext, useEffect } from "react";
 import {
   Table,
@@ -13,8 +13,8 @@ import {
   DatePicker,
   Checkbox,
   Space,
+  Spin,
 } from "antd";
-import { INVENTARIOORDENITEMS, ORDEN } from "../../../models";
 import TicketPDF from "./TicketPdf";
 import Cotizacion from "./Cotizacion";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
@@ -38,7 +38,6 @@ import {
   iNVENTARIOORDENITEMSByOrdenID,
   iNVENTARIOSByOpticaID,
   listCONFIGURACIONDOCUMENTOS,
-  listINVENTARIOORDENITEMS,
   listINVENTARIOS,
   listORDENS,
   oRDENSByOpticaID,
@@ -193,6 +192,7 @@ function ListaOrdenes() {
 
   const fetchOrdenes = async () => {
     try {
+      setLoading(false);
       let ordenes;
       if (labId === "") {
         const result = await API.graphql(
@@ -356,9 +356,63 @@ function ListaOrdenes() {
     buscarDocumento();
   };
   const entregarOrden = async () => {
-    if (metodoPago !== "") {
-      let deudaNow = precioTotal - montoPagado;
-      const fechaActual = dayjs().format("YYYY-MM-DD");
+    if (precioTotal !== montoPagado) {
+      if (metodoPago !== "") {
+        let deudaNow = precioTotal - montoPagado;
+        const fechaActual = dayjs().format("YYYY-MM-DD");
+        const fecha_entrega = dayjs().format("YYYY-MM-DD");
+        const updateOrden = {
+          id: ordenID,
+          fechaEntrega: fecha_entrega,
+          tipoOrden: "ORDEN",
+          ordenStatus: "ENTREGADA",
+          _version: version,
+          montoPagado: precioTotal,
+        };
+        const newTransaccion = {
+          monto: deudaNow,
+          fecha: fechaActual,
+          metodoPago,
+          turnoID: nowTurno.id,
+          ordenID,
+          tipoTransaccion: "VENTA",
+        };
+
+        try {
+          const result = await API.graphql(
+            graphqlOperation(deudasByOrdenID, { ordenID: ordenID })
+          );
+          const adeudoFetch = result?.data?.deudasByOrdenID.items[0];
+
+          const updateAdeudo = {
+            id: adeudoFetch.id,
+            _version: adeudoFetch._version,
+            montoDeuda: 0,
+            estado: "PAGADO",
+            fecha: fechaActual,
+          };
+          await API.graphql(
+            graphqlOperation(updateDeudas, { input: updateAdeudo })
+          );
+          message.success("Se pago la deuda pendiente");
+          await API.graphql(
+            graphqlOperation(updateORDEN, { input: updateOrden })
+          );
+          message.success("La orden se ha entregado correctamente");
+          await API.graphql(
+            graphqlOperation(createTransacciones, { input: newTransaccion })
+          );
+          setIsModalpago(false);
+          message.success("Se realizo el pago del adeudo");
+          fetchOrdenes();
+        } catch (error) {
+          message.error("Hubo un error contacta con el administrador");
+          console.log(error);
+        }
+      } else {
+        message.warning("Debe seleccionar el metodo de pago");
+      }
+    } else {
       const fecha_entrega = dayjs().format("YYYY-MM-DD");
       const updateOrden = {
         id: ordenID,
@@ -366,50 +420,12 @@ function ListaOrdenes() {
         tipoOrden: "ORDEN",
         ordenStatus: "ENTREGADA",
         _version: version,
-        montoPagado: precioTotal,
       };
-      const newTransaccion = {
-        monto: deudaNow,
-        fecha: fechaActual,
-        metodoPago,
-        turnoID: nowTurno.id,
-        ordenID,
-        tipoTransaccion: "VENTA",
-      };
+      await API.graphql(graphqlOperation(updateORDEN, { input: updateOrden }));
+      message.success("La orden se ha entregado correctamente");
 
-      try {
-        const result = await API.graphql(
-          graphqlOperation(deudasByOrdenID, { ordenID: ordenID })
-        );
-        const adeudoFetch = result?.data?.deudasByOrdenID.items[0];
-
-        const updateAdeudo = {
-          id: adeudoFetch.id,
-          _version: adeudoFetch._version,
-          montoDeuda: 0,
-          estado: "PAGADO",
-          fecha: fechaActual,
-        };
-        await API.graphql(
-          graphqlOperation(updateDeudas, { input: updateAdeudo })
-        );
-        message.success("Se pago la deuda pendiente");
-        await API.graphql(
-          graphqlOperation(updateORDEN, { input: updateOrden })
-        );
-        message.success("La orden se ha entregado correctamente");
-        await API.graphql(
-          graphqlOperation(createTransacciones, { input: newTransaccion })
-        );
-        setIsModalpago(false);
-        message.success("Se realizo el pago del adeudo");
-        fetchOrdenes();
-      } catch (error) {
-        message.error("Hubo un error contacta con el administrador");
-        console.log(error);
-      }
-    } else {
-      message.warning("Debe seleccionar el metodo de pago");
+      setIsModalpago(false);
+      fetchOrdenes();
     }
   };
   const finalizarOrden = async (record) => {
@@ -1500,7 +1516,17 @@ function ListaOrdenes() {
           rowClassName="editable-row"
         />
       ) : (
-        <p>Cargando...</p>
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            height: "200px",
+          }}
+        >
+          <Spin />
+        </div>
       )}
 
       {/* modal de report view */}
@@ -1605,29 +1631,36 @@ function ListaOrdenes() {
         open={isModalpago}
         onOk={() => entregarOrden()}
         onCancel={() => setIsModalpago(false)}
+        okText="Entregar"
       >
         <div className="m-6">
           <h3 style={{ width: "100%", textAlign: "start" }}>Adeudo</h3>
           <p>${Math.round((deuda * 100) / 100).toFixed(2)}</p>
-          <h3 style={{ width: "100%", textAlign: "start" }}>Método de Pago</h3>
-          <Checkbox
-            checked={metodoPago === "TARJETA_CREDITO"}
-            onChange={(e) => setMetodoPago("TARJETA_CREDITO")}
-          >
-            TARJETA_CREDITO
-          </Checkbox>
-          <Checkbox
-            checked={metodoPago === "TRANSFERENCIA"}
-            onChange={(e) => setMetodoPago("TRANSFERENCIA")}
-          >
-            TRANSFERENCIA
-          </Checkbox>
-          <Checkbox
-            checked={metodoPago === "EFECTIVO"}
-            onChange={(e) => setMetodoPago("EFECTIVO")}
-          >
-            EFECTIVO
-          </Checkbox>
+          {montoPagado !== precioTotal ? (
+            <>
+              <h3 style={{ width: "100%", textAlign: "start" }}>
+                Método de Pago
+              </h3>
+              <Checkbox
+                checked={metodoPago === "TARJETA_CREDITO"}
+                onChange={(e) => setMetodoPago("TARJETA_CREDITO")}
+              >
+                TARJETA_CREDITO
+              </Checkbox>
+              <Checkbox
+                checked={metodoPago === "TRANSFERENCIA"}
+                onChange={(e) => setMetodoPago("TRANSFERENCIA")}
+              >
+                TRANSFERENCIA
+              </Checkbox>
+              <Checkbox
+                checked={metodoPago === "EFECTIVO"}
+                onChange={(e) => setMetodoPago("EFECTIVO")}
+              >
+                EFECTIVO
+              </Checkbox>
+            </>
+          ) : null}
         </div>
       </Modal>
       {/* modal de enviar ordenes view */}

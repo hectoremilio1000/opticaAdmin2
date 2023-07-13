@@ -16,12 +16,12 @@ import {
 // amplify API
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { FaFilePdf } from "react-icons/fa";
-import { API, DataStore, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 // import { useNavigate } from "react-router-dom";
-import { OPTICA } from "../../../models";
 import {
   iNVENTARIOSByOpticaID,
   listINVENTARIOS,
+  listOPTICAS,
 } from "../../../graphql/queries";
 
 import { useGerenteContext } from "../../../contexts/GerenteContext";
@@ -134,7 +134,7 @@ function ListaInventario() {
         );
         setIsaument(false);
         setNewStock("");
-        message.success("Se agrego mas stock al producto");
+        message.success("Se quito stock al producto");
         fetchInventario();
       } else {
         message.error(
@@ -311,8 +311,10 @@ function ListaInventario() {
   ];
   const searchOpticas = async () => {
     try {
-      const result = await DataStore.query(OPTICA);
-      setOpticas(result);
+      // const result = await DataStore.query(OPTICA);
+      const result = await API.graphql(graphqlOperation(listOPTICAS));
+      const listOptics = result?.data?.listOPTICAS?.items;
+      setOpticas(listOptics);
     } catch (error) {
       console.log(error);
     }
@@ -741,9 +743,9 @@ function ListaInventario() {
           onOk={() => onRestarProduct()}
         >
           <p>Stock Actual: {stock}</p>
-          <Form.Item label="Agregar stock">
+          <Form.Item label="Quitar stock">
             <Input
-              placeholder="Ingresa la cantidad de stock a agregar al actual"
+              placeholder="Ingresa la cantidad de stock a quitar al actual"
               value={newStock}
               onChange={(e) => setNewStock(e.target.value)}
             />
