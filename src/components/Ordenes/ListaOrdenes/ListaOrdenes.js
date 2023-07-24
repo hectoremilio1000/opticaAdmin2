@@ -796,31 +796,56 @@ function ListaOrdenes() {
       const options = [];
       let productosList;
       if (labId === "") {
-        const result = await API.graphql(graphqlOperation(listINVENTARIOS));
-        const nodelete = result?.data?.listINVENTARIOS?.items;
-        const deletew = nodelete.filter(
-          (elemento) => elemento._deleted !== true
-        );
-        const tempProducts = [];
-        // productosList = deletew;
-        for (const producto of deletew) {
-          const resultOptica = await API.graphql(
-            graphqlOperation(getOPTICA, { id: producto.opticaID })
-          );
-          const optica = resultOptica.data.getOPTICA;
-          const productOptica = { ...producto, nombreOptica: optica.nombre };
-          tempProducts.push(productOptica);
+        try {
+          let nextToken = null;
+          do {
+            const result = await API.graphql(
+              graphqlOperation(listINVENTARIOS, { limit: 100, nextToken })
+            );
+            console.log(result);
+            const nodelete = result?.data?.listINVENTARIOS?.items;
+            const deletew = nodelete.filter(
+              (elemento) => elemento._deleted !== true
+            );
+            let tempProducts = [];
+            for (const producto of deletew) {
+              const resultOptica = await API.graphql(
+                graphqlOperation(getOPTICA, { id: producto.opticaID })
+              );
+              const optica = resultOptica.data.getOPTICA;
+              const productOptica = {
+                ...producto,
+                nombreOptica: optica.nombre,
+              };
+              tempProducts.push(productOptica);
+            }
+            productosList.push(...tempProducts);
+            nextToken = result?.data?.listINVENTARIOS?.nextToken;
+          } while (nextToken);
+        } catch (error) {
+          console.log(error);
         }
-        productosList = tempProducts;
       } else {
-        const result = await API.graphql(
-          graphqlOperation(iNVENTARIOSByOpticaID, { opticaID: labId })
-        );
-        const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
-        const deletew = nodelete.filter(
-          (elemento) => elemento._deleted !== true
-        );
-        productosList = deletew;
+        try {
+          let nextToken = null;
+          do {
+            const result = await API.graphql(
+              graphqlOperation(iNVENTARIOSByOpticaID, {
+                opticaID: labId,
+                limit: 100,
+                nextToken,
+              })
+            );
+            const nodelete = result?.data?.iNVENTARIOSByOpticaID?.items;
+            const deletew = nodelete.filter(
+              (elemento) => elemento._deleted !== true
+            );
+            productosList.push(...deletew);
+            nextToken = result?.data?.iNVENTARIOSByOpticaID?.nextToken;
+          } while (nextToken);
+        } catch (error) {
+          console.log(error);
+        }
       }
 
       productosList.map((producto) => {
