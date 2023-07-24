@@ -794,7 +794,7 @@ function ListaOrdenes() {
   const fetchProductos = async () => {
     try {
       const options = [];
-      let productosList;
+      let productosList = [];
       if (labId === "") {
         try {
           let nextToken = null;
@@ -873,7 +873,7 @@ function ListaOrdenes() {
       setProductos(options);
       setListaProductos(productosList);
     } catch (error) {
-      message.error("No se encontraron productos");
+      message.error("No se encontraron productos " + error);
     }
   };
   // Table source
@@ -1031,6 +1031,7 @@ function ListaOrdenes() {
     const original = await API.graphql(
       graphqlOperation(getORDEN, { id: ordenID })
     );
+    console.log(original);
     const ordenUpdate = original?.data?.getORDEN?._version;
 
     const fecha = dayjs().format("YYYY-MM-DD");
@@ -1162,6 +1163,7 @@ function ListaOrdenes() {
             await Promise.all(
               original.data.getORDEN.INVENTARIOORDENITEMS.items.map(
                 async (cart) => {
+                  console.log(cart);
                   const result = listaProductos.find(
                     (elemento) => elemento.id === cart.inventarioID
                   );
@@ -1170,6 +1172,7 @@ function ListaOrdenes() {
                     stock: Number(result.stock) - Number(cart.cantidad),
                     _version: result._version,
                   };
+                  console.log(newProducto);
                   await API.graphql(
                     graphqlOperation(updateINVENTARIO, { input: newProducto })
                   );
@@ -1284,6 +1287,7 @@ function ListaOrdenes() {
           await Promise.all(
             original.data.getORDEN.INVENTARIOORDENITEMS.items.map(
               async (cart) => {
+                console.log(cart);
                 const result = listaProductos.find(
                   (elemento) => elemento.id === cart.inventarioID
                 );
