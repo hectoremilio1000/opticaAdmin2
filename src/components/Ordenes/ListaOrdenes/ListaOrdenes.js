@@ -243,10 +243,11 @@ function ListaOrdenes() {
 
         // Agrega el objeto nuevo al array de órdenes con nombres de cliente
         ordenesConNombres.push(ordenConNombre);
+        setOrdenes(ordenesConNombres);
+        setDataSource(ordenesConNombres);
+        setLoading(true);
       }
-      setOrdenes(ordenesConNombres);
       // setDataSource(ordenesConNombres);
-      setLoading(true);
     } catch (error) {
       console.log(error);
     }
