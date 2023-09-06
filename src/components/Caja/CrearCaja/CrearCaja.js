@@ -126,6 +126,7 @@ const CrearCaja = () => {
           graphqlOperation(gASTOSByTurnoID, { turnoID: nowTurno.id })
         );
         const gastos = result?.data?.gASTOSByTurnoID?.items;
+        console.log(gastos);
         if (gastos.length > 0) {
           let montoGasto = 0;
           for (const gasto of gastos) {
@@ -141,7 +142,7 @@ const CrearCaja = () => {
   useEffect(() => {
     revisarGastos();
     // eslint-disable-next-line
-  }, [labId]);
+  }, [cajaAbierta]);
 
   const corteCaja = async () => {
     let fechaActual = dayjs().format("YYYY-MM-DD");
