@@ -27,5 +27,29 @@
         "opticaImages": {}
       }
     }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-opticaadmin-dev-01801-authRole",
+      "UnauthRoleArn": "arn:aws:iam::648055517850:role/amplify-opticaadmin-dev-01801-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::648055517850:role/amplify-opticaadmin-dev-01801-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-opticaadmin-dev-01801-deployment",
+      "UnauthRoleName": "amplify-opticaadmin-dev-01801-unauthRole",
+      "StackName": "amplify-opticaadmin-dev-01801",
+      "StackId": "arn:aws:cloudformation:us-east-1:648055517850:stack/amplify-opticaadmin-dev-01801/b7398140-91a3-11ee-a079-124714cdee67",
+      "AmplifyAppId": "d21lrap6jqh5ky"
+    },
+    "categories": {
+      "auth": {
+        "apioticapool": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "apioticapoolPostConfirmation": {
+          "GROUP": "cliente"
+        }
+      }
+    }
   }
 }
